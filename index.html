@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structural Sensei | Engineering & Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+        
+        :root {
+            --silk: #f5f5f0;
+            --brand-red: #d90429;
+            --brand-orange: #f3722c;
+            --dark-grey: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #000;
+            color: var(--silk);
+            scroll-behavior: smooth;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--brand-red), var(--brand-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Modal Logic */
+        #pythonModal { display: none; }
+        #pythonModal.active { display: flex; }
+
+        .code-container {
+            background: #0d1117;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center bg-black/80 backdrop-blur-md border-b border-white/5">
+        <div class="font-bold tracking-tighter uppercase text-sm">Structural<span class="text-red-600">Sensei</span></div>
+        <div class="flex gap-6 text-[10px] uppercase font-bold tracking-widest">
+            <a href="#about" class="hover:text-orange-500">About</a>
+            <a href="#platforms" class="hover:text-orange-500">Platforms</a>
+            <a href="javascript:void(0)" onclick="toggleModal()" class="text-red-500">Python Preview</a>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-20 px-6 max-w-4xl mx-auto">
+        <h1 class="text-5xl md:text-8xl font-bold leading-none mb-6">
+            Empowering Engineers, <br>
+            <span class="gradient-text">Building the Future.</span>
+        </h1>
+        <p class="text-lg text-stone-400 mb-8 max-w-2xl">
+            The bridge between academic theory and real-world mastery. I specialize in high-leverage systems for engineers, career growth, and financial independence.
+        </p>
+        <div class="flex gap-4">
+            <a href="https://www.upwork.com/freelancers/~018dd551fe9dd4aa2a" target="_blank" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded text-sm font-bold uppercase transition">Hire via Upwork</a>
+            <a href="#platforms" class="border border-stone-700 px-6 py-3 rounded text-sm font-bold uppercase hover:bg-white/5 transition">Explore Store</a>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 px-6 max-w-4xl mx-auto border-t border-white/5">
+        <div class="grid md:grid-cols-2 gap-12">
+            <div>
+                <h2 class="text-red-600 font-bold uppercase text-xs tracking-widest mb-4 italic">Background & Story</h2>
+                <p class="text-stone-300 text-sm mb-4">
+                    My journey began in structural engineering, where I realized the curriculum missed key lessons on <strong>career negotiation, personal branding, and building wealth.</strong>
+                </p>
+                <p class="text-stone-300 text-sm">
+                    Structural Sensei is now diversifying. We are moving from pure engineering into <strong>knowledge transfer and automation.</strong> Every digital tool you purchase funds our transition into a full integrated e-commerce ecosystem.
+                </p>
+            </div>
+            <div class="glass-card p-6 rounded-lg border-l-2 border-orange-500">
+                <h3 class="text-silk font-bold mb-2 uppercase text-sm tracking-tight">The "Sensei" Mindset</h3>
+                <p class="text-stone-400 text-xs italic leading-relaxed">
+                    "I distill years of professional experience into high-leverage actions. I don't just teach code or design; I teach the systems that lead to financial independence for technical professionals."
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="platforms" class="py-20 px-6 max-w-4xl mx-auto">
+        <h2 class="text-center font-bold uppercase text-xs tracking-widest text-stone-500 mb-12">Global Distribution Hub</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a href="https://gumroad.com" target="_blank" class="glass-card p-8 rounded hover:border-red-600/50 transition group">
+                <div class="text-red-600 mb-4 text-xl"><i class="fa-solid fa-cart-shopping"></i></div>
+                <h4 class="font-bold uppercase text-sm mb-2">Gumroad</h4>
+                <p class="text-stone-500 text-[11px]">Digital guides, Python scripts, and career e-books.</p>
+            </a>
+            <a href="https://youtube.com" target="_blank" class="glass-card p-8 rounded hover:border-orange-600/50 transition group">
+                <div class="text-orange-500 mb-4 text-xl"><i class="fa-brands fa-youtube"></i></div>
+                <h4 class="font-bold uppercase text-sm mb-2">YouTube</h4>
+                <p class="text-stone-500 text-[11px]">Technical deep-dives and career strategy videos.</p>
+            </a>
+            <a href="https://www.upwork.com/freelancers/~018dd551fe9dd4aa2a" target="_blank" class="glass-card p-8 rounded hover:border-white/20 transition group">
+                <div class="text-white mb-4 text-xl"><i class="fa-brands fa-upwork"></i></div>
+                <h4 class="font-bold uppercase text-sm mb-2">Consulting</h4>
+                <h4 class="text-stone-500 text-[11px]">Direct hire for Python automation and system design.</h4>
+            </a>
+        </div>
+    </section>
+
+    <footer class="py-20 px-6 text-center border-t border-white/5">
+        <p class="text-xs text-stone-600 mb-4 tracking-widest uppercase">Mastering the Art of Design</p>
+        <a href="mailto:wico.pydev@gmail.com" class="text-xl font-bold hover:text-orange-500 transition">wico.pydev@gmail.com</a>
+        <p class="mt-8 text-[10px] text-stone-700">© 2026 Structural Sensei. All Rights Reserved.</p>
+    </footer>
+
+    <div id="pythonModal" class="fixed inset-0 z-[60] items-center justify-center bg-black/90 p-4">
+        <div class="max-w-2xl w-full glass-card rounded-xl overflow-hidden border border-white/10">
+            <div class="p-4 bg-dark-grey flex justify-between items-center border-b border-white/5">
+                <span class="text-xs font-mono text-stone-500">automation_logic.py</span>
+                <button onclick="toggleModal()" class="text-stone-500 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 code-container text-[12px] md:text-sm">
+                <pre class="text-blue-300">
+<span class="text-stone-500"># Efficiency Logic: Structural Sensei Architecture</span>
+<span class="text-purple-400">import</span> automation_tools <span class="text-purple-400">as</span> ss
+
+<span class="text-purple-400">class</span> <span class="text-yellow-400">BusinessOptimizer</span>:
+    <span class="text-purple-400">def</span> <span class="text-blue-400">__init__</span>(self, status):
+        self.mindset = <span class="text-orange-400">"Engineering Precision"</span>
+        self.workflow = status
+
+    <span class="text-purple-400">def</span> <span class="text-blue-400">break_technical_wall</span>(self):
+        <span class="text-purple-400">if</span> self.workflow == <span class="text-orange-400">"Manual"</span>:
+            <span class="text-purple-400">return</span> ss.apply_python_automation()
+        <span class="text-purple-400">else</span>:
+            <span class="text-purple-400">return</span> <span class="text-orange-400">"Scale to Independence"</span>
+
+<span class="text-stone-500"># Result: 13 years of management experience automated.</span>
+sensei = BusinessOptimizer(<span class="text-orange-400">"Manual"</span>)
+print(sensei.break_technical_wall())
+                </pre>
+            </div>
+            <div class="p-4 bg-black text-center">
+                <a href="https://www.upwork.com/freelancers/~018dd551fe9dd4aa2a" class="text-[10px] uppercase font-bold text-red-500 hover:underline">Deploy similar logic for your business →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal() {
+            const modal = document.getElementById('pythonModal');
+            modal.classList.toggle('active');
+        }
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('pythonModal');
+            if (event.target == modal) {
+                modal.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
