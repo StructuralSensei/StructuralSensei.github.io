@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Structural Sensei | Engineering & Automation</title>
+    <title>Structural Sensei | Engineering & Automation Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -21,6 +21,7 @@
             background-color: #000;
             color: var(--silk);
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
         .gradient-text {
@@ -36,130 +37,196 @@
         }
 
         /* Modal Logic */
-        #pythonModal { display: none; }
-        #pythonModal.active { display: flex; }
+        #pythonModal, #hireMenu { display: none; }
+        #pythonModal.active, #hireMenu.active { display: flex; }
 
         .code-container {
             background: #0d1117;
             font-family: 'Courier New', Courier, monospace;
         }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
+        }
     </style>
 </head>
-<body>
+<body class="selection:bg-red-600 selection:text-white">
 
     <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center bg-black/80 backdrop-blur-md border-b border-white/5">
         <div class="font-bold tracking-tighter uppercase text-sm">Structural<span class="text-red-600">Sensei</span></div>
         <div class="flex gap-6 text-[10px] uppercase font-bold tracking-widest">
-            <a href="#about" class="hover:text-orange-500">About</a>
-            <a href="#platforms" class="hover:text-orange-500">Platforms</a>
-            <a href="javascript:void(0)" onclick="toggleModal()" class="text-red-500">Python Preview</a>
+            <a href="#about" class="hover:text-orange-500 transition">About</a>
+            <a href="#platforms" class="hover:text-orange-500 transition">Platforms</a>
+            <a href="javascript:void(0)" onclick="toggleModal('pythonModal')" class="text-red-500">Python Preview</a>
         </div>
     </nav>
 
-    <section class="pt-32 pb-20 px-6 max-w-4xl mx-auto">
-        <h1 class="text-5xl md:text-8xl font-bold leading-none mb-6">
+    <header class="pt-40 pb-20 px-6 max-w-4xl mx-auto">
+        <div class="inline-block px-3 py-1 mb-6 text-[10px] font-bold tracking-[0.2em] text-orange-500 uppercase border border-orange-500/30 rounded">
+            Engineering · Career · Finance
+        </div>
+        <h1 class="text-5xl md:text-8xl font-bold leading-[0.9] mb-8">
             Empowering Engineers, <br>
-            <span class="gradient-text">Building the Future.</span>
+            <span class="gradient-text">Building Mastery.</span>
         </h1>
-        <p class="text-lg text-stone-400 mb-8 max-w-2xl">
-            The bridge between academic theory and real-world mastery. I specialize in high-leverage systems for engineers, career growth, and financial independence.
+        <p class="text-lg md:text-xl text-stone-400 mb-10 max-w-2xl leading-relaxed">
+            I break the "Technical Wall." From custom Python automation to high-level engineering systems, I bridge the gap between academic theory and financial independence.
         </p>
-        <div class="flex gap-4">
-            <a href="https://www.upwork.com/freelancers/~01d3526b89af44ad3e" target="_blank" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded text-sm font-bold uppercase transition">Hire via Upwork</a>
-            <a href="#platforms" class="border border-stone-700 px-6 py-3 rounded text-sm font-bold uppercase hover:bg-white/5 transition">Explore Store</a>
+        
+        <div class="flex flex-wrap gap-4">
+            <button onclick="toggleModal('hireMenu')" class="btn-hover bg-red-600 hover:bg-red-700 px-8 py-4 rounded font-bold uppercase text-xs tracking-widest transition">
+                Get Started / Hire Me
+            </button>
+            <a href="#about" class="btn-hover border border-stone-700 px-8 py-4 rounded text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition">
+                Our Story ↓
+            </a>
         </div>
-    </section>
+    </header>
 
-    <section id="about" class="py-20 px-6 max-w-4xl mx-auto border-t border-white/5">
-        <div class="grid md:grid-cols-2 gap-12">
+    <section id="about" class="py-24 px-6 max-w-4xl mx-auto border-t border-white/5">
+        <div class="grid md:grid-cols-2 gap-16">
             <div>
-                <h2 class="text-red-600 font-bold uppercase text-xs tracking-widest mb-4 italic">Background & Story</h2>
-                <p class="text-stone-300 text-sm mb-4">
-                    My journey began in structural engineering, where I realized the curriculum missed key lessons on <strong>career negotiation, personal branding, and building wealth.</strong>
-                </p>
-                <p class="text-stone-300 text-sm">
-                    Structural Sensei is now diversifying. We are moving from pure engineering into <strong>knowledge transfer and automation.</strong> Every digital tool you purchase funds our transition into a full integrated e-commerce ecosystem.
-                </p>
+                <h2 class="text-red-600 font-bold uppercase text-xs tracking-widest mb-6 italic">Background & Mission</h2>
+                <div class="space-y-4 text-stone-300 text-sm leading-relaxed">
+                    <p>My journey began in structural engineering, where I quickly realized the curriculum missed key lessons on <strong>career negotiation, personal branding, and building wealth.</strong></p>
+                    <p>Structural Sensei is currently expanding into knowledge transfer and professional automation. We bridge the gap to real-world professional success with high-leverage guidance you won't find in a classroom.</p>
+                </div>
             </div>
-            <div class="glass-card p-6 rounded-lg border-l-2 border-orange-500">
-                <h3 class="text-silk font-bold mb-2 uppercase text-sm tracking-tight">The "Sensei" Mindset</h3>
-                <p class="text-stone-400 text-xs italic leading-relaxed">
-                    "I distill years of professional experience into high-leverage actions. I don't just teach code or design; I teach the systems that lead to financial independence for technical professionals."
+            <div class="glass-card p-8 rounded-2xl border-l-4 border-orange-500">
+                <h3 class="text-silk font-bold mb-4 uppercase text-xs tracking-widest">The "Sensei" Mentality</h3>
+                <p class="text-stone-400 text-sm italic leading-relaxed mb-6">
+                    "I distill 13+ years of technical management into practical mastery. I don't just write code; I design systems that ensure data integrity and massive time savings."
                 </p>
+                <div class="flex items-center gap-3">
+                    <div class="h-px w-8 bg-red-600"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Wico B. | Efficiency Architect</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="platforms" class="py-20 px-6 max-w-4xl mx-auto">
-        <h2 class="text-center font-bold uppercase text-xs tracking-widest text-stone-500 mb-12">Global Distribution Hub</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a href="https://wico.gumroad.com/" target="_blank" class="glass-card p-8 rounded hover:border-red-600/50 transition group">
-                <div class="text-red-600 mb-4 text-xl"><i class="fa-solid fa-cart-shopping"></i></div>
-                <h4 class="font-bold uppercase text-sm mb-2">Gumroad</h4>
-                <p class="text-stone-500 text-[11px]">Digital guides, Python scripts, and career e-books.</p>
+    <section id="platforms" class="py-24 px-6 max-w-4xl mx-auto border-t border-white/5">
+        <h2 class="text-center font-bold uppercase text-[10px] tracking-[0.3em] text-stone-500 mb-16">Global Resource Hub</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="https://wico.gumroad.com/" target="_blank" class="glass-card p-8 rounded-xl hover:border-red-600/50 transition-all group">
+                <div class="text-red-600 mb-6 text-2xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-cart-shopping"></i></div>
+                <h4 class="font-bold uppercase text-xs mb-2 tracking-widest">Gumroad Shop</h4>
+                <p class="text-stone-500 text-[11px] leading-relaxed">Download professional Python scripts, automation tools, and finance guides.</p>
             </a>
-            <a href="https://www.youtube.com/@StructuralSensei1" target="_blank" class="glass-card p-8 rounded hover:border-orange-600/50 transition group">
-                <div class="text-orange-500 mb-4 text-xl"><i class="fa-brands fa-youtube"></i></div>
-                <h4 class="font-bold uppercase text-sm mb-2">YouTube</h4>
-                <p class="text-stone-500 text-[11px]">Technical deep-dives and career strategy videos.</p>
+            <a href="https://www.youtube.com/@StructuralSensei1" target="_blank" class="glass-card p-8 rounded-xl hover:border-orange-600/50 transition-all group">
+                <div class="text-orange-500 mb-6 text-2xl group-hover:scale-110 transition-transform"><i class="fa-brands fa-youtube"></i></div>
+                <h4 class="font-bold uppercase text-xs mb-2 tracking-widest">YouTube Channel</h4>
+                <p class="text-stone-500 text-[11px] leading-relaxed">Watch video tutorials, deep-dives, and discussions on engineering concepts.</p>
             </a>
-            <a href="https://www.upwork.com/freelancers/~018dd551fe9dd4aa2a" target="_blank" class="glass-card p-8 rounded hover:border-white/20 transition group">
-                <div class="text-white mb-4 text-xl"><i class="fa-brands fa-upwork"></i></div>
-                <h4 class="font-bold uppercase text-sm mb-2">Consulting</h4>
-                <h4 class="text-stone-500 text-[11px]">Direct hire for Python automation and system design.</h4>
+            <a href="https://www.upwork.com/freelancers/~01d3526b89af44ad3e?mp_source=share" target="_blank" class="glass-card p-8 rounded-xl hover:border-white/40 transition-all group border-white/10 shadow-xl">
+                <div class="text-white mb-6 text-2xl group-hover:scale-110 transition-transform"><i class="fa-brands fa-upwork"></i></div>
+                <h4 class="font-bold uppercase text-xs mb-2 tracking-widest">Upwork Projects</h4>
+                <p class="text-stone-500 text-[11px] leading-relaxed">Hire me for custom Python automation, web scraping, and technical management.</p>
             </a>
         </div>
     </section>
 
-    <footer class="py-20 px-6 text-center border-t border-white/5">
-        <p class="text-xs text-stone-600 mb-4 tracking-widest uppercase">Mastering the Art of Design</p>
-        <a href="mailto:wico.pydev@gmail.com" class="text-xl font-bold hover:text-orange-500 transition">wico.pydev@gmail.com</a>
-        <p class="mt-8 text-[10px] text-stone-700">© 2026 Structural Sensei. All Rights Reserved.</p>
+    <footer class="py-20 px-6 text-center border-t border-white/5 bg-stone-950/50">
+        <p class="text-[10px] text-stone-600 mb-6 tracking-[0.4em] uppercase">Mastering the Art of Design</p>
+        <a href="mailto:wico.pydev@gmail.com" class="text-xl md:text-2xl font-bold hover:text-orange-500 transition-colors">wico.pydev@gmail.com</a>
+        <p class="mt-12 text-[10px] text-stone-700 tracking-widest">© 2026 STRUCTURAL SENSEI. ALL RIGHTS RESERVED.</p>
     </footer>
 
-    <div id="pythonModal" class="fixed inset-0 z-[60] items-center justify-center bg-black/90 p-4">
-        <div class="max-w-2xl w-full glass-card rounded-xl overflow-hidden border border-white/10">
-            <div class="p-4 bg-dark-grey flex justify-between items-center border-b border-white/5">
-                <span class="text-xs font-mono text-stone-500">automation_logic.py</span>
-                <button onclick="toggleModal()" class="text-stone-500 hover:text-white">&times;</button>
+    <div id="hireMenu" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/95 p-4 backdrop-blur-md">
+        <div class="max-w-lg w-full bg-stone-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center">
+                <h3 class="font-bold uppercase tracking-widest text-xs text-orange-500">The Decision Hub</h3>
+                <button onclick="toggleModal('hireMenu')" class="text-stone-500 hover:text-white text-2xl">&times;</button>
             </div>
-            <div class="p-6 code-container text-[12px] md:text-sm">
+            <div class="p-8 space-y-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="https://www.upwork.com/freelancers/~01d3526b89af44ad3e?mp_source=share" target="_blank" class="p-5 bg-white/5 border border-white/10 rounded-xl hover:border-green-500 transition text-center">
+                        <i class="fa-brands fa-upwork text-green-500 text-2xl mb-2"></i>
+                        <p class="text-[10px] font-bold uppercase tracking-tighter">Upwork Hire</p>
+                    </a>
+                    <a href="https://wico.gumroad.com/" target="_blank" class="p-5 bg-white/5 border border-white/10 rounded-xl hover:border-pink-500 transition text-center">
+                        <i class="fa-solid fa-cart-shopping text-pink-500 text-2xl mb-2"></i>
+                        <p class="text-[10px] font-bold uppercase tracking-tighter">Buy Tools</p>
+                    </a>
+                </div>
+                <hr class="border-white/5">
+                <div>
+                    <label class="block text-[10px] uppercase font-bold text-stone-500 mb-4 tracking-widest text-center">Custom Inquiry: Can I do the job?</label>
+                    <textarea id="jobInquiry" rows="3" class="w-full bg-black border border-white/10 rounded-xl p-4 text-sm text-silk focus:border-red-600 outline-none transition" placeholder="Tell me your technical challenge..."></textarea>
+                    <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                        <button onclick="suggest('Can you automate my messy Excel workflows?')" class="text-[9px] bg-white/5 px-3 py-1.5 rounded-full hover:bg-white/10 border border-white/5">Excel Automation</button>
+                        <button onclick="suggest('I need a custom Streamlit dashboard for my data.')" class="text-[9px] bg-white/5 px-3 py-1.5 rounded-full hover:bg-white/10 border border-white/5">Internal Tools</button>
+                    </div>
+                    <button onclick="sendInquiry()" class="w-full mt-6 bg-red-600 hover:bg-red-500 py-4 rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] transition shadow-lg shadow-red-900/20">
+                        Send Inquiry to Sensei
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pythonModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/90 p-4">
+        <div class="max-w-2xl w-full glass-card rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+            <div class="p-4 bg-stone-900 flex justify-between items-center border-b border-white/5">
+                <span class="text-[10px] font-mono text-stone-500 uppercase tracking-widest">automation_logic.py</span>
+                <button onclick="toggleModal('pythonModal')" class="text-stone-500 hover:text-white">&times;</button>
+            </div>
+            <div class="p-8 code-container text-[12px] md:text-sm overflow-x-auto">
                 <pre class="text-blue-300">
-<span class="text-stone-500"># Efficiency Logic: Structural Sensei Architecture</span>
-<span class="text-purple-400">import</span> automation_tools <span class="text-purple-400">as</span> ss
+<span class="text-stone-500"># Engineering Efficiency Logic</span>
+<span class="text-purple-400">class</span> <span class="text-yellow-400">StructuralSensei</span>:
+    <span class="text-purple-400">def</span> <span class="text-blue-400">__init__</span>(self):
+        self.mindset = <span class="text-orange-400">"Management Precision"</span>
+        self.tools = [<span class="text-orange-400">"Python"</span>, <span class="text-orange-400">"SQL"</span>, <span class="text-orange-400">"Streamlit"</span>]
 
-<span class="text-purple-400">class</span> <span class="text-yellow-400">BusinessOptimizer</span>:
-    <span class="text-purple-400">def</span> <span class="text-blue-400">__init__</span>(self, status):
-        self.mindset = <span class="text-orange-400">"Engineering Precision"</span>
-        self.workflow = status
+    <span class="text-purple-400">def</span> <span class="text-blue-400">optimize_workflow</span>(self, task_type):
+        <span class="text-purple-400">if</span> task_type == <span class="text-orange-400">"Manual"</span>:
+            <span class="text-purple-400">return</span> <span class="text-orange-400">"Automate via Custom Script"</span>
+        <span class="text-purple-400">return</span> <span class="text-orange-400">"Scale Professional Freedom"</span>
 
-    <span class="text-purple-400">def</span> <span class="text-blue-400">break_technical_wall</span>(self):
-        <span class="text-purple-400">if</span> self.workflow == <span class="text-orange-400">"Manual"</span>:
-            <span class="text-purple-400">return</span> ss.apply_python_automation()
-        <span class="text-purple-400">else</span>:
-            <span class="text-purple-400">return</span> <span class="text-orange-400">"Scale to Independence"</span>
-
-<span class="text-stone-500"># Result: 13 years of management experience automated.</span>
-sensei = BusinessOptimizer(<span class="text-orange-400">"Manual"</span>)
-print(sensei.break_technical_wall())
-                </pre>
+<span class="text-stone-500"># Initializing 13 years of expertise...</span>
+sensei = StructuralSensei()
+print(sensei.optimize_workflow(<span class="text-orange-400">"Manual"</span>))</pre>
             </div>
-            <div class="p-4 bg-black text-center">
-                <a href="https://www.upwork.com/freelancers/~018dd551fe9dd4aa2a" class="text-[10px] uppercase font-bold text-red-500 hover:underline">Deploy similar logic for your business →</a>
+            <div class="p-4 bg-red-600/10 text-center border-t border-white/5">
+                <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest">Logic-driven results for every contract.</p>
             </div>
         </div>
     </div>
 
     <script>
-        function toggleModal() {
-            const modal = document.getElementById('pythonModal');
-            modal.classList.toggle('active');
-        }
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('pythonModal');
-            if (event.target == modal) {
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('active');
+            } else {
+                modal.classList.add('hidden');
                 modal.classList.remove('active');
+            }
+        }
+
+        function suggest(text) {
+            document.getElementById('jobInquiry').value = text;
+        }
+
+        function sendInquiry() {
+            const text = document.getElementById('jobInquiry').value;
+            if (!text) {
+                alert("Please describe your project first!");
+                return;
+            }
+            const subject = encodeURIComponent("Structural Sensei: Project Inquiry");
+            const body = encodeURIComponent(text);
+            window.location.href = `mailto:wico.pydev@gmail.com?subject=${subject}&body=${body}`;
+        }
+
+        // Close modals when clicking background
+        window.onclick = function(event) {
+            if (event.target.classList.contains('active')) {
+                event.target.classList.add('hidden');
+                event.target.classList.remove('active');
             }
         }
     </script>
