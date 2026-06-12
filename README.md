@@ -1,4 +1,4 @@
-# StructuralSensei.github.io
+# structuralsensei.cc - StructuralSensei.github.io
 # Structural Sensei | Engineering & Automation Hub
 
 ![Status](https://img.shields.io/badge/Status-Live-success)
