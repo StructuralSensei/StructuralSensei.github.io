@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stress Test | Structural Sensei</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #050505; color: #f5f5f0; font-family: 'Space Grotesk', sans-serif; }
+        .glass-card { background: rgba(26, 26, 26, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-2xl mx-auto mt-20">
+        <h1 class="text-3xl font-bold mb-8 text-center">Structural <span class="text-red-600">Stress Test</span></h1>
+        
+        <div id="game-ui" class="glass-card p-8 rounded-2xl">
+            <div id="status" class="mb-6">
+                <div class="flex justify-between text-xs uppercase font-bold tracking-widest mb-2">
+                    <span>Integrity</span>
+                    <span id="integrity-text">100%</span>
+                </div>
+                <div class="h-2 bg-stone-800 rounded-full overflow-hidden">
+                    <div id="integrity-bar" class="h-full bg-red-600 transition-all duration-500" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div id="question-box">
+                <p id="q-text" class="text-lg mb-6 leading-relaxed">Click Start to begin the analysis.</p>
+                <div id="btn-container" class="grid gap-3">
+                    <button onclick="startGame()" class="bg-red-600 py-4 rounded font-bold uppercase text-xs tracking-widest hover:bg-red-700 transition">Start Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let integrity = 100;
+        let level = 0;
+        const questions = [
+            { q: "Cracks at the bottom-middle of a beam?", a: ["Increase tensile steel", "Increase beam width"], correct: 0 },
+            { q: "Primary runoff parameter in Rational Method?", a: ["Runoff Coefficient (C)", "Manning's n"], correct: 0 },
+            { q: "Cause of pavement fatigue cracking?", a: ["High temperature", "Repeated ESALs"], correct: 1 },
+            { q: "Resisting lateral wind forces?", a: ["Shear Walls", "Thicker Slabs"], correct: 0 }
+        ];
+
+        function updateUI() {
+            document.getElementById('integrity-bar').style.width = integrity + "%";
+            document.getElementById('integrity-text').innerText = integrity + "%";
+            if (integrity <= 0) endGame(false);
+        }
+
+        function startGame() {
+            level = 0; integrity = 100;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (level >= questions.length) return endGame(true);
+            const data = questions[level];
+            document.getElementById('q-text').innerText = data.q;
+            const container = document.getElementById('btn-container');
+            container.innerHTML = '';
+            data.a.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.innerText = opt;
+                btn.className = "bg-white/5 border border-white/10 py-3 rounded hover:border-red-600 transition";
+                btn.onclick = () => checkAnswer(idx === data.correct);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(isCorrect) {
+            if (isCorrect) {
+                integrity = Math.min(100, integrity + 15);
+                level++;
+                showQuestion();
+            } else {
+                integrity -= 25;
+            }
+            updateUI();
+        }
+
+        function endGame(win) {
+            document.getElementById('q-text').innerText = win ? "Mastered! Structural Integrity Maintained." : "Catastrophic Failure!";
+            document.getElementById('btn-container').innerHTML = `<button onclick="startGame()" class="bg-white text-black py-4 rounded font-bold uppercase text-xs">Restart</button>`;
+        }
+    </script>
+</body>
+</html>
