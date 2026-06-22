@@ -2,87 +2,226 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Stress Test | Structural Sensei</title>
+    <title>Structural Sensei | Full Game Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #050505; color: #f5f5f0; font-family: 'Space Grotesk', sans-serif; }
-        .glass-card { background: rgba(26, 26, 26, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        body { background: #050505; color: #f5f5f0; font-family: 'Inter', sans-serif; }
+        .view { display: none; }
+        .active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Animation Track Styles */
+        #track { position: relative; width: 100%; height: 120px; border-bottom: 2px solid #333; margin-bottom: 20px; }
+        #character { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            font-size: 3rem; 
+            transition: left 1s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth walking motion */
+            z-index: 10;
+        }
+        .milestone-marker {
+            position: absolute; bottom: -10px; width: 4px; height: 20px; background: #666;
+        }
     </style>
 </head>
-<body class="p-6">
-    <div class="max-w-2xl mx-auto mt-20">
-        <h1 class="text-3xl font-bold mb-8 text-center">Structural <span class="text-red-600">Stress Test</span></h1>
-        
-        <div id="game-ui" class="glass-card p-8 rounded-2xl">
-            <div id="status" class="mb-6">
-                <div class="flex justify-between text-xs uppercase font-bold tracking-widest mb-2">
-                    <span>Integrity</span>
-                    <span id="integrity-text">100%</span>
-                </div>
-                <div class="h-2 bg-stone-800 rounded-full overflow-hidden">
-                    <div id="integrity-bar" class="h-full bg-red-600 transition-all duration-500" style="width: 100%"></div>
-                </div>
-            </div>
+<body class="p-4 md:p-8">
 
-            <div id="question-box">
-                <p id="q-text" class="text-lg mb-6 leading-relaxed">Click Start to begin the analysis.</p>
-                <div id="btn-container" class="grid gap-3">
-                    <button onclick="startGame()" class="bg-red-600 py-4 rounded font-bold uppercase text-xs tracking-widest hover:bg-red-700 transition">Start Test</button>
-                </div>
-            </div>
+    <div id="menu" class="view active max-w-2xl mx-auto text-center mt-12 md:mt-24">
+        <h1 class="text-5xl font-bold mb-4 tracking-tighter">SENSEI <span class="text-red-600">HUB</span></h1>
+        <p class="text-stone-400 mb-12 uppercase tracking-widest text-xs">Engineering · STEM · Mastery</p>
+        
+        <div class="grid md:grid-cols-3 gap-4">
+            <button onclick="loadQuiz('hard')" class="glass p-8 hover:bg-red-900/50 hover:border-red-500 transition rounded-xl flex flex-col items-center gap-3">
+                <span class="text-3xl">⚙️</span>
+                <span class="font-bold text-sm tracking-widest">HARD MODE</span>
+            </button>
+            <button onclick="loadQuiz('gen')" class="glass p-8 hover:bg-orange-900/50 hover:border-orange-500 transition rounded-xl flex flex-col items-center gap-3">
+                <span class="text-3xl">🧠</span>
+                <span class="font-bold text-sm tracking-widest">STEM TRIVIA</span>
+            </button>
+            <button onclick="loadStory()" class="glass p-8 hover:bg-blue-900/50 hover:border-blue-500 transition rounded-xl flex flex-col items-center gap-3">
+                <span class="text-3xl">🛤️</span>
+                <span class="font-bold text-sm tracking-widest">THE JOURNEY</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="quiz-view" class="view max-w-xl mx-auto glass p-8 rounded-xl mt-10 shadow-2xl">
+        <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+            <h2 id="quiz-title" class="text-xl font-bold uppercase tracking-widest text-red-500">Quiz</h2>
+            <span id="score-counter" class="text-sm font-mono text-stone-400">Score: 0 / 10</span>
+        </div>
+        
+        <div id="q-text" class="text-lg md:text-xl mb-8 leading-relaxed font-medium"></div>
+        <div id="btns" class="grid gap-3 mb-8"></div>
+        
+        <button onclick="switchView('menu')" class="text-stone-500 hover:text-white text-xs uppercase tracking-widest transition">← Abandon Protocol</button>
+    </div>
+
+    <div id="story-view" class="view max-w-3xl mx-auto glass p-8 rounded-xl mt-10 shadow-2xl">
+        <h2 class="text-xl font-bold uppercase tracking-widest text-blue-500 mb-8 text-center">Path to Mastery</h2>
+        
+        <div id="track">
+            <div id="character">🚶</div>
+            <div class="milestone-marker" style="left: 0%;"></div>
+            <div class="milestone-marker" style="left: 33%;"></div>
+            <div class="milestone-marker" style="left: 66%;"></div>
+            <div class="milestone-marker" style="left: 95%;"></div>
+        </div>
+
+        <div class="text-center mt-8">
+            <h3 id="story-title" class="text-2xl font-bold mb-2">Stage 1: The Foundation</h3>
+            <p id="story-text" class="text-stone-400 h-16">Mastering the fundamentals of static loads and material strength.</p>
+            
+            <button id="walk-btn" onclick="advanceJourney()" class="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded font-bold uppercase tracking-widest transition mt-4 w-full md:w-auto">
+                Advance Career
+            </button>
+        </div>
+        
+        <div class="mt-8 text-center border-t border-white/10 pt-6">
+            <button onclick="switchView('menu')" class="text-stone-500 hover:text-white text-xs uppercase tracking-widest transition">← Return to Hub</button>
         </div>
     </div>
 
     <script>
-        let integrity = 100;
-        let level = 0;
-        const questions = [
-            { q: "Cracks at the bottom-middle of a beam?", a: ["Increase tensile steel", "Increase beam width"], correct: 0 },
-            { q: "Primary runoff parameter in Rational Method?", a: ["Runoff Coefficient (C)", "Manning's n"], correct: 0 },
-            { q: "Cause of pavement fatigue cracking?", a: ["High temperature", "Repeated ESALs"], correct: 1 },
-            { q: "Resisting lateral wind forces?", a: ["Shear Walls", "Thicker Slabs"], correct: 0 }
-        ];
+        // --- 1. DATA DICTIONARY ---
+        const data = {
+            hard: [
+                {q: "STRUCTURAL: What is the primary factor in Euler's Column Buckling formula (π²EI/L²)?", a: ["Tensile Load", "Effective Length", "Shear Modulus", "Torsional Yield"], c: 1},
+                {q: "FLUIDS: In open channel flow, which equation relies heavily on the roughness coefficient 'n'?", a: ["Bernoulli's", "Manning's Equation", "Darcy-Weisbach", "Reynold's Number"], c: 1},
+                {q: "AUTOMATION: In Python, what is the primary purpose of the __init__ method within a class structure?", a: ["To delete objects", "To initialize attributes of an object", "To import external libraries", "To compile the script"], c: 1},
+                {q: "MATERIALS: The point on a stress-strain curve where a material undergoes irreversible deformation is called?", a: ["Ultimate Tensile Strength", "Modulus of Elasticity", "Yield Point", "Fracture Point"], c: 2},
+                {q: "HYDROLOGY: In the Rational Method (Q = CiA), what does the 'C' represent?", a: ["Catchment Area", "Capillary Action", "Runoff Coefficient", "Channel Velocity"], c: 2},
+                {q: "GEOTECH: Which tool is used graphically to determine principal stresses and maximum shear stress in soil?", a: ["Mohr's Circle", "Atterberg Limits", "Proctor Curve", "Boussinesq Equation"], c: 0},
+                {q: "ELECTRICAL: According to Ohm's Law, Voltage (V) is equal to?", a: "Current / Resistance", a: ["Current x Resistance", "Power x Time", "Resistance / Current", "Current x Resistance"], c: 3},
+                {q: "COMPUTER SCIENCE: What is the time complexity (Big O) of a binary search algorithm?", a: ["O(1)", "O(n)", "O(log n)", "O(n²)"], c: 2},
+                {q: "MECHANICAL: The Second Law of Thermodynamics states that the total entropy of an isolated system can never?", a: ["Increase", "Decrease", "Equal zero", "Generate heat"], c: 1},
+                {q: "STRUCTURAL: The mathematical derivative of the Bending Moment diagram gives you what?", a: ["Deflection", "Rotation", "Axial Force", "Shear Force"], c: 3}
+            ],
+            gen: [
+                {q: "What is the primary alloy element combined with Iron to create Steel?", a: ["Zinc", "Carbon", "Copper", "Titanium"], c: 1},
+                {q: "Who is widely considered the first computer programmer?", a: ["Alan Turing", "Bill Gates", "Ada Lovelace", "Steve Wozniak"], c: 2},
+                {q: "What does the acronym S.T.E.M. stand for?", a: ["Science, Technology, Engineering, Math", "Software, Testing, Evaluation, Metrics", "Systems, Technology, Environment, Mechanics", "Science, Teaching, Education, Math"], c: 0},
+                {q: "Currently, what is the tallest man-made structure in the world?", a: ["Shanghai Tower", "Merdeka 118", "Burj Khalifa", "One World Trade Center"], c: 2},
+                {q: "What is the hardest known natural mineral on Earth?", a: ["Quartz", "Graphene", "Diamond", "Tungsten"], c: 2},
+                {q: "Who created the Python programming language in 1991?", a: ["Linus Torvalds", "Guido van Rossum", "James Gosling", "Dennis Ritchie"], c: 1},
+                {q: "What is the most abundant gas in the Earth's atmosphere?", a: ["Oxygen", "Carbon Dioxide", "Hydrogen", "Nitrogen"], c: 3},
+                {q: "Force equals Mass times Acceleration (F=ma) is which of Newton's laws?", a: ["First Law", "Second Law", "Third Law", "Law of Gravitation"], c: 1},
+                {q: "Which ancient Greek mathematician is known as the 'Father of Geometry'?", a: ["Pythagoras", "Archimedes", "Euclid", "Socrates"], c: 2},
+                {q: "Approximately how fast does light travel in a vacuum?", a: ["300,000 km/s", "150,000 km/s", "1,000,000 km/s", "343 m/s"], c: 0}
+            ]
+        };
 
-        function updateUI() {
-            document.getElementById('integrity-bar').style.width = integrity + "%";
-            document.getElementById('integrity-text').innerText = integrity + "%";
-            if (integrity <= 0) endGame(false);
+        // --- 2. GAME STATE LOGIC ---
+        let currentType = '';
+        let currentQIdx = 0;
+        let score = 0;
+
+        function switchView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
-        function startGame() {
-            level = 0; integrity = 100;
-            showQuestion();
+        // --- 3. QUIZ ENGINE ---
+        function loadQuiz(type) {
+            currentType = type;
+            currentQIdx = 0;
+            score = 0;
+            document.getElementById('quiz-title').innerText = type === 'hard' ? "Hard Mode Protocol" : "STEM Trivia Protocol";
+            updateScoreDisplay();
+            switchView('quiz-view');
+            renderQuestion();
         }
 
-        function showQuestion() {
-            if (level >= questions.length) return endGame(true);
-            const data = questions[level];
-            document.getElementById('q-text').innerText = data.q;
-            const container = document.getElementById('btn-container');
-            container.innerHTML = '';
-            data.a.forEach((opt, idx) => {
+        function updateScoreDisplay() {
+            document.getElementById('score-counter').innerText = `Score: ${score} / 10`;
+        }
+
+        function renderQuestion() {
+            const quizData = data[currentType];
+            
+            // Check for end of game
+            if (currentQIdx >= quizData.length) {
+                document.getElementById('q-text').innerHTML = `<span class="text-green-500">Protocol Complete.</span> Final Score: ${score}/10.`;
+                document.getElementById('btns').innerHTML = `<button onclick="loadQuiz('${currentType}')" class="glass p-4 text-center hover:bg-white/10">Restart Test</button>`;
+                return;
+            }
+
+            const q = quizData[currentQIdx];
+            document.getElementById('q-text').innerText = `${currentQIdx + 1}. ${q.q}`;
+            
+            const btnContainer = document.getElementById('btns');
+            btnContainer.innerHTML = '';
+            
+            q.a.forEach((opt, index) => {
                 const btn = document.createElement('button');
+                btn.className = 'glass p-4 rounded hover:bg-white/10 hover:border-white/40 text-left transition';
                 btn.innerText = opt;
-                btn.className = "bg-white/5 border border-white/10 py-3 rounded hover:border-red-600 transition";
-                btn.onclick = () => checkAnswer(idx === data.correct);
-                container.appendChild(btn);
+                btn.onclick = () => handleAnswer(index, q.c);
+                btnContainer.appendChild(btn);
             });
         }
 
-        function checkAnswer(isCorrect) {
-            if (isCorrect) {
-                integrity = Math.min(100, integrity + 15);
-                level++;
-                showQuestion();
-            } else {
-                integrity -= 25;
-            }
-            updateUI();
+        function handleAnswer(selectedIndex, correctIndex) {
+            if (selectedIndex === correctIndex) score++;
+            currentQIdx++;
+            updateScoreDisplay();
+            renderQuestion();
         }
 
-        function endGame(win) {
-            document.getElementById('q-text').innerText = win ? "Mastered! Structural Integrity Maintained." : "Catastrophic Failure!";
-            document.getElementById('btn-container').innerHTML = `<button onclick="startGame()" class="bg-white text-black py-4 rounded font-bold uppercase text-xs">Restart</button>`;
+        // --- 4. INTERACTIVE STORY ENGINE ---
+        const journeyStages = [
+            { pos: "0%", icon: "👷", title: "Stage 1: The Foundation", text: "Mastering the fundamentals of structural engineering, calculations, and concrete." },
+            { pos: "33%", icon: "💻", title: "Stage 2: The Automator", text: "Hitting the 'Technical Wall'. Discovering Python to write scripts and automate repetitive design tasks." },
+            { pos: "66%", icon: "🚀", title: "Stage 3: Systems Architect", text: "Bridging disciplines. Building high-level systems, web apps, and data pipelines for infrastructure." },
+            { pos: "95%", icon: "🧘", title: "Stage 4: The Sensei", text: "Achieving leverage. Translating technical mastery into financial independence and teaching others." }
+        ];
+        
+        let journeyStep = 0;
+
+        function loadStory() {
+            journeyStep = 0;
+            updateJourneyUI();
+            switchView('story-view');
+        }
+
+        function advanceJourney() {
+            if (journeyStep < journeyStages.length - 1) {
+                journeyStep++;
+                updateJourneyUI();
+            } else {
+                // Loop back or finish
+                alert("You have reached mastery. Now, teach the next generation.");
+                journeyStep = 0;
+                updateJourneyUI();
+            }
+        }
+
+        function updateJourneyUI() {
+            const stage = journeyStages[journeyStep];
+            const character = document.getElementById('character');
+            
+            // Move character physically across the track
+            character.style.left = stage.pos;
+            
+            // Update text after a slight delay to match walking animation
+            setTimeout(() => {
+                character.innerText = stage.icon;
+                document.getElementById('story-title').innerText = stage.title;
+                document.getElementById('story-text').innerText = stage.text;
+                
+                const btn = document.getElementById('walk-btn');
+                if (journeyStep === journeyStages.length - 1) {
+                    btn.innerText = "Restart Journey";
+                    btn.classList.replace('bg-blue-600', 'bg-green-600');
+                } else {
+                    btn.innerText = "Advance Career";
+                    btn.classList.replace('bg-green-600', 'bg-blue-600');
+                }
+            }, 300); // 300ms delay feels natural
         }
     </script>
 </body>
