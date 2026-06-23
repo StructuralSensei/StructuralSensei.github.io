@@ -1,5 +1,4 @@
-[My Portfolio Website](https://www.structuralsensei.cc)
-[github pages](https://StructuralSensei.github.io)
+[Check out My Portfolio Website](https://www.structuralsensei.cc)
 # Structural Sensei | Engineering & Automation Hub
 
 ![Status](https://img.shields.io/badge/Status-Live-success)
