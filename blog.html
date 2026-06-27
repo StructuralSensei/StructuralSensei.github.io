@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structural Sensei | The Dojo Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --silk: #f5f5f0;
+            --brand-red: #d90429;
+            --brand-orange: #f3722c;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #000;
+            color: var(--silk);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, var(--brand-red), var(--brand-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-card {
+            background: rgba(26, 26, 26, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="selection:bg-red-600 selection:text-white">
+
+    <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center bg-black/80 backdrop-blur-md border-b border-white/5">
+        <div class="font-bold tracking-tighter uppercase text-sm">
+            <a href="index.html">Structural<span class="text-red-600">Sensei</span></a>
+        </div>
+        <div class="flex gap-6 text-[10px] uppercase font-bold tracking-widest">
+            <a href="index.html" class="hover:text-orange-500 transition"><i class="fa-solid fa-arrow-left mr-1"></i> Back to Hub</a>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-4xl mx-auto">
+        <div class="text-center mb-16">
+            <div class="inline-block px-3 py-1 mb-4 text-[9px] font-bold tracking-[0.3em] text-red-500 uppercase border border-red-500/20 rounded">
+                Dynamic Weekly Briefing
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold uppercase tracking-tight">The <span class="gradient-text">Dojo Blog</span></h1>
+            <p class="text-stone-400 text-sm max-w-xl mx-auto mt-4">
+                Analyzing trends and historic engineering precision through the calculated vision of a Karateka.
+            </p>
+        </div>
+
+        <div id="active-post-container" class="space-y-8">
+            <div class="text-center py-12 text-stone-500 font-mono text-xs">
+                <i class="fa-solid fa-spinner animate-spin mr-2"></i>Accessing data layer arrays via Cloudflare Edge...
+            </div>
+        </div>
+
+        <div id="archive-section-container" class="mt-16 pt-8 border-t border-white/5 hidden">
+            <h3 class="text-xs uppercase tracking-[0.3em] font-bold text-stone-400 mb-6">Previous Strategic Lessons</h3>
+            <div id="archive-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+    </main>
+
+    <footer class="py-10 text-center text-stone-600 text-xs border-t border-white/5">
+        &copy; 2026 Structural Sensei. Built for Code, Wealth, and Discipline.
+    </footer>
+
+    <script>
+        // Replace this with your actual live Cloudflare Worker URL
+        const API_ENDPOINT = "https://sensei-blog-api.yoursubdomain.workers.dev";
+
+        async function initializeDojoBlog() {
+            try {
+                // Read incoming address bar parameters to support unique direct links
+                const urlParams = new URLSearchParams(window.location.search);
+                const targetSlug = urlParams.get('slug');
+
+                // Fetch full historic array from Cloudflare D1
+                const response = await fetch(API_ENDPOINT);
+                if (!response.ok) throw new Error('Data pipeline connection timed out.');
+
+                const allPosts = await response.json();
+
+                if (!allPosts || allPosts.length === 0) {
+                    document.getElementById('active-post-container').innerHTML = `
+                        <div class="text-center py-12 text-stone-500 font-mono text-xs">
+                            <i class="fa-solid fa-box-open mr-2"></i>Dojo library empty. Awaiting pipeline cycle.
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Identify target post: Use url slug choice if valid, fallback to newest item [0]
+                let featuredPost = allPosts[0];
+                if (targetSlug) {
+                    const matched = allPosts.find(p => p.slug === targetSlug);
+                    if (matched) {
+                        featuredPost = matched;
+                    }
+                }
+
+                // Format publication date string nicely
+                const formattedDate = new Date(featuredPost.published_date).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+
+                // 1. Inject Primary Article Payload into DOM
+                document.getElementById('active-post-container').innerHTML = `
+                    <article class="glass-card p-8 rounded-2xl border border-white/5">
+                        <div class="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider text-stone-500 mb-6">
+                            <span><i class="fa-regular fa-calendar-days mr-1"></i> ${formattedDate}</span>
+                            <button onclick="sharePost('${featuredPost.slug}')" class="text-orange-500 hover:text-orange-400 transition flex items-center gap-1">
+                                <i class="fa-solid fa-share-nodes"></i> Share Lesson
+                            </button>
+                        </div>
+
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 uppercase tracking-tight leading-snug">
+                            ${featuredPost.title}
+                        </h2>
+
+                        <div class="space-y-6 text-stone-300 text-sm leading-relaxed">
+                            <div>
+                                <h4 class="text-xs uppercase tracking-widest text-red-500 font-bold mb-2">The Modern Trend</h4>
+                                <p>${featuredPost.trend}</p>
+                            </div>
+
+                            <div class="pt-2">
+                                <h4 class="text-xs uppercase tracking-widest text-orange-400 font-bold mb-2">Technical Analysis & History</h4>
+                                <p>${featuredPost.history}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 p-6 bg-gradient-to-r from-orange-500/10 to-transparent border-l-2 border-orange-500 rounded-r-xl">
+                            <div class="text-xs uppercase font-bold tracking-widest text-orange-500 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-user-ninja"></i> Karateka Execution Vector
+                            </div>
+                            <p class="text-stone-300 text-xs italic leading-relaxed">
+                                ${featuredPost.vector}
+                            </p>
+                        </div>
+                    </article>
+                `;
+
+                // 2. Build the History Index Navigation Grid (Excluding the currently featured post)
+                const historicalArchive = allPosts.filter(p => p.slug !== featuredPost.slug);
+
+                if (historicalArchive.length > 0) {
+                    let archiveHtml = '';
+                    historicalArchive.forEach(post => {
+                        const archDate = new Date(post.published_date).toLocaleDateString('en-US', {
+                            month: 'short', year: 'numeric'
+                        });
+                        archiveHtml += `
+                            <a href="blog.html?slug=${post.slug}" class="glass-card p-5 rounded-xl block hover:border-orange-500/30 transition group">
+                                <span class="text-[9px] font-mono text-stone-500 block mb-1">${archDate}</span>
+                                <h5 class="text-xs font-bold uppercase text-stone-200 group-hover:text-orange-400 transition tracking-tight truncate">${post.title}</h5>
+                            </a>
+                        `;
+                    });
+                    document.getElementById('archive-grid').innerHTML = archiveHtml;
+                    document.getElementById('archive-section-container').classList.remove('hidden');
+                }
+
+            } catch (error) {
+                document.getElementById('active-post-container').innerHTML = `
+                    <div class="glass-card p-6 rounded-xl border border-red-500/20 text-center font-mono text-[11px] text-red-500">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> Connection to cloud database failed. Resetting pipeline loops.
+                    </div>
+                `;
+            }
+        }
+
+        // Clip share link immediately to user clipboard
+        function sharePost(slug) {
+            const shareUrl = `${window.location.origin}${window.location.pathname}?slug=${slug}`;
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                alert("Strategic URL copied to clipboard. Transmission clear.");
+            }).catch(() => {
+                alert("Clipboard access blocked. Copy address manually: " + shareUrl);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', initializeDojoBlog);
+    </script>
+</body>
+</html>

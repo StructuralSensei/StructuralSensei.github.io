@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local Virtual Environments
+venv/
+ENV/
+env/
+.env
+
+# PyCharm / JetBrains IDE internal settings
+.idea/
+*.iws
+*.iml
+
+# Local database files or runtime artifacts
+*.db
+*.sqlite3
+blog_data.json
+
+# Operating System files
+.DS_Store
+Thumbs.db
