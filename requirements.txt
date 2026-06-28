@@ -1,0 +1,9 @@
+# =====================================================================
+# Structural Sensei Platform - Core Dependency Manifest
+# =====================================================================
+
+# AI Core Engine: Formulates the weekly engineering insight payload via GenAI
+google-genai>=1.0.0
+
+# Edge Telemetry: Transmits generated data objects seamlessly to the Cloudflare Worker API
+requests>=2.34.0

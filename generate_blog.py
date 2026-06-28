@@ -1,136 +1,113 @@
 import os
-import xml.etree.ElementTree as ET
-import json
 import re
+import json
 import requests
-from datetime import datetime
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_google_genai import ChatGoogleGenerativeAI
+from datetime import datetime, timezone
+from pathlib import Path
+from google import genai
 
-# CLOUDFLARE CONFIGURATION
-CLOUDFLARE_WORKER_URL = "https://sensei-blog-api.wico-dev.workers.dev"
+API_ENDPOINT = "https://sensei-blog-api.wico-pydev.workers.dev/api/posts"
+KEY_PATH = Path(__file__).parent / "assets" / "api_key.txt"
 
+if os.environ.get("GOOGLE_API_KEY"):
+    GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+elif KEY_PATH.exists():
+    GOOGLE_API_KEY = KEY_PATH.read_text().strip()
+    os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
+else:
+    print("[-] Halting: GOOGLE_API_KEY environment variable or assets/api_key.txt not found.")
+    print("[-] Generation failed. Exiting pipeline loop.")
+    exit(0)
 
-def get_latest_engineering_trend():
-    """Fetches the top trend from Google News RSS without requiring an API key."""
-    search_keywords = '"structural engineering" OR "megastructures" OR "civil engineering technology"'
-    rss_url = f"https://news.google.com/rss/search?q={requests.utils.quote(search_keywords)}&hl=en-US&gl=US&ceid=US:en"
-
-    try:
-        response = requests.get(rss_url, timeout=15)
-        response.raise_for_status()
-        root = ET.fromstring(response.content)
-
-        item = root.find(".//item")
-        if item is not None:
-            return {
-                "title": item.find("title").text,
-                "link": item.find("link").text,
-                "pubDate": item.find("pubDate").text
-            }
-    except Exception as e:
-        print(f"[-] Failed to query news trend pipeline: {e}")
-    return None
+print("[+] Initializing weekly Dojo content automation engine via Gemini...")
+client = genai.Client(api_key=GOOGLE_API_KEY)
 
 
-def generate_sensei_insight(trend_data):
-    """Uses LangChain and Google Gemini to synthesize raw news into the brand persona."""
-    api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key:
-        print("[-] Halting: GOOGLE_API_KEY environment variable is not set.")
-        return None
+def fetch_industry_trend():
+    # Ask Gemini to browse or identify the latest structural engineering trends
+    # using a very simple prompt before the main synthesis
+    discovery_prompt = "Identify the most significant, current news topic or trend in Structural Engineering for this week. Return ONLY the trend name and context in one sentence."
 
-    # Initialize the Gemini engine via LangChain
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
-        temperature=0.7,
-        google_api_key=api_key
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=discovery_prompt
     )
-
-    system_prompt = (
-        "You are Structural Sensei (@StructuralSensei), an elite technical manager, civil engineering professional, "
-        "and disciplined Karateka. Your mission is to bridge technical engineering theory with deep martial arts philosophy.\n\n"
-        "Your tone must be authoritative, highly analytical, clear, concise, and deeply grounded in discipline. Avoid generic corporate fluff.\n\n"
-        "You must output exactly a JSON object containing the following keys:\n"
-        "- 'blogTitle': A striking, unique title blending the engineering topic with a martial arts conceptual framework.\n"
-        "- 'modernTrend': A breakdown of the current engineering event or breakthrough provided in the news context.\n"
-        "- 'technicalHistory': The deeper scientific, materials science, or structural history behind this phenomenon.\n"
-        "- 'karatekaVector': The Sensei Insight—how this specific engineering problem maps directly onto traditional Karate principles, balance, stances, mechanics, or discipline."
-    )
-
-    human_prompt = (
-        "Analyze this current industry trend:\n"
-        "Raw Title: {trend_title}\n"
-        "Source Link: {trend_link}\n"
-        "Published Date: {trend_date}\n\n"
-        "Generate a highly specific, unique weekly article matching your structural rules. "
-        "Ensure your output is valid, raw JSON only. Do not wrap it in markdown code blocks like ```json."
-    )
-
-    prompt_template = ChatPromptTemplate.from_messages([
-        ("system", system_prompt),
-        ("human", human_prompt)
-    ])
-
-    chain = prompt_template | llm
-
-    try:
-        execution_input = {
-            "trend_title": trend_data["title"],
-            "trend_link": trend_data["link"],
-            "trend_date": trend_data["pubDate"]
-        }
-        response = chain.invoke(execution_input)
-
-        clean_content = response.content.strip()
-        if clean_content.startswith("```json"):
-            clean_content = clean_content.replace("```json", "").replace("```", "").strip()
-
-        return json.loads(clean_content)
-    except Exception as e:
-        print(f"[-] Gemini generation or parsing anomaly: {e}")
-        return None
+    trend = response.text.strip()
+    print(f"[+] Dynamically discovered trend: {trend}")
+    return trend
 
 
-def main():
-    print("[+] Initializing weekly Dojo content automation engine via Gemini...")
-    trend = get_latest_engineering_trend()
-
-    if not trend:
-        print("[-] No active trend parsed. Exiting pipeline loop.")
-        return
-
-    print(f"[+] Target trend identified: {trend['title']}")
-    blog_payload = generate_sensei_insight(trend)
-
-    if not blog_payload:
-        print("[-] Generation failed. Exiting pipeline loop.")
-        return
-
-    raw_title = blog_payload["blogTitle"]
-    slug = raw_title.lower()
+def generate_slug(title):
+    slug = title.lower()
     slug = re.sub(r'[^a-z0-9\s-]', '', slug)
     slug = re.sub(r'[\s-]+', '-', slug).strip('-')
+    return slug
 
-    worker_payload = {
-        "slug": slug,
-        "title": blog_payload["blogTitle"],
-        "trend": blog_payload["modernTrend"],
-        "history": blog_payload["technicalHistory"],
-        "vector": blog_payload["karatekaVector"],
-        "published_date": datetime.now().strftime("%Y-%m-%d")
-    }
 
-    print(f"[+] Transmitting generated lesson '{raw_title}' to Cloudflare edge network...")
+def run_pipeline():
     try:
-        response = requests.post(CLOUDFLARE_WORKER_URL, json=worker_payload, timeout=15)
-        if response.status_code == 200 or response.status_code == 201:
+        current_trend = fetch_industry_trend()
+
+        prompt = f"""
+        You are Structural Sensei, an expert engineering technical manager and efficiency architect.
+        Analyze this current market or technical trend: "{current_trend}"
+
+        Synthesize a brilliant, high-value educational directive for professional engineers.
+        You MUST respond strictly with raw, valid JSON matching the exact schema definition below. 
+        Do not wrap your output in markdown formatting blocks, just return the raw text object.
+
+        Required JSON Layout Structure:
+        {{
+            "title": "A powerful, definitive title blending structural engineering concepts with automation/career strategy.",
+            "history": "Deep technical analysis or historical background context explaining the core engineering concepts behind this trend.",
+            "vector": "An actionable, advanced system analysis breakdown, complete with practical implementation logic, python optimization strategies, or geometric formula considerations to automate or solve this challenge."
+        }}
+        """
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+        response_text = response.text.strip()
+
+        # UI-Safe Markdown Stripping: Bypasses the chat renderer bug
+        bt = "`" * 3
+        if response_text.startswith(bt):
+            response_text = response_text.replace(bt + "json", "").replace(bt, "").strip()
+
+        payload_data = json.loads(response_text)
+
+        title = payload_data.get("title", "Untitled Mastery Document")
+        slug = generate_slug(title)
+        published_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+
+        final_payload = {
+            "slug": slug,
+            "title": title,
+            "trend": current_trend,
+            "history": payload_data.get("history", ""),
+            "vector": payload_data.get("vector", ""),
+            "published_date": published_date
+        }
+
+        print(f"[+] Transmitting generated lesson '{title}' to Cloudflare edge network...")
+
+        headers = {"Content-Type": "application/json"}
+        cf_response = requests.post(API_ENDPOINT, json=final_payload, headers=headers)
+
+        if cf_response.status_code == 201:
             print(f"[+] Execution complete. Post live at D1 database storage via slug: {slug}")
         else:
-            print(f"[-] Cloudflare API rejected package. Status: {response.status_code}")
+            print(f"[-] Cloudflare edge transmission error (Status: {cf_response.status_code}): {cf_response.text}")
+            print("[-] Halting pipeline loops.")
+
+    except json.JSONDecodeError:
+        print("[-] System Error: Failed to parse clean structural JSON from Gemini engine.")
+        print(f"[-] Raw capture dump: {response_text}")
     except Exception as e:
-        print(f"[-] Direct connection to Cloudflare worker broke down: {e}")
+        print(f"[-] Critical Pipeline Exception: {str(e)}")
+        print("[-] Exiting runtime loop.")
 
 
 if __name__ == "__main__":
-    main()
+    run_pipeline()
