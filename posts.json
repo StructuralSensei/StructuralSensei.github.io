@@ -1,0 +1,18 @@
+[
+  {
+    "slug": "precision-concrete-mix-automation",
+    "published_date": "2026-07-24",
+    "title": "Automating Concrete Mix Design & Geotechnical Analytics with Python",
+    "trend": "Civil engineering labs are rapidly transitioning away from error-prone spreadsheet data entry toward automated Python pipelines for soil and concrete analytics.",
+    "history": "Historically, concrete compressive strength testing and geotechnical grading calculations required multi-step manual recording. Modern scripts validate water-to-cement ratios and yield limits in milliseconds.",
+    "vector": "Execute lean, deterministic automation algorithms. Eliminate manual verification lag while maintaining strict compliance with engineering standards."
+  },
+  {
+    "slug": "browser-based-quantity-takeoffs",
+    "published_date": "2026-07-15",
+    "title": "Streamlining Spatial Estimation with Web Extensions",
+    "trend": "Web-based linear, area, and count estimation tools are replacing heavy desktop CAD software for initial bill-of-quantities (BOQ) drafts.",
+    "history": "Traditional takeoff routines involved manual digitizing boards or expensive desktop suites. Injecting lightweight canvas overlay scripts onto active browser tabs provides instantaneous spatial measurement.",
+    "vector": "Maintain absolute operational discipline: eliminate software bloat while maximizing measurement precision and local data security."
+  }
+]
