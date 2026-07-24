@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Sensei Takeoff & Structural Sensei</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+
+        :root {
+            --silk: #f5f5f0;
+            --brand-red: #d90429;
+            --brand-orange: #f3722c;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #000;
+            color: var(--silk);
+            scroll-behavior: smooth;
+        }
+
+        .glass-card {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="selection:bg-red-600 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 px-4 sm:px-6 py-4 flex justify-between items-center bg-black/80 backdrop-blur-md border-b border-white/5">
+        <a href="index.html" class="font-bold tracking-tighter uppercase text-xs sm:text-sm">Structural<span class="text-red-600">Sensei</span></a>
+        <div class="flex gap-4 text-[10px] uppercase font-bold tracking-widest items-center">
+            <a href="index.html" class="hover:text-orange-500 transition">← Back to Main Hub</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-20 px-6 max-w-4xl mx-auto">
+        <div class="mb-12 border-b border-white/10 pb-8">
+            <div class="inline-block px-3 py-1 mb-4 text-[10px] font-bold tracking-[0.2em] text-red-500 uppercase border border-red-500/30 rounded">
+                Legal & Security Standard
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
+            <p class="text-sm text-stone-400">Effective Date: July 24, 2026 | Last Updated: July 2026</p>
+        </div>
+
+        <div class="space-y-10 text-stone-300 text-sm leading-relaxed">
+
+            <!-- Overview -->
+            <section class="glass-card p-8 rounded-2xl border-l-4 border-red-600">
+                <h2 class="text-white font-bold text-lg mb-3 uppercase tracking-wider">1. Overview & Single Purpose Statement</h2>
+                <p class="mb-3">
+                    This Privacy Policy applies to the <strong>Structural Sensei</strong> website (<code class="text-red-400">structuralsensei.pages.dev</code>) and the <strong>Sensei Takeoff</strong> Chrome Extension.
+                </p>
+                <p>
+                    <strong>Sensei Takeoff</strong> is an engineering productivity tool designed exclusively to enable web-based linear, area, and count quantity takeoffs with local export capabilities (Excel BOQ generation). We adhere strictly to the Chrome Web Store Developer Program Policies, including the User Data Limited Use Disclosure.
+                </p>
+            </section>
+
+            <!-- Data Collection -->
+            <section class="space-y-4">
+                <h2 class="text-white font-bold text-lg uppercase tracking-wider text-red-500">2. Data Collection & Handling</h2>
+                <p>
+                    We believe in total operational data minimization:
+                </p>
+                <ul class="list-disc pl-6 space-y-2 text-stone-400">
+                    <li><strong>No Personal Identifiable Information (PII) Tracking:</strong> Sensei Takeoff does not harvest, log, or track your personal details, browsing history, keystrokes, or network credentials.</li>
+                    <li><strong>Local Measurement Data:</strong> All takeoff measurements, coordinate math, scale calibrations, and bill-of-quantities calculations remain strictly on your local device memory or within your browser's local extension storage.</li>
+                    <li><strong>Contact Forms:</strong> When you submit a custom project inquiry via our website, your name, email, and message are transmitted securely via HTTP POST directly to our email system (<code class="text-red-400">wico.pydev@gmail.com</code>) solely to fulfill your service inquiry.</li>
+                </ul>
+            </section>
+
+            <!-- Chrome Permissions -->
+            <section class="space-y-4">
+                <h2 class="text-white font-bold text-lg uppercase tracking-wider text-red-500">3. Chrome Extension Permissions Justification</h2>
+                <p>Sensei Takeoff requests only the minimal necessary browser permissions required to operate:</p>
+
+                <div class="grid md:grid-cols-2 gap-4 pt-2">
+                    <div class="glass-card p-5 rounded-xl">
+                        <h3 class="text-white font-bold text-xs uppercase mb-2 text-orange-400">activeTab</h3>
+                        <p class="text-stone-400 text-xs">Used temporarily to inject the visual measurement overlay and canvas calculation interface on the document you are actively taking off.</p>
+                    </div>
+                    <div class="glass-card p-5 rounded-xl">
+                        <h3 class="text-white font-bold text-xs uppercase mb-2 text-orange-400">storage</h3>
+                        <p class="text-stone-400 text-xs">Used to save your local scale calibration settings and temporary takeoff totals locally on your device so work is not lost across page refreshes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Guarantee -->
+            <section class="glass-card p-8 rounded-2xl border-l-4 border-orange-500">
+                <h2 class="text-white font-bold text-lg mb-3 uppercase tracking-wider">4. Zero Data Sales & Sharing Guarantee</h2>
+                <p class="mb-3">
+                    <strong>We do not sell, trade, lease, or monetize user data under any circumstances.</strong>
+                </p>
+                <p class="text-stone-400 text-xs leading-relaxed">
+                    Data collected via the website or saved within the Chrome Extension is never used for targeted advertising, broker transfers, credit evaluation, or third-party tracking.
+                </p>
+            </section>
+
+            <!-- Remote Code -->
+            <section class="space-y-4">
+                <h2 class="text-white font-bold text-lg uppercase tracking-wider text-red-500">5. Execution of Code & Security</h2>
+                <p>
+                    Sensei Takeoff contains no obfuscated scripts, remote dynamic code execution, or unauthorized background network connections. All execution packages are self-contained within the extension bundle submitted to Google Chrome Web Store review.
+                </p>
+            </section>
+
+            <!-- Contact Information -->
+            <section class="pt-6 border-t border-white/10">
+                <h2 class="text-white font-bold text-lg uppercase tracking-wider mb-2">6. Developer Contact Info</h2>
+                <p class="text-stone-400 mb-4">If you have any questions regarding this Privacy Policy or data security, please contact the developer directly:</p>
+                <div class="inline-block glass-card px-6 py-4 rounded-xl border border-white/10">
+                    <p class="font-bold text-white text-xs uppercase">Structural Sensei Development</p>
+                    <p class="text-xs text-stone-400">Lead Architect: Wico Buys</p>
+                    <a href="mailto:wico.pydev@gmail.com" class="text-orange-500 font-bold text-sm hover:underline">wico.pydev@gmail.com</a>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-10 px-6 text-center border-t border-white/5 bg-stone-950/50 text-[10px] text-stone-600 uppercase tracking-widest">
+        © 2026 STRUCTURAL SENSEI. ALL RIGHTS RESERVED.
+    </footer>
+
+</body>
+</html>

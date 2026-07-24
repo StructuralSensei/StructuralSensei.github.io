@@ -37,8 +37,8 @@
         }
 
         /* Modal Logic */
-        #pythonModal, #hireMenu { display: none; }
-        #pythonModal.active, #hireMenu.active { display: flex; }
+        .modal-overlay { display: none; }
+        .modal-overlay.active { display: flex; }
 
         .code-container {
             background: #0d1117;
@@ -58,21 +58,30 @@
             transform: translateY(-10px) scale(1.05);
             filter: drop-shadow(0 15px 25px rgba(217, 4, 41, 0.4));
         }
+
+        /* Back to top button transition */
+        #backToTop {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
     </style>
 </head>
 <body class="selection:bg-red-600 selection:text-white">
 
+    <!-- Navigation Bar -->
     <nav class="fixed w-full z-50 px-4 sm:px-6 py-4 flex justify-between items-center bg-black/80 backdrop-blur-md border-b border-white/5">
         <div class="font-bold tracking-tighter uppercase text-xs sm:text-sm">Structural<span class="text-red-600">Sensei</span></div>
         <div class="flex gap-2.5 sm:gap-6 text-[9px] sm:text-[10px] uppercase font-bold tracking-wide sm:tracking-widest items-center">
             <a href="#about" class="hover:text-orange-500 transition">About</a>
             <a href="#platforms" class="hover:text-orange-500 transition">Platforms</a>
+            <a href="javascript:void(0)" onclick="toggleModal('roiModal')" class="text-amber-400 hover:text-amber-300 transition"><i class="fa-solid fa-calculator mr-1"></i>ROI Calc</a>
             <a href="blog.html" class="text-orange-500 hover:text-orange-400 transition">Blog</a>
             <a href="game.html" class="text-white hover:text-red-500 transition">Games</a>
+            <a href="privacy.html" class="text-stone-400 hover:text-white transition">Privacy</a>
             <a href="javascript:void(0)" onclick="toggleModal('pythonModal')" class="text-red-500">Python Preview</a>
         </div>
     </nav>
 
+    <!-- Header / Hero Section -->
     <header class="pt-40 pb-20 px-6 max-w-6xl mx-auto">
         <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
             <div class="flex-1 text-center lg:text-left">
@@ -88,8 +97,11 @@
                 </p>
 
                 <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
-                    <button onclick="toggleModal('hireMenu')" class="btn-hover bg-red-600 hover:bg-red-700 px-8 py-4 rounded font-bold uppercase text-xs tracking-widest transition">
+                    <button onclick="toggleModal('hireMenu')" class="btn-hover bg-red-600 hover:bg-red-700 px-8 py-4 rounded font-bold uppercase text-xs tracking-widest transition shadow-lg shadow-red-900/30">
                         Get Started / Hire Me
+                    </button>
+                    <button onclick="toggleModal('roiModal')" class="btn-hover bg-stone-900 border border-amber-500/30 text-amber-400 hover:border-amber-500 px-8 py-4 rounded text-xs font-bold uppercase tracking-widest transition">
+                        Calculate Savings <i class="fa-solid fa-bolt ml-1"></i>
                     </button>
                     <a href="#about" class="btn-hover border border-stone-700 px-8 py-4 rounded text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition">
                         Our Story ↓
@@ -109,6 +121,7 @@
         </div>
     </header>
 
+    <!-- About Section -->
     <section id="about" class="py-24 px-6 max-w-4xl mx-auto border-t border-white/5">
         <div class="grid md:grid-cols-2 gap-16">
             <div>
@@ -131,9 +144,15 @@
         </div>
     </section>
 
-    <section id="platforms" class="py-24 px-6 max-w-4xl mx-auto border-t border-white/5">
-        <h2 class="text-center font-bold uppercase text-[10px] tracking-[0.3em] text-stone-500 mb-16">Global Resource Hub</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Platforms & Resource Hub Section -->
+    <section id="platforms" class="py-24 px-6 max-w-5xl mx-auto border-t border-white/5">
+        <h2 class="text-center font-bold uppercase text-[10px] tracking-[0.3em] text-stone-500 mb-16">Global Resource Hub & Tools</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a href="https://chromewebstore.google.com" target="_blank" class="glass-card p-8 rounded-xl hover:border-red-500/50 transition-all group border-red-500/20">
+                <div class="text-red-500 mb-6 text-2xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-ruler-combined"></i></div>
+                <h4 class="font-bold uppercase text-xs mb-2 tracking-widest">Sensei Takeoff</h4>
+                <p class="text-stone-500 text-[11px] leading-relaxed">Chrome extension for web-based linear, area, and count takeoffs with Excel BOQ exports.</p>
+            </a>
             <a href="https://wico.gumroad.com/" target="_blank" class="glass-card p-8 rounded-xl hover:border-red-600/50 transition-all group">
                 <div class="text-red-600 mb-6 text-2xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-cart-shopping"></i></div>
                 <h4 class="font-bold uppercase text-xs mb-2 tracking-widest">Gumroad Shop</h4>
@@ -152,13 +171,29 @@
         </div>
     </section>
 
+    <!-- Footer -->
     <footer class="py-20 px-6 text-center border-t border-white/5 bg-stone-950/50">
         <p class="text-[10px] text-stone-600 mb-6 tracking-[0.4em] uppercase">Mastering the Art of Design</p>
         <a href="mailto:wico.pydev@gmail.com" class="text-xl md:text-2xl font-bold hover:text-orange-500 transition-colors">wico.pydev@gmail.com</a>
+
+        <div class="mt-8 flex justify-center gap-6 text-[10px] text-stone-500 uppercase tracking-widest">
+            <a href="privacy.html" class="hover:text-orange-500 transition-colors">Privacy Policy</a>
+            <span>•</span>
+            <a href="#about" class="hover:text-orange-500 transition-colors">About Us</a>
+            <span>•</span>
+            <a href="#platforms" class="hover:text-orange-500 transition-colors">Tools & Apps</a>
+        </div>
+
         <p class="mt-12 text-[10px] text-stone-700 tracking-widest">© 2026 STRUCTURAL SENSEI. ALL RIGHTS RESERVED.</p>
     </footer>
 
-    <div id="hireMenu" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/95 p-4 backdrop-blur-md">
+    <!-- Floating Back to Top Button -->
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 z-40 bg-stone-900 border border-white/10 text-white w-12 h-12 rounded-full flex items-center justify-center opacity-0 pointer-events-none hover:border-red-600 hover:text-red-500 shadow-2xl transition">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Modal 1: Decision Hub / Hire Menu (With Automated HTTP AJAX FormSubmit) -->
+    <div id="hireMenu" class="modal-overlay fixed inset-0 z-[70] hidden items-center justify-center bg-black/95 p-4 backdrop-blur-md">
         <div class="max-w-lg w-full bg-stone-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
             <div class="p-6 border-b border-white/5 flex justify-between items-center">
                 <h3 class="font-bold uppercase tracking-widest text-xs text-orange-500">The Decision Hub</h3>
@@ -170,35 +205,56 @@
                         <i class="fa-brands fa-upwork text-green-500 text-2xl mb-2"></i>
                         <p class="text-[10px] font-bold uppercase tracking-tighter">Upwork Hire</p>
                     </a>
-                    <a href="https://wico.gumroad.com/" target="_blank" class="p-5 bg-white/5 border border-white/10 rounded-xl hover:Pink-500 transition text-center">
+                    <a href="https://wico.gumroad.com/" target="_blank" class="p-5 bg-white/5 border border-white/10 rounded-xl hover:border-pink-500 transition text-center">
                         <i class="fa-solid fa-cart-shopping text-pink-500 text-2xl mb-2"></i>
                         <p class="text-[10px] font-bold uppercase tracking-tighter">Buy Tools</p>
                     </a>
                 </div>
                 <hr class="border-white/5">
                 <div>
-                    <label class="block text-[10px] uppercase font-bold text-stone-500 mb-4 tracking-widest text-center">Custom Inquiry: Can I do the job?</label>
+                    <label class="block text-[10px] uppercase font-bold text-stone-500 mb-3 tracking-widest text-center">Direct HTTP Inquiry: Can I do the job?</label>
+
+                    <!-- FormSubmit Bot Trap (Honeypot) -->
+                    <input type="text" id="_honey" class="hidden" style="display:none !important;">
+
+                    <!-- Email Input -->
+                    <input type="email" id="userEmail" class="w-full bg-black border border-white/10 rounded-xl p-4 mb-3 text-sm text-silk focus:border-red-600 outline-none transition" placeholder="Your Email Address (for my reply)..." required>
+
+                    <!-- Message Textarea -->
                     <textarea id="jobInquiry" rows="3" class="w-full bg-black border border-white/10 rounded-xl p-4 text-sm text-silk focus:border-red-600 outline-none transition" placeholder="Tell me your technical challenge..."></textarea>
+
+                    <!-- Suggestion Badges -->
                     <div class="mt-4 flex flex-wrap gap-2 justify-center">
-                        <button onclick="suggest('Can you automate my messy Excel workflows?')" class="text-[9px] bg-white/5 px-3 py-1.5 rounded-full hover:bg-white/10 border border-white/5">Excel Automation</button>
-                        <button onclick="suggest('I need a custom Streamlit dashboard for my data.')" class="text-[9px] bg-white/5 px-3 py-1.5 rounded-full hover:bg-white/10 border border-white/5">Internal Tools</button>
+                        <button onclick="suggest('Can you automate my messy Excel workflows?')" class="text-[9px] bg-white/5 px-3 py-1.5 rounded-full hover:bg-white/10 border border-white/5 transition">Excel Automation</button>
+                        <button onclick="suggest('I need a custom Streamlit dashboard for my data.')" class="text-[9px] bg-white/5 px-3 py-1.5 rounded-full hover:bg-white/10 border border-white/5 transition">Internal Tools</button>
                     </div>
-                    <button onclick="sendInquiry()" class="w-full mt-6 bg-red-600 hover:bg-red-500 py-4 rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] transition shadow-lg shadow-red-900/20">
-                        Send Inquiry to Sensei
+
+                    <!-- Status Div -->
+                    <div id="inquiryStatus" class="mt-4 text-center text-xs font-bold hidden"></div>
+
+                    <!-- Send Button -->
+                    <button id="sendInquiryBtn" onclick="sendInquiry()" class="w-full mt-6 bg-red-600 hover:bg-red-500 py-4 rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] transition shadow-lg shadow-red-900/20 flex justify-center items-center gap-2">
+                        <span>Send Inquiry to Sensei</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="pythonModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/90 p-4">
+    <!-- Modal 2: Python Code Preview Modal -->
+    <div id="pythonModal" class="modal-overlay fixed inset-0 z-[70] hidden items-center justify-center bg-black/90 p-4">
         <div class="max-w-2xl w-full glass-card rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
             <div class="p-4 bg-stone-900 flex justify-between items-center border-b border-white/5">
                 <span class="text-[10px] font-mono text-stone-500 uppercase tracking-widest">automation_logic.py</span>
-                <button onclick="toggleModal('pythonModal')" class="text-stone-500 hover:text-white">&times;</button>
+                <div class="flex items-center gap-3">
+                    <button onclick="copyPythonCode()" id="copyCodeBtn" class="text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 px-3 py-1 rounded border border-white/10 transition">
+                        <i class="fa-regular fa-copy mr-1"></i> Copy Script
+                    </button>
+                    <button onclick="toggleModal('pythonModal')" class="text-stone-500 hover:text-white text-xl">&times;</button>
+                </div>
             </div>
             <div class="p-8 code-container text-[12px] md:text-sm overflow-x-auto">
-                <pre class="text-blue-300">
+                <pre id="pythonCodeSnippet" class="text-blue-300">
 <span class="text-stone-500"># Engineering Efficiency Logic</span>
 <span class="text-purple-400">class</span> <span class="text-yellow-400">StructuralSensei</span>:
     <span class="text-purple-400">def</span> <span class="text-blue-400">__init__</span>(self):
@@ -220,9 +276,42 @@ print(sensei.optimize_workflow(<span class="text-orange-400">"Manual"</span>))</
         </div>
     </div>
 
+    <!-- Modal 3: Smart Automation ROI Calculator -->
+    <div id="roiModal" class="modal-overlay fixed inset-0 z-[70] hidden items-center justify-center bg-black/90 p-4 backdrop-blur-md">
+        <div class="max-w-lg w-full bg-stone-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center">
+                <h3 class="font-bold uppercase tracking-widest text-xs text-amber-400"><i class="fa-solid fa-calculator mr-2"></i>Automation Savings Estimator</h3>
+                <button onclick="toggleModal('roiModal')" class="text-stone-500 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="p-8 space-y-6">
+                <div>
+                    <label class="block text-[10px] uppercase font-bold text-stone-400 mb-2">Hours spent per week on manual data/Excel work:</label>
+                    <input type="number" id="manualHours" value="10" min="1" max="80" oninput="calculateROI()" class="w-full bg-black border border-white/10 rounded-xl p-4 text-sm text-amber-400 font-bold focus:border-amber-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase font-bold text-stone-400 mb-2">Estimated hourly rate / engineering cost ($/hr):</label>
+                    <input type="number" id="hourlyRate" value="45" min="10" max="500" oninput="calculateROI()" class="w-full bg-black border border-white/10 rounded-xl p-4 text-sm text-amber-400 font-bold focus:border-amber-500 outline-none transition">
+                </div>
+
+                <div class="glass-card p-6 rounded-xl border-amber-500/20 bg-amber-500/5 text-center">
+                    <p class="text-[10px] uppercase font-bold text-stone-400 tracking-widest mb-1">Estimated Annual Savings</p>
+                    <h4 id="annualSavings" class="text-3xl font-bold text-amber-400 mb-2">$21,060 / yr</h4>
+                    <p id="hoursSaved" class="text-xs text-stone-300">~468 hours saved annually with custom Python scripts.</p>
+                </div>
+
+                <button onclick="applyROIEstimateToInquiry()" class="w-full bg-amber-500 hover:bg-amber-400 text-black py-4 rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] transition">
+                    Automate This Workflow Now →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Embedded Scripts -->
     <script>
+        // Universal Modal Toggle
         function toggleModal(id) {
             const modal = document.getElementById(id);
+            if (!modal) return;
             if (modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
                 modal.classList.add('active');
@@ -232,28 +321,180 @@ print(sensei.optimize_workflow(<span class="text-orange-400">"Manual"</span>))</
             }
         }
 
+        // Pre-fill suggestion into inquiry field
         function suggest(text) {
-            document.getElementById('jobInquiry').value = text;
+            const inquiryBox = document.getElementById('jobInquiry');
+            if (inquiryBox) {
+                inquiryBox.value = text;
+                saveDrafts();
+            }
         }
 
-        function sendInquiry() {
-            const text = document.getElementById('jobInquiry').value;
-            if (!text) {
-                alert("Please describe your project first!");
+        // Direct HTTP FormSubmit AJAX Sending Logic
+        async function sendInquiry() {
+            const honey = document.getElementById('_honey');
+            if (honey && honey.value !== '') return; // Silent rejection for spam bots
+
+            const emailInput = document.getElementById('userEmail');
+            const textInput = document.getElementById('jobInquiry');
+            const btn = document.getElementById('sendInquiryBtn');
+
+            const userEmail = emailInput ? emailInput.value.trim() : '';
+            const message = textInput ? textInput.value.trim() : '';
+
+            if (!userEmail) {
+                showStatus('Please enter your email address so I can reply!', 'text-yellow-500');
                 return;
             }
-            const subject = encodeURIComponent("Structural Sensei: Project Inquiry");
-            const body = encodeURIComponent(text);
-            window.location.href = `mailto:wico.pydev@gmail.com?subject=${subject}&body=${body}`;
+
+            if (!message) {
+                showStatus('Please describe your technical challenge first!', 'text-yellow-500');
+                return;
+            }
+
+            // UI Loading State
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending to Sensei...</span>`;
+            showStatus('Dispatching inquiry to Sensei...', 'text-stone-400');
+
+            try {
+                const response = await fetch('https://formsubmit.co/ajax/wico.pydev@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: userEmail,
+                        message: message,
+                        _subject: '🥋 Structural Sensei: New Project Inquiry'
+                    })
+                });
+
+                if (response.ok) {
+                    showStatus('✅ Inquiry sent successfully! Sensei will reach out shortly.', 'text-green-500');
+                    textInput.value = '';
+                    emailInput.value = '';
+                    localStorage.removeItem('sensei_draft_email');
+                    localStorage.removeItem('sensei_draft_inquiry');
+                } else {
+                    throw new Error('Server returned an error status.');
+                }
+            } catch (error) {
+                showStatus('❌ Connection error. Please try again or email wico.pydev@gmail.com directly.', 'text-red-500');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Send Inquiry to Sensei</span>`;
+            }
         }
 
-        // Close modals when clicking background
+        function showStatus(msg, colorClass) {
+            const statusDiv = document.getElementById('inquiryStatus');
+            if (statusDiv) {
+                statusDiv.className = `mt-4 text-center text-xs font-bold ${colorClass}`;
+                statusDiv.innerText = msg;
+                statusDiv.classList.remove('hidden');
+            }
+        }
+
+        // Copy Code Snippet Logic
+        function copyPythonCode() {
+            const codeText = `class StructuralSensei:
+    def __init__(self):
+        self.mindset = "Management Precision"
+        self.tools = ["Python", "SQL", "Streamlit"]
+
+    def optimize_workflow(self, task_type):
+        if task_type == "Manual":
+            return "Automate via Custom Script"
+        return "Scale Professional Freedom"
+
+sensei = StructuralSensei()
+print(sensei.optimize_workflow("Manual"))`;
+
+            navigator.clipboard.writeText(codeText).then(() => {
+                const btn = document.getElementById('copyCodeBtn');
+                btn.innerHTML = `<i class="fa-solid fa-check text-green-400 mr-1"></i> Copied!`;
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fa-regular fa-copy mr-1"></i> Copy Script`;
+                }, 2000);
+            });
+        }
+
+        // Automation ROI Calculator Logic
+        function calculateROI() {
+            const hours = parseFloat(document.getElementById('manualHours').value) || 0;
+            const rate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+
+            const hoursSavedPerYear = Math.round(hours * 0.9 * 52); // Assume 90% automation efficiency
+            const dollarsSaved = Math.round(hoursSavedPerYear * rate);
+
+            document.getElementById('annualSavings').innerText = `$${dollarsSaved.toLocaleString()} / yr`;
+            document.getElementById('hoursSaved').innerText = `~${hoursSavedPerYear} hours saved annually with custom Python scripts.`;
+        }
+
+        function applyROIEstimateToInquiry() {
+            const hours = document.getElementById('manualHours').value;
+            const rate = document.getElementById('hourlyRate').value;
+            const text = `I spend around ${hours} hours/week on manual tasks ($${rate}/hr). I want to automate this workflow with Python.`;
+
+            toggleModal('roiModal');
+            toggleModal('hireMenu');
+            suggest(text);
+        }
+
+        // Draft Persistence via LocalStorage
+        function saveDrafts() {
+            const email = document.getElementById('userEmail')?.value || '';
+            const inquiry = document.getElementById('jobInquiry')?.value || '';
+            localStorage.setItem('sensei_draft_email', email);
+            localStorage.setItem('sensei_draft_inquiry', inquiry);
+        }
+
+        function loadDrafts() {
+            const savedEmail = localStorage.getItem('sensei_draft_email');
+            const savedInquiry = localStorage.getItem('sensei_draft_inquiry');
+            if (savedEmail && document.getElementById('userEmail')) document.getElementById('userEmail').value = savedEmail;
+            if (savedInquiry && document.getElementById('jobInquiry')) document.getElementById('jobInquiry').value = savedInquiry;
+        }
+
+        // Input Listeners for Draft Auto-Save
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDrafts();
+            calculateROI();
+
+            document.getElementById('userEmail')?.addEventListener('input', saveDrafts);
+            document.getElementById('jobInquiry')?.addEventListener('input', saveDrafts);
+        });
+
+        // Floating Back-To-Top Button Scroll Handler
+        window.addEventListener('scroll', () => {
+            const btt = document.getElementById('backToTop');
+            if (window.scrollY > 400) {
+                btt.classList.remove('opacity-0', 'pointer-events-none');
+                btt.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                btt.classList.add('opacity-0', 'pointer-events-none');
+                btt.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        });
+
+        // Global Backdrop & Keyboard Listeners
         window.onclick = function(event) {
-            if (event.target.classList.contains('active')) {
+            if (event.target.classList.contains('modal-overlay')) {
                 event.target.classList.add('hidden');
                 event.target.classList.remove('active');
             }
-        }
+        };
+
+        window.onkeydown = function(event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('active');
+                });
+            }
+        };
     </script>
 </body>
 </html>
