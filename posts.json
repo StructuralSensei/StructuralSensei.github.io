@@ -1,5 +1,13 @@
 [
-    {
+  {
+    "slug": "mix-design-tips-a-comprehensive-guide-for-concrete-engineers",
+    "published_date": "2026-07-24",
+    "title": "Mix Design Tips: A Comprehensive Guide for Concrete Engineers",
+    "trend": "The transition from traditional mix design to a more dynamic approach where materials are continuously mixed and optimized based on real-time feedback.",
+    "history": "Historically, concrete mix designs were often rigidly dictated by engineers without considering material properties in real-time. This manual process was impractical for modern construction.",
+    "vector": "In this blog post, I'll break down the current trend of using a dynamic mix design approach and provide practical advice on how to incorporate mixed materials into your project."
+  },
+  {
     "slug": "precision-concrete-mix-automation",
     "published_date": "2026-07-24",
     "title": "Automating Concrete Mix Design & Geotechnical Analytics with Python",
