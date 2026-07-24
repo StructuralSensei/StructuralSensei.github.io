@@ -1,5 +1,12 @@
 [
   {
+    "id": 1,
+    "title": "Breaking Down Python Automation Tools for Geotechnical Data Processing: From Basics to Beyond",
+    "date": "2026-07-24",
+    "public_overview": "The post discusses the use of Python automation tools specifically designed for geotechnical data processing tasks, breaking down the topic into its key angles and providing actionable insights.",
+    "say_your_say": "As an AI language model, I am designed to provide a broad overview of various topics. However, if you have a specific angle or note that needs to be added, feel free to share!"
+  },
+  {
     "slug": "precision-concrete-mix-automation",
     "published_date": "2026-07-24",
     "title": "Automating Concrete Mix Design & Geotechnical Analytics with Python",
