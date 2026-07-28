@@ -1,66 +1,425 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Structural Sensei | Full Game Suite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KATA vs TECH | 2D Sensei Platformer</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #050505; color: #f5f5f0; font-family: 'Inter', sans-serif; }
-        .view { display: none; }
-        .active { display: block; animation: fadeIn 0.4s ease-in-out; }
-        .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Animation Track Styles */
-        #track { position: relative; width: 100%; height: 120px; border-bottom: 2px solid #333; margin-bottom: 20px; }
-        #character { 
-            position: absolute; 
-            bottom: 0; 
-            left: 0; 
-            font-size: 3rem; 
-            transition: left 1s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth walking motion */
-            z-index: 10;
-        }
-        .milestone-marker {
-            position: absolute; bottom: -10px; width: 4px; height: 20px; background: #666;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fira+Code:wght@500;700&display=swap');
+        .font-comic { font-family: 'Bangers', cursive; letter-spacing: 0.05em; }
+        .font-mono-code { font-family: 'Fira Code', monospace; }
+        canvas { touch-action: none; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-black text-white font-sans antialiased select-none overflow-x-hidden min-h-screen flex flex-col justify-between">
 
-    <div id="menu" class="view active max-w-2xl mx-auto text-center mt-12 md:mt-24">
-        <h1 class="text-5xl font-bold mb-4 tracking-tighter">SENSEI <span class="text-red-600">HUB</span></h1>
-        <p class="text-stone-400 mb-12 uppercase tracking-widest text-xs">Engineering · STEM · Mastery</p>
-        
-        <div class="grid md:grid-cols-3 gap-4">
-            <button onclick="loadQuiz('hard')" class="glass p-8 hover:bg-red-900/50 hover:border-red-500 transition rounded-xl flex flex-col items-center gap-3">
-                <span class="text-3xl">⚙️</span>
-                <span class="font-bold text-sm tracking-widest">HARD MODE</span>
-            </button>
-            <button onclick="loadQuiz('gen')" class="glass p-8 hover:bg-orange-900/50 hover:border-orange-500 transition rounded-xl flex flex-col items-center gap-3">
-                <span class="text-3xl">🧠</span>
-                <span class="font-bold text-sm tracking-widest">STEM TRIVIA</span>
-            </button>
-            <button onclick="loadStory()" class="glass p-8 hover:bg-blue-900/50 hover:border-blue-500 transition rounded-xl flex flex-col items-center gap-3">
-                <span class="text-3xl">🛤️</span>
-                <span class="font-bold text-sm tracking-widest">THE JOURNEY</span>
+    <!-- Top Navigation -->
+    <nav class="w-full px-6 py-4 bg-stone-950/90 border-b border-stone-800 flex justify-between items-center z-40">
+        <a href="index.html" class="font-bold uppercase tracking-tight text-sm flex items-center gap-2 text-stone-300 hover:text-red-500 transition">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Structural<span class="text-red-600">Sensei</span></span>
+        </a>
+        <div class="flex items-center gap-4 text-xs font-mono">
+            <span class="text-amber-400 font-bold"><i class="fa-solid fa-trophy mr-1"></i> HIGH SCORE: <span id="navHighScore">0</span></span>
+            <button onclick="showStanceSelect()" class="bg-red-600/20 border border-red-500/50 text-red-400 px-3 py-1 rounded hover:bg-red-600/40 transition">
+                <i class="fa-solid fa-user-ninja mr-1"></i> SELECT STANCE
             </button>
         </div>
-    </div>
+    </nav>
 
-    <div id="quiz-view" class="view max-w-xl mx-auto glass p-8 rounded-xl mt-10 shadow-2xl">
-        <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-            <h2 id="quiz-title" class="text-xl font-bold uppercase tracking-widest text-red-500">Quiz</h2>
-            <span id="score-counter" class="text-sm font-mono text-stone-400">Score: 0 / 10</span>
+    <!-- Game Container -->
+    <main class="flex-1 flex flex-col items-center justify-center p-2 sm:p-6 relative max-w-5xl mx-auto w-full">
+        
+        <!-- Game HUD Overlay -->
+        <div id="gameHud" class="w-full max-w-4xl bg-stone-900 border-t border-x border-stone-800 rounded-t-xl p-3 flex justify-between items-center text-xs font-mono font-bold">
+            <div class="flex items-center gap-4">
+                <div class="text-red-500 flex items-center gap-1">
+                    <i class="fa-solid fa-heart"></i>
+                    <span id="hudHp">100</span> HP
+                </div>
+                <div class="text-yellow-400">
+                    <i class="fa-solid fa-star"></i> SCORE: <span id="hudScore">0</span>
+                </div>
+            </div>
+            <div class="text-center font-comic text-lg tracking-wider text-orange-400">
+                LEVEL <span id="hudLevel">1</span>: <span id="hudLevelName">SPREADSHEET SWAMP</span>
+            </div>
+            <div class="text-cyan-400">
+                <i class="fa-solid fa-bolt"></i> STANCE: <span id="hudStance">PYTHON</span>
+            </div>
         </div>
-        
-        <div id="q-text" class="text-lg md:text-xl mb-8 leading-relaxed font-medium"></div>
-        <div id="btns" class="grid gap-3 mb-8"></div>
-        
-        <button onclick="switchView('menu')" class="text-stone-500 hover:text-white text-xs uppercase tracking-widest transition">← Abandon Protocol</button>
-    </div>
 
+        <!-- Canvas Game Screen -->
+        <div class="relative w-full max-w-4xl bg-stone-950 border border-stone-800 rounded-b-xl overflow-hidden shadow-2xl">
+            <canvas id="gameCanvas" width="800" height="450" class="w-full h-auto block bg-stone-950"></canvas>
+
+            <!-- Comic Stance Choice Modal (Start Screen) -->
+            <div id="stanceModal" class="absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-30">
+                <h1 class="text-4xl sm:text-6xl font-comic text-orange-500 tracking-wider mb-2 drop-shadow-md">
+                    KATA VS TECH
+                </h1>
+                <p class="text-stone-400 text-xs sm:text-sm font-mono mb-8 max-w-md">
+                    Select your Kata stance to fight through 5 levels of legacy tech bugs and defeat the Monolithic Boss!
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl w-full mb-8">
+                    <button onclick="selectStance('python')" class="bg-stone-900 hover:bg-orange-500/20 border-2 border-orange-500/50 hover:border-orange-500 p-4 rounded-xl text-left transition group">
+                        <div class="text-orange-500 text-2xl mb-2 font-comic flex justify-between">
+                            <span>🐍 PYTHON</span>
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <p class="text-[11px] text-stone-300 font-mono">High Speed & Fast Shuriken cooldown. Ideal for agile automation.</p>
+                    </button>
+
+                    <button onclick="selectStance('sql')" class="bg-stone-900 hover:bg-cyan-500/20 border-2 border-cyan-500/50 hover:border-cyan-500 p-4 rounded-xl text-left transition group">
+                        <div class="text-cyan-400 text-2xl mb-2 font-comic flex justify-between">
+                            <span>🛡️ SQL MASTER</span>
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <p class="text-[11px] text-stone-300 font-mono">+50 Max HP & High Defense. Robust schema integrity.</p>
+                    </button>
+
+                    <button onclick="selectStance('streamlit')" class="bg-stone-900 hover:bg-red-500/20 border-2 border-red-500/50 hover:border-red-500 p-4 rounded-xl text-left transition group">
+                        <div class="text-red-500 text-2xl mb-2 font-comic flex justify-between">
+                            <span>🚀 STREAMLIT</span>
+                            <i class="fa-solid fa-angles-up"></i>
+                        </div>
+                        <p class="text-[11px] text-stone-300 font-mono">High Jump & Explosive Attacks. Rapid dashboard deployment.</p>
+                    </button>
+                </div>
+
+                <p class="text-stone-500 text-[10px] font-mono">Controls: [A/D or Arrows] Move | [Space/W] Jump | [F or J] Attack</p>
+            </div>
+
+            <!-- Game Over / Victory Modal -->
+            <div id="endModal" class="hidden absolute inset-0 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-30">
+                <h2 id="endTitle" class="text-5xl font-comic text-red-500 mb-2">GAME OVER</h2>
+                <p id="endSubtitle" class="text-stone-300 font-mono text-sm mb-6">The Legacy System overwhelmed your workflow.</p>
+
+                <div class="bg-stone-900 p-4 rounded-xl border border-stone-800 font-mono text-xs text-left mb-6 w-full max-w-sm space-y-2">
+                    <div class="flex justify-between"><span>FINAL SCORE:</span> <span id="endScore" class="text-yellow-400 font-bold">0</span></div>
+                    <div class="flex justify-between"><span>HIGHEST LEVEL:</span> <span id="endLevel" class="text-orange-400 font-bold">1</span></div>
+                    <div class="flex justify-between"><span>STANCE USED:</span> <span id="endStance" class="text-cyan-400 font-bold">PYTHON</span></div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button onclick="restartGame()" class="bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold px-6 py-3 rounded-lg uppercase tracking-wider transition">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Play Again
+                    </button>
+                    <button onclick="generateFlashcard()" class="bg-amber-500 hover:bg-amber-400 text-black font-mono text-xs font-bold px-6 py-3 rounded-lg uppercase tracking-wider transition">
+                        <i class="fa-solid fa-share-nodes mr-1"></i> Dojo Flashcard
+                    </button>
+                </div>
+            </div>
+
+            <!-- Shareable Flashcard Modal Overlay -->
+            <div id="flashcardModal" class="hidden absolute inset-0 bg-black/95 flex flex-col items-center justify-center p-4 z-40">
+                <div class="bg-stone-900 border border-amber-500/40 p-4 rounded-xl max-w-sm w-full flex flex-col items-center">
+                    <h3 class="font-comic text-2xl text-amber-400 mb-3">YOUR DOJO ACHIEVEMENT</h3>
+                    
+                    <canvas id="cardCanvas" width="360" height="220" class="rounded border border-stone-800 shadow-lg mb-4"></canvas>
+                    
+                    <div class="flex gap-2 w-full">
+                        <button onclick="downloadFlashcard()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-black font-mono text-[10px] font-bold py-2 rounded uppercase">
+                            <i class="fa-solid fa-download mr-1"></i> Download
+                        </button>
+                        <button onclick="closeFlashcard()" class="bg-stone-800 hover:bg-stone-700 text-stone-300 font-mono text-[10px] font-bold px-4 py-2 rounded uppercase">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Touch Controls for Mobile -->
+        <div class="w-full max-w-4xl mt-3 grid grid-cols-2 gap-4 sm:hidden">
+            <div class="flex gap-2">
+                <button id="btnLeft" class="flex-1 bg-stone-900 border border-stone-800 active:bg-orange-500/40 text-stone-300 py-4 rounded-xl text-xl">◀</button>
+                <button id="btnRight" class="flex-1 bg-stone-900 border border-stone-800 active:bg-orange-500/40 text-stone-300 py-4 rounded-xl text-xl">▶</button>
+            </div>
+            <div class="flex gap-2">
+                <button id="btnJump" class="flex-1 bg-stone-900 border border-stone-800 active:bg-red-500/40 text-stone-300 py-4 rounded-xl font-comic text-lg">JUMP</button>
+                <button id="btnAttack" class="flex-1 bg-red-600/30 border border-red-500/50 active:bg-red-600 text-red-400 py-4 rounded-xl font-comic text-lg">KICK</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Link -->
+    <footer class="py-4 text-center font-mono text-[10px] text-stone-600 border-t border-stone-900">
+        Structural Sensei Engine | <a href="https://structuralsensei.github.io" class="hover:text-orange-500 underline">structuralsensei.github.io</a>
+    </footer>
+
+    <!-- Game Engine Logic -->
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game Configuration & State
+        let highScore = parseInt(localStorage.getItem('sensei_high_score') || '0');
+        document.getElementById('navHighScore').textContent = highScore;
+
+        let gameState = {
+            active: false,
+            score: 0,
+            level: 1,
+            stance: 'python',
+            cameraX: 0
+        };
+
+        const levelNames = {
+            1: "SPREADSHEET SWAMP",
+            2: "SERVER ROOM DUNGEON",
+            3: "CLOUD CHAOS HORIZON",
+            4: "AUTOMATED PIPELINE",
+            5: "MONOLITHIC BOSS REALM"
+        };
+
+        // Player Character Object
+        let player = {
+            x: 50, y: 300, w: 24, h: 40,
+            vx: 0, vy: 0,
+            speed: 4, jumpPower: 11,
+            hp: 100, maxHp: 100,
+            grounded: false,
+            attacking: false,
+            attackCooldown: 0
+        };
+
+        let keys = {};
+        let platforms = [];
+        let enemies = [];
+        let projectiles = [];
+        let comicPopups = [];
+        let boss = null;
+
+        // Choice Stance System
+        function selectStance(type) {
+            gameState.stance = type;
+            if (type === 'python') {
+                player.speed = 5; player.jumpPower = 11; player.maxHp = 100;
+            } else if (type === 'sql') {
+                player.speed = 3.5; player.jumpPower = 10; player.maxHp = 150;
+            } else if (type === 'streamlit') {
+                player.speed = 4.2; player.jumpPower = 13.5; player.maxHp = 90;
+            }
+            player.hp = player.maxHp;
+            document.getElementById('hudStance').textContent = type.toUpperCase();
+            document.getElementById('stanceModal').classList.add('hidden');
+            startGame();
+        }
+
+        function showStanceSelect() {
+            document.getElementById('stanceModal').classList.remove('hidden');
+            gameState.active = false;
+        }
+
+        function startGame() {
+            gameState.active = true;
+            gameState.score = 0;
+            gameState.level = 1;
+            loadLevel(1);
+            requestAnimationFrame(gameLoop);
+        }
+
+        function restartGame() {
+            document.getElementById('endModal').classList.add('hidden');
+            selectStance(gameState.stance);
+        }
+
+        // Level Loader
+        function loadLevel(lvl) {
+            gameState.level = lvl;
+            gameState.cameraX = 0;
+            player.x = 50;
+            player.y = 300;
+            player.vx = 0;
+            player.vy = 0;
+
+            document.getElementById('hudLevel').textContent = lvl;
+            document.getElementById('hudLevelName').textContent = levelNames[lvl];
+
+            platforms = [
+                { x: 0, y: 400, w: 2500, h: 50 }, // Main ground
+                { x: 200, y: 310, w: 120, h: 20 },
+                { x: 420, y: 240, w: 140, h: 20 },
+                { x: 680, y: 310, w: 150, h: 20 },
+                { x: 950, y: 220, w: 160, h: 20 },
+                { x: 1250, y: 300, w: 180, h: 20 },
+                { x: 1550, y: 230, w: 150, h: 20 },
+                { x: 1850, y: 320, w: 200, h: 20 }
+            ];
+
+            enemies = [
+                { x: 300, y: 375, w: 25, h: 25, type: 'bug', vx: -1.5, hp: 1 },
+                { x: 500, y: 215, w: 25, h: 25, type: 'bug', vx: 1.5, hp: 1 },
+                { x: 750, y: 285, w: 25, h: 25, type: 'glitch', vx: -2, hp: 2 },
+                { x: 1000, y: 195, w: 25, h: 25, type: 'bug', vx: 1.5, hp: 1 },
+                { x: 1300, y: 275, w: 30, h: 30, type: 'glitch', vx: -2, hp: 2 },
+                { x: 1600, y: 205, w: 25, h: 25, type: 'bug', vx: 2, hp: 1 }
+            ];
+
+            boss = null;
+            if (lvl === 5) {
+                boss = {
+                    x: 2100, y: 240, w: 80, h: 160,
+                    hp: 100, maxHp: 100,
+                    vx: -1, actionTimer: 0
+                };
+            }
+        }
+
+        // Input Listeners
+        window.addEventListener('keydown', e => { keys[e.key] = true; });
+        window.addEventListener('keyup', e => { keys[e.key] = false; });
+
+        // Touch Listeners for Mobile
+        const bindTouch = (id, key) => {
+            const btn = document.getElementById(id);
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; });
+            btn.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
+        };
+        bindTouch('btnLeft', 'ArrowLeft');
+        bindTouch('btnRight', 'ArrowRight');
+        bindTouch('btnJump', 'Space');
+        bindTouch('btnAttack', 'f');
+
+        // Main Game Loop
+        function gameLoop() {
+            if (!gameState.active) return;
+
+            update();
+            render();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Engine Logic Update
+        function update() {
+            // Player Controls
+            if (keys['ArrowLeft'] || keys['a']) player.vx = -player.speed;
+            else if (keys['ArrowRight'] || keys['d']) player.vx = player.speed;
+            else player.vx *= 0.8;
+
+            if ((keys['Space'] || keys['w'] || keys['ArrowUp']) && player.grounded) {
+                player.vy = -player.jumpPower;
+                player.grounded = false;
+            }
+
+            // Attack / Shuriken Throw
+            if ((keys['f'] || keys['j']) && player.attackCooldown <= 0) {
+                projectiles.push({
+                    x: player.x + (player.vx >= 0 ? player.w : -10),
+                    y: player.y + 12,
+                    vx: player.vx >= 0 ? 8 : -8,
+                    life: 40
+                });
+                player.attackCooldown = gameState.stance === 'python' ? 12 : 20;
+                addComicPopup(player.x - gameState.cameraX, player.y - 10, "KAPOW!", "#f97316");
+            }
+            if (player.attackCooldown > 0) player.attackCooldown--;
+
+            // Physics & Gravity
+            player.vy += 0.5; // Gravity
+            player.x += player.vx;
+            player.y += player.vy;
+
+            // Platform Collision
+            player.grounded = false;
+            platforms.forEach(p => {
+                if (player.x < p.x + p.w && player.x + player.w > p.x &&
+                    player.y + player.h > p.y && player.y + player.h < p.y + p.h + player.vy) {
+                    player.y = p.y - player.h;
+                    player.vy = 0;
+                    player.grounded = true;
+                }
+            });
+
+            // Camera Tracking
+            gameState.cameraX = Math.max(0, player.x - 200);
+
+            // Projectiles Update
+            projectiles.forEach((proj, pIdx) => {
+                proj.x += proj.vx;
+                proj.life--;
+
+                // Hit Enemies
+                enemies.forEach((enemy, eIdx) => {
+                    if (proj.x < enemy.x + enemy.w && proj.x + 10 > enemy.x &&
+                        proj.y < enemy.y + enemy.h && proj.y + 10 > enemy.y) {
+                        enemy.hp--;
+                        projectiles.splice(pIdx, 1);
+                        addComicPopup(enemy.x - gameState.cameraX, enemy.y, "KAIZEN!", "#22c55e");
+                        if (enemy.hp <= 0) {
+                            enemies.splice(eIdx, 1);
+                            gameState.score += 150;
+                        }
+                    }
+                });
+
+                // Hit Boss
+                if (boss && proj.x < boss.x + boss.w && proj.x + 10 > boss.x &&
+                    proj.y < boss.y + boss.h && proj.y + 10 > boss.y) {
+                    boss.hp -= 4;
+                    projectiles.splice(pIdx, 1);
+                    addComicPopup(boss.x - gameState.cameraX, boss.y, "SYNTAX FIX!", "#ef4444");
+                }
+            });
+            projectiles = projectiles.filter(p => p.life > 0);
+
+            // Enemy Patrol & Hit Player
+            enemies.forEach(enemy => {
+                enemy.x += enemy.vx;
+                if (enemy.x < 100 || enemy.x > 2200) enemy.vx *= -1;
+
+                if (player.x < enemy.x + enemy.w && player.x + player.w > enemy.x &&
+                    player.y < enemy.y + enemy.h && player.y + player.h > enemy.y) {
+                    player.hp -= 0.5;
+                    addComicPopup(player.x - gameState.cameraX, player.y - 10, "404 BUG!", "#ef4444");
+                }
+            });
+
+            // Boss AI (Level 5)
+            if (boss) {
+                boss.x += boss.vx;
+                if (boss.x < 1850 || boss.x > 2300) boss.vx *= -1;
+
+                if (player.x < boss.x + boss.w && player.x + player.w > boss.x &&
+                    player.y < boss.y + boss.h && player.y + player.h > boss.y) {
+                    player.hp -= 1;
+                }
+
+                if (boss.hp <= 0) {
+                    gameState.score += 2000;
+                    triggerVictory();
+                }
+            }
+
+            // Level Progression (End of map reached)
+            if (player.x > 2400 && gameState.level < 5) {
+                gameState.score += 500;
+                loadLevel(gameState.level + 1);
+            }
+
+            // Fall Death or Low HP
+            if (player.y > 500 || player.hp <= 0) {
+                triggerGameOver();
+            }
+
+            // HUD UI Sync
+            document.getElementById('hudHp').textContent = Math.max(0, Math.round(player.hp));
+            document.getElementById('hudScore').textContent = gameState.score;
+        }
+
+        // Comic Popup Effects
+        function addComicPopup(x, y, text, color) {
+            comicPopups.push({ x, y, text, color, opacity: 1.0 });
+        }
+
+        // Render Canvas Graphics
+        function render() {
+         
     <div id="story-view" class="view max-w-3xl mx-auto glass p-8 rounded-xl mt-10 shadow-2xl">
         <h2 class="text-xl font-bold uppercase tracking-widest text-blue-500 mb-8 text-center">Path to Mastery</h2>
         
