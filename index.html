@@ -315,70 +315,107 @@
         </div>
     </div>
 
-    <!-- Modal 2: Python Code Preview Modal -->
-    <div id="pythonModal" class="modal-overlay fixed inset-0 z-[70] hidden items-center justify-center bg-black/90 p-4">
-        <div class="max-w-2xl w-full glass-card rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-            <div class="p-4 bg-stone-900 flex justify-between items-center border-b border-white/5">
-                <span class="text-[10px] font-mono text-stone-500 uppercase tracking-widest">automation_logic.py</span>
-                <div class="flex items-center gap-3">
-                    <button onclick="copyPythonCode()" id="copyCodeBtn" class="text-[10px] bg-white/5 hover:bg-white/10 text-stone-300 px-3 py-1 rounded border border-white/10 transition">
-                        <i class="fa-regular fa-copy mr-1"></i> Copy Script
-                    </button>
-                    <button onclick="toggleModal('pythonModal')" class="text-stone-500 hover:text-white text-xl">&times;</button>
+        <!-- Unified Interactive Terminal Modal: KATA DOJO CLI -->
+    <div id="pythonModal" class="modal-overlay fixed inset-0 z-[70] hidden items-center justify-center bg-black/90 p-3 sm:p-4 backdrop-blur-md">
+        <div class="max-w-2xl w-full bg-[#0c0e12] rounded-xl overflow-hidden border border-stone-800 shadow-2xl flex flex-col max-h-[90vh]">
+            
+            <!-- Terminal Title Bar -->
+            <div class="px-4 py-3 bg-[#161920] flex justify-between items-center border-b border-white/10 select-none">
+                <div class="flex items-center gap-2">
+                    <div class="flex gap-1.5">
+                        <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+                    </div>
+                    <span class="text-[11px] font-mono text-stone-400 font-bold ml-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-ninja text-orange-500 text-xs"></i> kata_dojo.py — sensei@terminal:~
+                    </span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="hidden sm:inline-block text-[9px] bg-red-500/10 text-red-400 px-2 py-0.5 rounded border border-red-500/20 font-mono">
+                        PYTHON 3.12 INTERACTIVE
+                    </span>
+                    <button onclick="toggleModal('pythonModal')" class="text-stone-400 hover:text-white text-xl leading-none px-1">&times;</button>
                 </div>
             </div>
-            <div class="p-8 code-container text-[12px] md:text-sm overflow-x-auto">
-                <pre id="pythonCodeSnippet" class="text-blue-300">
-<span class="text-stone-500"># Engineering Efficiency Logic</span>
-<span class="text-purple-400">class</span> <span class="text-yellow-400">StructuralSensei</span>:
-    <span class="text-purple-400">def</span> <span class="text-blue-400">__init__</span>(self):
-        self.mindset = <span class="text-orange-400">"Management Precision"</span>
-        self.tools = [<span class="text-orange-400">"Python"</span>, <span class="text-orange-400">"SQL"</span>, <span class="text-orange-400">"Streamlit"</span>]
 
-    <span class="text-purple-400">def</span> <span class="text-blue-400">optimize_workflow</span>(self, task_type):
-        <span class="text-purple-400">if</span> task_type == <span class="text-orange-400">"Manual"</span>:
-            <span class="text-purple-400">return</span> <span class="text-orange-400">"Automate via Custom Script"</span>
-        <span class="text-purple-400">return</span> <span class="text-orange-400">"Scale Professional Freedom"</span>
-
-<span class="text-stone-500"># Initializing 13 years of expertise...</span>
-sensei = StructuralSensei()
-print(sensei.optimize_workflow(<span class="text-orange-400">"Manual"</span>))</pre>
-            </div>
-            <div class="p-4 bg-red-600/10 text-center border-t border-white/5">
-                <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest">Logic-driven results for every contract.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal 3: Smart Automation ROI Calculator -->
-    <div id="roiModal" class="modal-overlay fixed inset-0 z-[70] hidden items-center justify-center bg-black/90 p-4 backdrop-blur-md">
-        <div class="max-w-lg w-full bg-stone-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-            <div class="p-6 border-b border-white/5 flex justify-between items-center">
-                <h3 class="font-bold uppercase tracking-widest text-xs text-amber-400"><i class="fa-solid fa-calculator mr-2"></i>Automation Savings Estimator</h3>
-                <button onclick="toggleModal('roiModal')" class="text-stone-500 hover:text-white text-2xl">&times;</button>
-            </div>
-            <div class="p-8 space-y-6">
-                <div>
-                    <label class="block text-[10px] uppercase font-bold text-stone-400 mb-2">Hours spent per week on manual data/Excel work:</label>
-                    <input type="number" id="manualHours" value="10" min="1" max="80" oninput="calculateROI()" class="w-full bg-black border border-white/10 rounded-xl p-4 text-sm text-amber-400 font-bold focus:border-amber-500 outline-none transition">
-                </div>
-                <div>
-                    <label class="block text-[10px] uppercase font-bold text-stone-400 mb-2">Estimated hourly rate / engineering cost ($/hr):</label>
-                    <input type="number" id="hourlyRate" value="45" min="10" max="500" oninput="calculateROI()" class="w-full bg-black border border-white/10 rounded-xl p-4 text-sm text-amber-400 font-bold focus:border-amber-500 outline-none transition">
+            <!-- Terminal Screen -->
+            <div id="terminalScreen" class="p-4 sm:p-6 font-mono text-xs md:text-sm overflow-y-auto space-y-3 text-stone-300 leading-relaxed bg-[#0a0c0f] flex-1 min-h-[320px] sm:min-h-[380px]">
+                
+                <!-- CLI Banner Header -->
+                <div class="text-orange-500 font-bold leading-tight text-[10px] sm:text-xs">
+                    <pre class="overflow-x-auto">
+   ____ _____ ____  _   _  ____ _____ _   _ ____    _    _     
+  / ___|_   _|  _ \| | | |/ ___|_   _| | | |  _ \  / \  | |    
+  \___ \ | | | |_) | | | | |     | | | | | | |_) |/ _ \ | |    
+   ___) || | |  _ <| |_| | |___  | | | |_| |  _ < / ___ \| |___ 
+  |____/ |_| |_| \_\\___/ \____| |_|  \___/|_| \_/_/   \_\_____|
+                    </pre>
                 </div>
 
-                <div class="glass-card p-6 rounded-xl border-amber-500/20 bg-amber-500/5 text-center">
-                    <p class="text-[10px] uppercase font-bold text-stone-400 tracking-widest mb-1">Estimated Annual Savings</p>
-                    <h4 id="annualSavings" class="text-3xl font-bold text-amber-400 mb-2">$21,060 / yr</h4>
-                    <p id="hoursSaved" class="text-xs text-stone-300">~468 hours saved annually with custom Python scripts.</p>
+                <div class="text-stone-400 text-[11px] border-b border-white/10 pb-3">
+                    <span class="text-green-400">✓ Engine Status:</span> Ready. Type or click a <span class="text-amber-400 font-bold">KATA option</span> below to execute Python code.
                 </div>
 
-                <button onclick="applyROIEstimateToInquiry()" class="w-full bg-amber-500 hover:bg-amber-400 text-black py-4 rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] transition">
-                    Automate This Workflow Now →
+                <!-- Terminal Output Display -->
+                <div id="cliOutput" class="space-y-3">
+                    <div class="text-cyan-400">
+                        <span class="text-stone-500">[SYSTEM]</span> Loaded <span class="text-yellow-400">4 Kata Modules</span>.
+                    </div>
+                </div>
+
+                <!-- Interactive Menu Prompt -->
+                <div id="cliMenuPrompt" class="bg-stone-900/70 p-3 rounded-lg border border-white/5 space-y-2">
+                    <div class="text-amber-400 font-bold text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-list-check"></i> SELECT KATA TO RUN:
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                        <button onclick="runKata(1)" class="text-left bg-black/60 hover:bg-orange-500/20 hover:border-orange-500/50 p-2 rounded border border-white/10 text-stone-300 hover:text-orange-400 transition flex items-center gap-2">
+                            <span class="text-amber-400 font-bold">[1]</span>
+                            <span>⚡ ROI Calculator Kata</span>
+                        </button>
+                        <button onclick="runKata(2)" class="text-left bg-black/60 hover:bg-orange-500/20 hover:border-orange-500/50 p-2 rounded border border-white/10 text-stone-300 hover:text-orange-400 transition flex items-center gap-2">
+                            <span class="text-amber-400 font-bold">[2]</span>
+                            <span>🐍 Python Automation Script</span>
+                        </button>
+                        <button onclick="runKata(3)" class="text-left bg-black/60 hover:bg-orange-500/20 hover:border-orange-500/50 p-2 rounded border border-white/10 text-stone-300 hover:text-orange-400 transition flex items-center gap-2">
+                            <span class="text-amber-400 font-bold">[3]</span>
+                            <span>📊 Data Integrity & LIMS Sync</span>
+                        </button>
+                        <button onclick="runKata(4)" class="text-left bg-black/60 hover:bg-orange-500/20 hover:border-orange-500/50 p-2 rounded border border-white/10 text-stone-300 hover:text-orange-400 transition flex items-center gap-2">
+                            <span class="text-amber-400 font-bold">[4]</span>
+                            <span>🥋 Sensei Budo Mindset</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive CLI Form Input Area (Dynamic for ROI & Commands) -->
+                <div id="cliInteractiveArea" class="hidden"></div>
+            </div>
+
+            <!-- Command Line Input Bar -->
+            <div class="p-3 bg-[#111318] border-t border-white/10 flex items-center gap-2 font-mono text-xs">
+                <span class="text-red-500 font-bold">sensei@dojo:~$</span>
+                <input 
+                    type="text" 
+                    id="cliInput" 
+                    placeholder="Type option number (1-4) or 'clear'..." 
+                    onkeydown="handleCliKeyDown(event)"
+                    class="flex-1 bg-transparent text-green-400 focus:outline-none placeholder-stone-600 font-mono text-xs"
+                />
+                <button onclick="submitCliInput()" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition">
+                    EXECUTE
                 </button>
             </div>
+
+            <!-- Terminal Footer Callout -->
+            <div class="px-4 py-2 bg-stone-950 text-center border-t border-white/5 flex justify-between items-center text-[10px] font-mono text-stone-500">
+                <span><i class="fa-solid fa-bolt text-yellow-500 mr-1"></i> Budo Engineering Engine</span>
+                <button onclick="resetTerminal()" class="hover:text-stone-300 underline">Reset Console</button>
+            </div>
         </div>
     </div>
+
 
     <!-- Embedded Scripts -->
     <script>
@@ -570,5 +607,182 @@ print(sensei.optimize_workflow("Manual"))`;
             }
         };
     </script>
+       <script>
+    // Navigation Drawer Toggle
+    function toggleMobileNav() {
+        const drawer = document.getElementById('mobileNavDrawer');
+        const icon = document.getElementById('mobileMenuIcon');
+        if (drawer.classList.contains('hidden')) {
+            drawer.classList.remove('hidden');
+            drawer.classList.add('flex');
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-xmark');
+        } else {
+            drawer.classList.add('hidden');
+            drawer.classList.remove('flex');
+            icon.classList.remove('fa-xmark');
+            icon.classList.add('fa-bars');
+        }
+    }
+
+    // CLI Console Execution Logic
+    function handleCliKeyDown(e) {
+        if (e.key === 'Enter') {
+            submitCliInput();
+        }
+    }
+
+    function submitCliInput() {
+        const input = document.getElementById('cliInput');
+        const val = input.value.trim().toLowerCase();
+        input.value = '';
+
+        if (!val) return;
+
+        if (val === '1' || val === 'roi') runKata(1);
+        else if (val === '2' || val === 'python' || val === 'script') runKata(2);
+        else if (val === '3' || val === 'data' || val === 'lims') runKata(3);
+        else if (val === '4' || val === 'sensei' || val === 'budo') runKata(4);
+        else if (val === 'clear' || val === 'cls') resetTerminal();
+        else {
+            appendCliOutput(`<span class="text-red-400">[!] Unknown Command: '${val}'. Type 1, 2, 3, 4, or 'clear'.</span>`);
+        }
+    }
+
+    function runKata(option) {
+        const interactiveArea = document.getElementById('cliInteractiveArea');
+        interactiveArea.classList.add('hidden');
+        interactiveArea.innerHTML = '';
+
+        if (option === 1) {
+            // Interactive ROI Calculator Kata
+            appendCliOutput(`
+                <div class="text-amber-400 font-bold border-l-2 border-amber-500 pl-2">
+                    >>> RUNNING KATA 1: AUTOMATION ROI CALCULATOR
+                </div>
+                <div class="text-stone-300 text-xs">
+                    Calculate your annual cost savings by automating repetitive engineering tasks.
+                </div>
+            `);
+
+            interactiveArea.innerHTML = `
+                <div class="bg-black/80 p-4 rounded-lg border border-amber-500/30 space-y-3 font-mono text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] text-stone-400 uppercase mb-1">Hours/Week Spent Manually:</label>
+                            <input type="number" id="cliHours" value="10" min="1" max="80" oninput="calculateCliROI()" class="w-full bg-stone-900 border border-white/20 rounded px-3 py-1.5 text-amber-400 font-bold focus:border-amber-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-stone-400 uppercase mb-1">Hourly Rate / Cost ($/hr):</label>
+                            <input type="number" id="cliRate" value="45" min="10" max="500" oninput="calculateCliROI()" class="w-full bg-stone-900 border border-white/20 rounded px-3 py-1.5 text-amber-400 font-bold focus:border-amber-500 outline-none">
+                        </div>
+                    </div>
+                    <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded text-center">
+                        <span class="text-[10px] text-stone-400 uppercase block">Annual Savings Potential</span>
+                        <span id="cliSavingsDisplay" class="text-2xl font-bold text-amber-400">$21,060 / yr</span>
+                        <span id="cliHoursSavedDisplay" class="block text-[10px] text-stone-400">~468 hours recovered annually</span>
+                    </div>
+                    <button onclick="applyROIEstimateToInquiry()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold py-2 rounded text-[10px] uppercase tracking-widest transition">
+                        Automate This Kata Now →
+                    </button>
+                </div>
+            `;
+            interactiveArea.classList.remove('hidden');
+            calculateCliROI();
+
+        } else if (option === 2) {
+            // Python Automation Code Preview
+            appendCliOutput(`
+                <div class="text-orange-400 font-bold border-l-2 border-orange-500 pl-2">
+                    >>> RUNNING KATA 2: PYTHON WORKFLOW AUTOMATION
+                </div>
+                <pre class="bg-black/90 p-3 rounded text-[11px] text-blue-300 border border-white/10 overflow-x-auto">
+<span class="text-stone-500"># Budo Automation Kata</span>
+<span class="text-purple-400">class</span> <span class="text-yellow-400">StructuralSensei</span>:
+    <span class="text-purple-400">def</span> <span class="text-blue-400">__init__</span>(self):
+        self.mindset = <span class="text-orange-400">"Shotokan Precision"</span>
+        self.stack = [<span class="text-orange-400">"Python 3.12"</span>, <span class="text-orange-400">"SQL"</span>, <span class="text-orange-400">"Streamlit"</span>]
+
+    <span class="text-purple-400">def</span> <span class="text-blue-400">eliminate_waste</span>(self, task):
+        <span class="text-purple-400">if</span> task.<span class="text-blue-400">is_manual</span>():
+            <span class="text-purple-400">return</span> <span class="text-orange-400">"Automate via Custom Script (Save ~80% Time)"</span>
+        <span class="text-purple-400">return</span> <span class="text-orange-400">"Continuous Kaizen Improvement"</span>
+
+sensei = StructuralSensei()
+print(sensei.eliminate_waste(Task(<span class="text-orange-400">"Excel Data Cleaning"</span>)))
+                </pre>
+            `);
+
+        } else if (option === 3) {
+            // Data Integrity & LIMS Kata
+            appendCliOutput(`
+                <div class="text-cyan-400 font-bold border-l-2 border-cyan-500 pl-2">
+                    >>> RUNNING KATA 3: LIMS & DATA INTEGRITY ENGINE
+                </div>
+                <div class="bg-black/90 p-3 rounded text-[11px] text-stone-300 border border-white/10 space-y-1">
+                    <div><span class="text-green-400">[✓]</span> Validating SQLite database schemas...</div>
+                    <div><span class="text-green-400">[✓]</span> Executing asynchronous PDF report scraping...</div>
+                    <div><span class="text-yellow-400">[!]</span> Zero calculation mismatch detected across 10,200+ data rows.</div>
+                    <div class="text-cyan-400 font-bold pt-1">Data integrity guaranteed with Karate-level rigor.</div>
+                </div>
+            `);
+
+        } else if (option === 4) {
+            // Sensei Mindset
+            appendCliOutput(`
+                <div class="text-red-400 font-bold border-l-2 border-red-500 pl-2">
+                    >>> RUNNING KATA 4: SENSEI MINDSET & SPECS
+                </div>
+                <div class="bg-black/90 p-3 rounded text-[11px] text-stone-300 border border-white/10 space-y-1">
+                    <div><strong class="text-orange-400">Philosophy:</strong> "Kime (Focus) in Code, Zanshin (Awareness) in Quality Assurance."</div>
+                    <div><strong class="text-orange-400">Experience:</strong> 13+ Years Civil Engineering Management + Python Software Architecture.</div>
+                    <div><strong class="text-orange-400">Mission:</strong> Empower engineers through automated systems and knowledge transfer.</div>
+                </div>
+            `);
+        }
+
+        scrollToTerminalBottom();
+    }
+
+    function calculateCliROI() {
+        const hours = parseFloat(document.getElementById('cliHours')?.value) || 0;
+        const rate = parseFloat(document.getElementById('cliRate')?.value) || 0;
+        
+        // Assuming ~90% time saved through script automation
+        const hoursSavedPerYear = Math.round(hours * 52 * 0.9);
+        const annualSavings = Math.round(hoursSavedPerYear * rate);
+
+        const savingsEl = document.getElementById('cliSavingsDisplay');
+        const hoursEl = document.getElementById('cliHoursSavedDisplay');
+
+        if (savingsEl) savingsEl.textContent = `$${annualSavings.toLocaleString()} / yr`;
+        if (hoursEl) hoursEl.textContent = `~${hoursSavedPerYear} hours recovered annually`;
+    }
+
+    function appendCliOutput(html) {
+        const output = document.getElementById('cliOutput');
+        const div = document.createElement('div');
+        div.className = 'space-y-1 border-t border-white/5 pt-2 mt-2';
+        div.innerHTML = html;
+        output.appendChild(div);
+        scrollToTerminalBottom();
+    }
+
+    function resetTerminal() {
+        document.getElementById('cliOutput').innerHTML = `
+            <div class="text-cyan-400">
+                <span class="text-stone-500">[SYSTEM]</span> Console reset. Ready for input.
+            </div>
+        `;
+        document.getElementById('cliInteractiveArea').classList.add('hidden');
+        document.getElementById('cliInteractiveArea').innerHTML = '';
+    }
+
+    function scrollToTerminalBottom() {
+        const screen = document.getElementById('terminalScreen');
+        screen.scrollTop = screen.scrollHeight;
+    }
+       </script>
+       
 </body>
 </html>
