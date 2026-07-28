@@ -67,19 +67,58 @@
 </head>
 <body class="selection:bg-red-600 selection:text-white">
 
-    <!-- Navigation Bar -->
-    <nav class="fixed w-full z-50 px-4 sm:px-6 py-4 flex justify-between items-center bg-black/80 backdrop-blur-md border-b border-white/5">
-        <div class="font-bold tracking-tighter uppercase text-xs sm:text-sm">Structural<span class="text-red-600">Sensei</span></div>
-        <div class="flex gap-2.5 sm:gap-6 text-[9px] sm:text-[10px] uppercase font-bold tracking-wide sm:tracking-widest items-center">
-            <a href="#about" class="hover:text-orange-500 transition">About</a>
-            <a href="#platforms" class="hover:text-orange-500 transition">Platforms</a>
-            <a href="javascript:void(0)" onclick="toggleModal('roiModal')" class="text-amber-400 hover:text-amber-300 transition"><i class="fa-solid fa-calculator mr-1"></i>ROI Calc</a>
-            <a href="blog.html" class="text-orange-500 hover:text-orange-400 transition">Blog</a>
-            <a href="game.html" class="text-white hover:text-red-500 transition">Games</a>
-            <a href="privacy.html" class="text-stone-400 hover:text-white transition">Privacy</a>
-            <a href="javascript:void(0)" onclick="toggleModal('pythonModal')" class="text-red-500">Python Preview</a>
+        <!-- Navigation Bar -->
+    <nav class="fixed w-full z-50 px-4 sm:px-6 py-3.5 bg-black/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Brand Logo -->
+            <a href="#" class="font-bold tracking-tighter uppercase text-sm sm:text-base flex items-center gap-1.5">
+                <i class="fa-solid fa-user-ninja text-red-600"></i>
+                <span>Structural<span class="text-red-600">Sensei</span></span>
+            </a>
+
+            <!-- Desktop Links -->
+            <div class="hidden lg:flex gap-6 text-[10px] uppercase font-bold tracking-widest items-center">
+                <a href="#about" class="text-stone-300 hover:text-orange-500 transition">About</a>
+                <a href="#platforms" class="text-stone-300 hover:text-orange-500 transition">Platforms</a>
+                <a href="blog.html" class="text-stone-300 hover:text-orange-500 transition">Blog</a>
+                <a href="game.html" class="text-stone-300 hover:text-red-500 transition">Games</a>
+                <a href="privacy.html" class="text-stone-400 hover:text-white transition">Privacy</a>
+                
+                <!-- Flashing Interactive Dojo CLI Button -->
+                <button onclick="toggleModal('pythonModal')" class="relative group bg-red-600/20 border border-red-500/50 hover:bg-red-600/40 text-red-400 px-3.5 py-1.5 rounded-lg flex items-center gap-2 transition font-mono tracking-wider shadow-lg shadow-red-900/30">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    </span>
+                    <i class="fa-solid fa-terminal text-orange-400"></i>
+                    <span>DOJO CLI</span>
+                    <span class="bg-red-600 text-white text-[8px] font-sans font-extrabold px-1.5 py-0.5 rounded tracking-normal animate-pulse">TRY LIVE</span>
+                </button>
+            </div>
+
+            <!-- Mobile Interactive CLI Trigger & Menu Toggle -->
+            <div class="flex lg:hidden items-center gap-2.5">
+                <button onclick="toggleModal('pythonModal')" class="bg-red-600/20 border border-red-500/50 text-red-400 px-2.5 py-1 rounded-lg text-[9px] font-mono font-bold flex items-center gap-1.5 animate-pulse">
+                    <i class="fa-solid fa-terminal text-orange-400"></i>
+                    <span>KATA CLI</span>
+                </button>
+
+                <button id="mobileMenuBtn" onclick="toggleMobileNav()" class="text-stone-300 hover:text-white p-2 rounded-lg bg-white/5 border border-white/10 text-xs">
+                    <i class="fa-solid fa-bars" id="mobileMenuIcon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobileNavDrawer" class="hidden lg:hidden flex-col gap-3 pt-4 pb-2 text-[11px] font-bold uppercase tracking-wider border-t border-white/5 mt-3">
+            <a href="#about" onclick="toggleMobileNav()" class="text-stone-300 hover:text-orange-500 py-1">About</a>
+            <a href="#platforms" onclick="toggleMobileNav()" class="text-stone-300 hover:text-orange-500 py-1">Platforms</a>
+            <a href="blog.html" class="text-stone-300 hover:text-orange-500 py-1">Blog</a>
+            <a href="game.html" class="text-stone-300 hover:text-red-500 py-1">Games</a>
+            <a href="privacy.html" class="text-stone-400 hover:text-white py-1">Privacy</a>
         </div>
     </nav>
+
 
     <!-- Header / Hero Section -->
     <header class="pt-40 pb-20 px-6 max-w-6xl mx-auto">
