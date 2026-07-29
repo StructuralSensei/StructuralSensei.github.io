@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KATA vs TECH | 2D Sensei Platformer & Dojo Hub</title>
+    <title>KATA vs TECH | 2D Sensei Platformer</title>
+    <!-- Tailwind CSS & FontAwesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -12,34 +13,9 @@
         .font-mono-code { font-family: 'Fira Code', monospace; }
         canvas { touch-action: none; }
         .glass {
-            background: rgba(24, 24, 27, 0.85);
+            background: rgba(24, 24, 27, 0.90);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .view { display: none; }
-        .view.active { display: block; }
-        #track {
-            position: relative;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            margin: 50px 0 30px 0;
-            border-radius: 2px;
-        }
-        .milestone-marker {
-            position: absolute;
-            top: -6px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #3b82f6;
-            transform: translateX(-50%);
-        }
-        #character {
-            position: absolute;
-            top: -32px;
-            font-size: 24px;
-            transition: left 0.4s ease-in-out;
-            transform: translateX(-50%);
         }
     </style>
 </head>
@@ -47,94 +23,29 @@
 
     <!-- Top Navigation Header -->
     <nav class="w-full px-3 sm:px-6 py-3 bg-stone-950/90 border-b border-stone-800 flex justify-between items-center z-40 sticky top-0">
-        <button onclick="switchView('hub-view')" class="font-bold uppercase tracking-tight text-xs sm:text-sm flex items-center gap-1.5 text-stone-300 hover:text-red-500 transition">
-            <i class="fa-solid fa-house text-red-500"></i>
-            <span>Structural<span class="text-red-600">Sensei</span></span>
-        </button>
-        <div class="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs font-mono">
-            <button onclick="switchView('hub-view')" class="bg-stone-900 hover:bg-stone-800 border border-stone-800 px-2 py-1 rounded transition text-stone-300">
-                <i class="fa-solid fa-layer-group sm:mr-1"></i> <span class="hidden sm:inline">HUB</span>
+        <!-- Home Button pointing to website -->
+        <a href="https://www.structuralsensei.cc" id="homeBtn" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm px-3 py-1.5 rounded flex items-center gap-2 transition shadow">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+
+        <!-- Quiz Trigger & Score HUD -->
+        <div class="flex items-center gap-2 sm:gap-3 text-xs font-mono">
+            <button onclick="openQuizPopup('hard')" class="bg-stone-800 hover:bg-stone-700 border border-stone-700 text-amber-400 font-bold px-3 py-1.5 rounded transition flex items-center gap-1.5">
+                <i class="fa-solid fa-brain"></i>
+                <span class="hidden sm:inline">STEM</span> QUIZ
             </button>
-            <button onclick="switchView('game-view')" class="bg-stone-800 hover:bg-stone-700 px-2 py-1 rounded transition text-stone-300">
-                <i class="fa-solid fa-gamepad sm:mr-1"></i> <span class="hidden sm:inline">GAME</span>
-            </button>
-            <button onclick="switchView('story-view')" class="bg-stone-800 hover:bg-stone-700 px-2 py-1 rounded transition text-stone-300">
-                <i class="fa-solid fa-road sm:mr-1"></i> <span class="hidden sm:inline">CAREER</span>
-            </button>
-            <button onclick="switchView('quiz-view'); loadQuiz('hard');" class="bg-stone-800 hover:bg-stone-700 px-2 py-1 rounded transition text-stone-300">
-                <i class="fa-solid fa-brain sm:mr-1"></i> <span class="hidden sm:inline">QUIZ</span>
-            </button>
-            <span class="text-amber-400 font-bold ml-1 text-[11px]"><i class="fa-solid fa-trophy mr-0.5"></i> <span id="navHighScore">0</span></span>
+            <span class="text-amber-400 font-bold ml-1 text-xs sm:text-sm flex items-center gap-1">
+                <i class="fa-solid fa-trophy"></i> HI: <span id="navHighScore">0</span>
+            </span>
         </div>
     </nav>
 
-    <!-- Main Content Container -->
+    <!-- Main Game Container -->
     <main class="flex-1 flex flex-col items-center justify-center p-2 sm:p-6 relative max-w-5xl mx-auto w-full">
-        
-        <!-- VIEW 0: CENTRAL SENSEI HUB (DEFAULT) -->
-        <div id="hub-view" class="view active w-full max-w-3xl glass p-6 sm:p-8 rounded-xl shadow-2xl my-auto">
-            <div class="text-center mb-8">
-                <span class="inline-block px-3 py-1 bg-red-950/60 border border-red-500/30 text-red-400 font-mono text-[11px] rounded-full uppercase tracking-wider mb-3">
-                    Structural Sensei Engine v2.0
-                </span>
-                <h1 class="text-3xl sm:text-5xl font-comic text-white tracking-wide">
-                    DOJO CONTROL CENTER
-                </h1>
-                <p class="text-stone-400 text-xs sm:text-sm font-mono mt-2">
-                    Select a module to test your engineering Kata or explore technical career mastery.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <!-- Game Card -->
-                <button onclick="switchView('game-view')" class="bg-stone-900/90 hover:bg-stone-800 border border-stone-800 hover:border-orange-500/50 p-5 rounded-xl text-left transition flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-lg bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-500 text-lg mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-gamepad"></i>
-                        </div>
-                        <h3 class="font-comic text-xl text-stone-200 group-hover:text-orange-400">2D Platformer</h3>
-                        <p class="text-stone-400 text-[11px] font-mono mt-1">Fight through legacy bugs with Python, SQL, and Streamlit stances.</p>
-                    </div>
-                    <span class="mt-4 text-[10px] font-mono text-orange-500 font-bold flex items-center gap-1">LAUNCH GAME →</span>
-                </button>
-
-                <!-- Career Card -->
-                <button onclick="switchView('story-view')" class="bg-stone-900/90 hover:bg-stone-800 border border-stone-800 hover:border-blue-500/50 p-5 rounded-xl text-left transition flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-road"></i>
-                        </div>
-                        <h3 class="font-comic text-xl text-stone-200 group-hover:text-blue-400">Path to Mastery</h3>
-                        <p class="text-stone-400 text-[11px] font-mono mt-1">Interactive roadmap from junior structural engineer to system architect.</p>
-                    </div>
-                    <span class="mt-4 text-[10px] font-mono text-blue-400 font-bold flex items-center gap-1">VIEW ROADMAP →</span>
-                </button>
-
-                <!-- Quiz Card -->
-                <button onclick="switchView('quiz-view'); loadQuiz('hard');" class="bg-stone-900/90 hover:bg-stone-800 border border-stone-800 hover:border-amber-500/50 p-5 rounded-xl text-left transition flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-brain"></i>
-                        </div>
-                        <h3 class="font-comic text-xl text-stone-200 group-hover:text-amber-400">STEM Quiz</h3>
-                        <p class="text-stone-400 text-[11px] font-mono mt-1">Hard mode engineering & computer science knowledge protocol.</p>
-                    </div>
-                    <span class="mt-4 text-[10px] font-mono text-amber-400 font-bold flex items-center gap-1">TEST KNOWLEDGE →</span>
-                </button>
-            </div>
-
-            <!-- External Portfolio Link -->
-            <div class="border-t border-stone-800 pt-5 text-center flex flex-col sm:flex-row justify-between items-center gap-3">
-                <span class="text-stone-500 font-mono text-xs">Official Site & Portfolio</span>
-                <a href="https://structuralsensei.github.io" target="_blank" class="bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold px-4 py-2 rounded transition flex items-center gap-2">
-                    <i class="fa-solid fa-globe"></i> Visit structuralsensei.github.io
-                </a>
-            </div>
-        </div>
-
-        <!-- VIEW 1: 2D PLATFORMER GAME -->
-        <div id="game-view" class="view w-full flex flex-col items-center">
-            <!-- Game HUD Overlay (Mobile Grid Optimized) -->
+        <div id="game-wrapper" class="w-full flex flex-col items-center">
+            
+            <!-- Game HUD Overlay -->
             <div id="gameHud" class="w-full max-w-4xl bg-stone-900 border-t border-x border-stone-800 rounded-t-xl p-2 sm:p-3 grid grid-cols-2 gap-1 sm:flex sm:justify-between items-center text-[11px] sm:text-xs font-mono font-bold">
                 <div class="flex items-center gap-3">
                     <div class="text-red-500 flex items-center gap-1">
@@ -152,17 +63,17 @@
                 </div>
             </div>
 
-            <!-- Canvas Game Screen -->
+            <!-- Canvas Screen -->
             <div class="relative w-full max-w-4xl bg-stone-950 border border-stone-800 rounded-b-xl overflow-hidden shadow-2xl aspect-[16/9]">
                 <canvas id="gameCanvas" width="800" height="450" class="w-full h-full block bg-stone-950"></canvas>
 
-                <!-- Comic Stance Choice Modal -->
+                <!-- Stance Selection Start Modal -->
                 <div id="stanceModal" class="absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6 text-center z-30 max-h-full overflow-y-auto">
                     <h1 class="text-3xl sm:text-6xl font-comic text-orange-500 tracking-wider mb-1 drop-shadow-md">
                         KATA VS TECH
                     </h1>
                     <p class="text-stone-400 text-[11px] sm:text-sm font-mono mb-4 sm:mb-8 max-w-md">
-                        Select your Kata stance to fight legacy tech bugs and defeat the Monolithic Boss!
+                        Select your Kata stance to fight legacy bugs and defeat the Monolithic Boss!
                     </p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl w-full mb-4 sm:mb-8">
@@ -212,13 +123,10 @@
                         <button onclick="generateFlashcard()" class="bg-amber-500 hover:bg-amber-400 text-black font-mono text-[11px] font-bold px-4 py-2 sm:px-6 sm:py-3 rounded-lg uppercase tracking-wider transition">
                             <i class="fa-solid fa-share-nodes mr-1"></i> Flashcard
                         </button>
-                        <button onclick="switchView('hub-view')" class="bg-stone-800 hover:bg-stone-700 text-stone-300 font-mono text-[11px] font-bold px-4 py-2 sm:px-6 sm:py-3 rounded-lg uppercase tracking-wider transition">
-                            <i class="fa-solid fa-house mr-1"></i> Hub
-                        </button>
                     </div>
                 </div>
 
-                <!-- Flashcard Modal Overlay -->
+                <!-- Achievement Flashcard Modal -->
                 <div id="flashcardModal" class="hidden absolute inset-0 bg-black/95 flex flex-col items-center justify-center p-4 z-40 max-h-full overflow-y-auto">
                     <div class="bg-stone-900 border border-amber-500/40 p-4 rounded-xl max-w-sm w-full flex flex-col items-center">
                         <h3 class="font-comic text-2xl text-amber-400 mb-2">DOJO ACHIEVEMENT</h3>
@@ -237,7 +145,7 @@
                 </div>
             </div>
 
-            <!-- Compact Touch Controls for Mobile -->
+            <!-- Mobile Touch Controls -->
             <div class="w-full max-w-4xl mt-2 grid grid-cols-2 gap-2 sm:hidden">
                 <div class="flex gap-1.5">
                     <button id="btnLeft" class="flex-1 bg-stone-900 border border-stone-800 active:bg-orange-500/40 text-stone-300 py-2.5 rounded-lg text-lg">◀</button>
@@ -249,69 +157,47 @@
                 </div>
             </div>
         </div>
-
-        <!-- VIEW 2: CAREER PATH TO MASTERY -->
-        <div id="story-view" class="view max-w-3xl w-full glass p-6 sm:p-8 rounded-xl shadow-2xl my-auto">
-            <h2 class="text-lg sm:text-xl font-bold uppercase tracking-widest text-blue-500 mb-6 text-center">Path to Mastery</h2>
-            
-            <div id="track">
-                <div id="character">👷</div>
-                <div class="milestone-marker" style="left: 0%;"></div>
-                <div class="milestone-marker" style="left: 33%;"></div>
-                <div class="milestone-marker" style="left: 66%;"></div>
-                <div class="milestone-marker" style="left: 95%;"></div>
-            </div>
-
-            <div class="text-center mt-6">
-                <h3 id="story-title" class="text-xl sm:text-2xl font-bold mb-2">Stage 1: The Foundation</h3>
-                <p id="story-text" class="text-stone-400 text-xs sm:text-sm h-16 max-w-lg mx-auto">Mastering the fundamentals of static loads and material strength.</p>
-                
-                <button id="walk-btn" onclick="advanceJourney()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm px-6 py-3 rounded font-bold uppercase tracking-widest transition mt-4 w-full sm:w-auto">
-                    Advance Career
-                </button>
-            </div>
-            
-            <div class="mt-8 text-center border-t border-stone-800 pt-4">
-                <button onclick="switchView('hub-view')" class="text-stone-500 hover:text-white text-xs font-mono transition">← Back to Dojo Hub</button>
-            </div>
-        </div>
-
-        <!-- VIEW 3: DOJO STEM QUIZ -->
-        <div id="quiz-view" class="view max-w-2xl w-full glass p-6 sm:p-8 rounded-xl shadow-2xl my-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="quiz-title" class="text-lg sm:text-xl font-bold uppercase tracking-widest text-orange-400">Hard Mode Protocol</h2>
-                <span id="score-counter" class="font-mono text-xs sm:text-sm text-amber-400 font-bold">Score: 0 / 10</span>
-            </div>
-
-            <p id="q-text" class="text-base sm:text-lg font-medium mb-6 leading-relaxed">Loading Question...</p>
-
-            <div id="btns" class="grid grid-cols-1 gap-2.5"></div>
-
-            <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-stone-800 pt-4">
-                <div class="space-x-2">
-                    <button onclick="loadQuiz('hard')" class="text-xs bg-stone-800 hover:bg-stone-700 px-3 py-1.5 rounded font-mono text-stone-300">Hard STEM</button>
-                    <button onclick="loadQuiz('gen')" class="text-xs bg-stone-800 hover:bg-stone-700 px-3 py-1.5 rounded font-mono text-stone-300">General Trivia</button>
-                </div>
-                <button onclick="switchView('hub-view')" class="text-stone-500 hover:text-white text-xs font-mono transition">← Back to Dojo Hub</button>
-            </div>
-        </div>
-
     </main>
 
-    <!-- Footer -->
+    <!-- ISOLATED QUIZ POPUP MODAL -->
+    <div id="quiz-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="glass max-w-lg w-full p-6 rounded-xl shadow-2xl relative border border-stone-700">
+            <!-- Close Button -->
+            <button onclick="closeQuizPopup()" class="absolute top-3 right-4 text-stone-400 hover:text-white text-2xl font-bold">&times;</button>
+            
+            <div class="flex justify-between items-center mb-4 pr-6">
+                <h2 id="quiz-title" class="text-lg font-bold uppercase tracking-widest text-orange-400">Hard STEM Protocol</h2>
+                <span id="score-counter" class="font-mono text-xs text-amber-400 font-bold">Score: 0 / 10</span>
+            </div>
+
+            <p id="q-text" class="text-sm sm:text-base font-medium mb-5 leading-relaxed min-h-[60px]">Loading Question...</p>
+
+            <div id="quiz-btns" class="grid grid-cols-1 gap-2"></div>
+
+            <div class="mt-6 flex justify-between items-center border-t border-stone-800 pt-3">
+                <div class="space-x-2">
+                    <button onclick="loadQuiz('hard')" class="text-[11px] bg-stone-800 hover:bg-stone-700 px-2.5 py-1 rounded font-mono text-stone-300">Hard STEM</button>
+                    <button onclick="loadQuiz('gen')" class="text-[11px] bg-stone-800 hover:bg-stone-700 px-2.5 py-1 rounded font-mono text-stone-300">General Trivia</button>
+                </div>
+                <button onclick="closeQuizPopup()" class="text-xs font-mono text-stone-400 hover:text-white">Resume Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Link -->
     <footer class="py-3 text-center font-mono text-[10px] text-stone-600 border-t border-stone-900">
-        Structural Sensei Engine | <a href="https://structuralsensei.github.io" target="_blank" class="hover:text-orange-500 underline">structuralsensei.github.io</a>
+        Structural Sensei Engine | <a href="https://www.structuralsensei.cc" class="hover:text-orange-500 underline">www.structuralsensei.cc</a>
     </footer>
 
-    <!-- Game Engine Logic & Hub Scripts -->
+    <!-- Main Game & Quiz Scripts -->
     <script>
-        // --- VIEW SWITCHER ---
-        function switchView(id) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            const targetView = document.getElementById(id);
-            if (targetView) targetView.classList.add('active');
-            if (id === 'story-view') loadStory();
-        }
+        // --- HOME CONFIRMATION IF GAME RUNNING ---
+        document.getElementById('homeBtn').addEventListener('click', function(e) {
+            if (gameState && gameState.active) {
+                const confirmExit = confirm("Exit Kata vs Tech and return home?");
+                if (!confirmExit) e.preventDefault();
+            }
+        });
 
         // --- 2D PLATFORMER ENGINE ---
         const canvas = document.getElementById('gameCanvas');
@@ -320,6 +206,7 @@
         let highScore = parseInt(localStorage.getItem('sensei_high_score') || '0');
         document.getElementById('navHighScore').textContent = highScore;
 
+        let isGamePaused = false;
         let gameState = {
             active: false,
             score: 0,
@@ -434,8 +321,10 @@
 
         function gameLoop() {
             if (!gameState.active) return;
-            update();
-            render();
+            if (!isGamePaused) {
+                update();
+                render();
+            }
             requestAnimationFrame(gameLoop);
         }
 
@@ -669,7 +558,7 @@
 
             cctx.fillStyle = '#38bdf8';
             cctx.font = '12px Fira Code, monospace';
-            cctx.fillText("structuralsensei.github.io", 30, 185);
+            cctx.fillText("www.structuralsensei.cc", 30, 185);
 
             document.getElementById('flashcardModal').classList.remove('hidden');
         }
@@ -686,8 +575,8 @@
             document.getElementById('flashcardModal').classList.add('hidden');
         }
 
-        // --- STEM QUIZ DATA & ENGINE ---
-        const data = {
+        // --- ISOLATED QUIZ MODAL ENGINE ---
+        const quizDataMap = {
             hard: [
                 {q: "STRUCTURAL: What is the primary factor in Euler's Column Buckling formula (π²EI/L²)?", a: ["Tensile Load", "Effective Length", "Shear Modulus", "Torsional Yield"], c: 1},
                 {q: "FLUIDS: In open channel flow, which equation relies heavily on the roughness coefficient 'n'?", a: ["Bernoulli's", "Manning's Equation", "Darcy-Weisbach", "Reynold's Number"], c: 1},
@@ -714,15 +603,26 @@
             ]
         };
 
-        let currentType = '';
+        let currentQuizType = 'hard';
         let currentQIdx = 0;
         let quizScore = 0;
 
+        function openQuizPopup(type = 'hard') {
+            isGamePaused = true;
+            document.getElementById('quiz-modal').classList.remove('hidden');
+            loadQuiz(type);
+        }
+
+        function closeQuizPopup() {
+            document.getElementById('quiz-modal').classList.add('hidden');
+            isGamePaused = false;
+        }
+
         function loadQuiz(type) {
-            currentType = type;
+            currentQuizType = type;
             currentQIdx = 0;
             quizScore = 0;
-            document.getElementById('quiz-title').innerText = type === 'hard' ? "Hard Mode Protocol" : "STEM Trivia Protocol";
+            document.getElementById('quiz-title').innerText = type === 'hard' ? "Hard STEM Protocol" : "General Trivia Protocol";
             updateScoreDisplay();
             renderQuestion();
         }
@@ -732,23 +632,23 @@
         }
 
         function renderQuestion() {
-            const quizData = data[currentType];
+            const quizList = quizDataMap[currentQuizType];
             
-            if (currentQIdx >= quizData.length) {
-                document.getElementById('q-text').innerHTML = `<span class="text-green-500 font-bold">Protocol Complete.</span> Final Score: ${quizScore}/10.`;
-                document.getElementById('btns').innerHTML = `<button onclick="loadQuiz('${currentType}')" class="glass p-4 rounded text-center hover:bg-white/10 font-mono text-sm text-stone-200">Restart Test</button>`;
+            if (currentQIdx >= quizList.length) {
+                document.getElementById('q-text').innerHTML = `<span class="text-green-400 font-bold">Protocol Complete!</span> You scored ${quizScore}/10.`;
+                document.getElementById('quiz-btns').innerHTML = `<button onclick="loadQuiz('${currentQuizType}')" class="bg-stone-800 hover:bg-stone-700 p-3 rounded text-center font-mono text-xs text-stone-200">Try Again</button>`;
                 return;
             }
 
-            const q = quizData[currentQIdx];
+            const q = quizList[currentQIdx];
             document.getElementById('q-text').innerText = `${currentQIdx + 1}. ${q.q}`;
             
-            const btnContainer = document.getElementById('btns');
+            const btnContainer = document.getElementById('quiz-btns');
             btnContainer.innerHTML = '';
             
             q.a.forEach((opt, index) => {
                 const btn = document.createElement('button');
-                btn.className = 'glass p-3 sm:p-4 rounded hover:bg-white/10 hover:border-white/40 text-left transition text-xs sm:text-sm font-mono text-stone-300';
+                btn.className = 'bg-stone-900 border border-stone-800 hover:bg-stone-800 hover:border-orange-500/50 p-2.5 rounded text-left transition text-xs font-mono text-stone-300';
                 btn.innerText = opt;
                 btn.onclick = () => handleAnswer(index, q.c);
                 btnContainer.appendChild(btn);
@@ -760,54 +660,6 @@
             currentQIdx++;
             updateScoreDisplay();
             renderQuestion();
-        }
-
-        // --- CAREER PATH STORY ENGINE ---
-        const journeyStages = [
-            { pos: "0%", icon: "👷", title: "Stage 1: The Foundation", text: "Mastering the fundamentals of structural engineering, calculations, and concrete." },
-            { pos: "33%", icon: "💻", title: "Stage 2: The Automator", text: "Hitting the 'Technical Wall'. Discovering Python to write scripts and automate repetitive design tasks." },
-            { pos: "66%", icon: "🚀", title: "Stage 3: Systems Architect", text: "Bridging disciplines. Building high-level systems, web apps, and data pipelines for infrastructure." },
-            { pos: "95%", icon: "🧘", title: "Stage 4: The Sensei", text: "Achieving leverage. Translating technical mastery into financial independence and teaching others." }
-        ];
-        
-        let journeyStep = 0;
-
-        function loadStory() {
-            journeyStep = 0;
-            updateJourneyUI();
-        }
-
-        function advanceJourney() {
-            if (journeyStep < journeyStages.length - 1) {
-                journeyStep++;
-                updateJourneyUI();
-            } else {
-                alert("You have reached mastery. Now, teach the next generation.");
-                journeyStep = 0;
-                updateJourneyUI();
-            }
-        }
-
-        function updateJourneyUI() {
-            const stage = journeyStages[journeyStep];
-            const character = document.getElementById('character');
-            
-            character.style.left = stage.pos;
-            
-            setTimeout(() => {
-                character.innerText = stage.icon;
-                document.getElementById('story-title').innerText = stage.title;
-                document.getElementById('story-text').innerText = stage.text;
-                
-                const btn = document.getElementById('walk-btn');
-                if (journeyStep === journeyStages.length - 1) {
-                    btn.innerText = "Restart Journey";
-                    btn.className = "bg-green-600 hover:bg-green-500 text-white text-xs sm:text-sm px-6 py-3 rounded font-bold uppercase tracking-widest transition mt-4 w-full sm:w-auto";
-                } else {
-                    btn.innerText = "Advance Career";
-                    btn.className = "bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm px-6 py-3 rounded font-bold uppercase tracking-widest transition mt-4 w-full sm:w-auto";
-                }
-            }, 300);
         }
     </script>
 </body>
