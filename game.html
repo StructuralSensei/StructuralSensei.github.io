@@ -22,7 +22,7 @@
             position: relative;
             height: 4px;
             background: rgba(255, 255, 255, 0.2);
-            margin: 40px 0;
+            margin: 50px 0 30px 0;
             border-radius: 2px;
         }
         .milestone-marker {
@@ -32,10 +32,11 @@
             height: 16px;
             border-radius: 50%;
             background: #3b82f6;
+            transform: translateX(-50%);
         }
         #character {
             position: absolute;
-            top: -24px;
+            top: -32px;
             font-size: 24px;
             transition: left 0.4s ease-in-out;
             transform: translateX(-50%);
@@ -44,119 +45,185 @@
 </head>
 <body class="bg-black text-white font-sans antialiased select-none overflow-x-hidden min-h-screen flex flex-col justify-between">
 
-    <!-- Top Navigation -->
-    <nav class="w-full px-6 py-4 bg-stone-950/90 border-b border-stone-800 flex justify-between items-center z-40">
-        <a href="#" onclick="switchView('game-view')" class="font-bold uppercase tracking-tight text-sm flex items-center gap-2 text-stone-300 hover:text-red-500 transition">
-            <i class="fa-solid fa-arrow-left"></i>
+    <!-- Top Navigation Header -->
+    <nav class="w-full px-3 sm:px-6 py-3 bg-stone-950/90 border-b border-stone-800 flex justify-between items-center z-40 sticky top-0">
+        <button onclick="switchView('hub-view')" class="font-bold uppercase tracking-tight text-xs sm:text-sm flex items-center gap-1.5 text-stone-300 hover:text-red-500 transition">
+            <i class="fa-solid fa-house text-red-500"></i>
             <span>Structural<span class="text-red-600">Sensei</span></span>
-        </a>
-        <div class="flex items-center gap-3 text-xs font-mono">
-            <button onclick="switchView('game-view')" class="bg-stone-800 hover:bg-stone-700 px-3 py-1 rounded transition text-stone-300">
-                <i class="fa-solid fa-gamepad mr-1"></i> GAME
+        </button>
+        <div class="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs font-mono">
+            <button onclick="switchView('hub-view')" class="bg-stone-900 hover:bg-stone-800 border border-stone-800 px-2 py-1 rounded transition text-stone-300">
+                <i class="fa-solid fa-layer-group sm:mr-1"></i> <span class="hidden sm:inline">HUB</span>
             </button>
-            <button onclick="switchView('story-view')" class="bg-stone-800 hover:bg-stone-700 px-3 py-1 rounded transition text-stone-300">
-                <i class="fa-solid fa-road mr-1"></i> CAREER
+            <button onclick="switchView('game-view')" class="bg-stone-800 hover:bg-stone-700 px-2 py-1 rounded transition text-stone-300">
+                <i class="fa-solid fa-gamepad sm:mr-1"></i> <span class="hidden sm:inline">GAME</span>
             </button>
-            <button onclick="switchView('quiz-view'); loadQuiz('hard');" class="bg-stone-800 hover:bg-stone-700 px-3 py-1 rounded transition text-stone-300">
-                <i class="fa-solid fa-brain mr-1"></i> QUIZ
+            <button onclick="switchView('story-view')" class="bg-stone-800 hover:bg-stone-700 px-2 py-1 rounded transition text-stone-300">
+                <i class="fa-solid fa-road sm:mr-1"></i> <span class="hidden sm:inline">CAREER</span>
             </button>
-            <span class="text-amber-400 font-bold ml-2"><i class="fa-solid fa-trophy mr-1"></i> HI: <span id="navHighScore">0</span></span>
+            <button onclick="switchView('quiz-view'); loadQuiz('hard');" class="bg-stone-800 hover:bg-stone-700 px-2 py-1 rounded transition text-stone-300">
+                <i class="fa-solid fa-brain sm:mr-1"></i> <span class="hidden sm:inline">QUIZ</span>
+            </button>
+            <span class="text-amber-400 font-bold ml-1 text-[11px]"><i class="fa-solid fa-trophy mr-0.5"></i> <span id="navHighScore">0</span></span>
         </div>
     </nav>
 
     <!-- Main Content Container -->
     <main class="flex-1 flex flex-col items-center justify-center p-2 sm:p-6 relative max-w-5xl mx-auto w-full">
         
+        <!-- VIEW 0: CENTRAL SENSEI HUB (DEFAULT) -->
+        <div id="hub-view" class="view active w-full max-w-3xl glass p-6 sm:p-8 rounded-xl shadow-2xl my-auto">
+            <div class="text-center mb-8">
+                <span class="inline-block px-3 py-1 bg-red-950/60 border border-red-500/30 text-red-400 font-mono text-[11px] rounded-full uppercase tracking-wider mb-3">
+                    Structural Sensei Engine v2.0
+                </span>
+                <h1 class="text-3xl sm:text-5xl font-comic text-white tracking-wide">
+                    DOJO CONTROL CENTER
+                </h1>
+                <p class="text-stone-400 text-xs sm:text-sm font-mono mt-2">
+                    Select a module to test your engineering Kata or explore technical career mastery.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <!-- Game Card -->
+                <button onclick="switchView('game-view')" class="bg-stone-900/90 hover:bg-stone-800 border border-stone-800 hover:border-orange-500/50 p-5 rounded-xl text-left transition flex flex-col justify-between group">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-500 text-lg mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <h3 class="font-comic text-xl text-stone-200 group-hover:text-orange-400">2D Platformer</h3>
+                        <p class="text-stone-400 text-[11px] font-mono mt-1">Fight through legacy bugs with Python, SQL, and Streamlit stances.</p>
+                    </div>
+                    <span class="mt-4 text-[10px] font-mono text-orange-500 font-bold flex items-center gap-1">LAUNCH GAME →</span>
+                </button>
+
+                <!-- Career Card -->
+                <button onclick="switchView('story-view')" class="bg-stone-900/90 hover:bg-stone-800 border border-stone-800 hover:border-blue-500/50 p-5 rounded-xl text-left transition flex flex-col justify-between group">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-road"></i>
+                        </div>
+                        <h3 class="font-comic text-xl text-stone-200 group-hover:text-blue-400">Path to Mastery</h3>
+                        <p class="text-stone-400 text-[11px] font-mono mt-1">Interactive roadmap from junior structural engineer to system architect.</p>
+                    </div>
+                    <span class="mt-4 text-[10px] font-mono text-blue-400 font-bold flex items-center gap-1">VIEW ROADMAP →</span>
+                </button>
+
+                <!-- Quiz Card -->
+                <button onclick="switchView('quiz-view'); loadQuiz('hard');" class="bg-stone-900/90 hover:bg-stone-800 border border-stone-800 hover:border-amber-500/50 p-5 rounded-xl text-left transition flex flex-col justify-between group">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h3 class="font-comic text-xl text-stone-200 group-hover:text-amber-400">STEM Quiz</h3>
+                        <p class="text-stone-400 text-[11px] font-mono mt-1">Hard mode engineering & computer science knowledge protocol.</p>
+                    </div>
+                    <span class="mt-4 text-[10px] font-mono text-amber-400 font-bold flex items-center gap-1">TEST KNOWLEDGE →</span>
+                </button>
+            </div>
+
+            <!-- External Portfolio Link -->
+            <div class="border-t border-stone-800 pt-5 text-center flex flex-col sm:flex-row justify-between items-center gap-3">
+                <span class="text-stone-500 font-mono text-xs">Official Site & Portfolio</span>
+                <a href="https://structuralsensei.github.io" target="_blank" class="bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold px-4 py-2 rounded transition flex items-center gap-2">
+                    <i class="fa-solid fa-globe"></i> Visit structuralsensei.github.io
+                </a>
+            </div>
+        </div>
+
         <!-- VIEW 1: 2D PLATFORMER GAME -->
-        <div id="game-view" class="view active w-full flex flex-col items-center">
-            <!-- Game HUD Overlay -->
-            <div id="gameHud" class="w-full max-w-4xl bg-stone-900 border-t border-x border-stone-800 rounded-t-xl p-3 flex justify-between items-center text-xs font-mono font-bold">
-                <div class="flex items-center gap-4">
+        <div id="game-view" class="view w-full flex flex-col items-center">
+            <!-- Game HUD Overlay (Mobile Grid Optimized) -->
+            <div id="gameHud" class="w-full max-w-4xl bg-stone-900 border-t border-x border-stone-800 rounded-t-xl p-2 sm:p-3 grid grid-cols-2 gap-1 sm:flex sm:justify-between items-center text-[11px] sm:text-xs font-mono font-bold">
+                <div class="flex items-center gap-3">
                     <div class="text-red-500 flex items-center gap-1">
-                        <i class="fa-solid fa-heart"></i>
-                        <span id="hudHp">100</span> HP
+                        <i class="fa-solid fa-heart"></i> <span id="hudHp">100</span> HP
                     </div>
                     <div class="text-yellow-400">
-                        <i class="fa-solid fa-star"></i> SCORE: <span id="hudScore">0</span>
+                        <i class="fa-solid fa-star"></i> <span id="hudScore">0</span>
                     </div>
                 </div>
-                <div class="text-center font-comic text-lg tracking-wider text-orange-400">
-                    LEVEL <span id="hudLevel">1</span>: <span id="hudLevelName">SPREADSHEET SWAMP</span>
+                <div class="text-center font-comic text-sm sm:text-base tracking-wider text-orange-400 col-span-2 sm:col-span-1 order-first sm:order-none border-b border-stone-800 sm:border-none pb-1 sm:pb-0">
+                    LVL <span id="hudLevel">1</span>: <span id="hudLevelName">SPREADSHEET SWAMP</span>
                 </div>
-                <div class="text-cyan-400">
-                    <i class="fa-solid fa-bolt"></i> STANCE: <span id="hudStance">PYTHON</span>
+                <div class="text-cyan-400 text-right">
+                    <i class="fa-solid fa-bolt"></i> <span id="hudStance">PYTHON</span>
                 </div>
             </div>
 
             <!-- Canvas Game Screen -->
-            <div class="relative w-full max-w-4xl bg-stone-950 border border-stone-800 rounded-b-xl overflow-hidden shadow-2xl">
-                <canvas id="gameCanvas" width="800" height="450" class="w-full h-auto block bg-stone-950"></canvas>
+            <div class="relative w-full max-w-4xl bg-stone-950 border border-stone-800 rounded-b-xl overflow-hidden shadow-2xl aspect-[16/9]">
+                <canvas id="gameCanvas" width="800" height="450" class="w-full h-full block bg-stone-950"></canvas>
 
-                <!-- Comic Stance Choice Modal (Start Screen) -->
-                <div id="stanceModal" class="absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-30">
-                    <h1 class="text-4xl sm:text-6xl font-comic text-orange-500 tracking-wider mb-2 drop-shadow-md">
+                <!-- Comic Stance Choice Modal -->
+                <div id="stanceModal" class="absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6 text-center z-30 max-h-full overflow-y-auto">
+                    <h1 class="text-3xl sm:text-6xl font-comic text-orange-500 tracking-wider mb-1 drop-shadow-md">
                         KATA VS TECH
                     </h1>
-                    <p class="text-stone-400 text-xs sm:text-sm font-mono mb-8 max-w-md">
-                        Select your Kata stance to fight through 5 levels of legacy tech bugs and defeat the Monolithic Boss!
+                    <p class="text-stone-400 text-[11px] sm:text-sm font-mono mb-4 sm:mb-8 max-w-md">
+                        Select your Kata stance to fight legacy tech bugs and defeat the Monolithic Boss!
                     </p>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl w-full mb-8">
-                        <button onclick="selectStance('python')" class="bg-stone-900 hover:bg-orange-500/20 border-2 border-orange-500/50 hover:border-orange-500 p-4 rounded-xl text-left transition">
-                            <div class="text-orange-500 text-2xl mb-2 font-comic flex justify-between">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl w-full mb-4 sm:mb-8">
+                        <button onclick="selectStance('python')" class="bg-stone-900 hover:bg-orange-500/20 border-2 border-orange-500/50 hover:border-orange-500 p-3 sm:p-4 rounded-xl text-left transition">
+                            <div class="text-orange-500 text-xl sm:text-2xl mb-1 font-comic flex justify-between">
                                 <span>🐍 PYTHON</span>
-                                <i class="fa-solid fa-bolt"></i>
+                                <i class="fa-solid fa-bolt text-xs"></i>
                             </div>
-                            <p class="text-[11px] text-stone-300 font-mono">High Speed & Fast Shuriken cooldown. Ideal for agile automation.</p>
+                            <p class="text-[10px] text-stone-300 font-mono">High Speed & Fast Shuriken cooldown. Ideal for agile automation.</p>
                         </button>
 
-                        <button onclick="selectStance('sql')" class="bg-stone-900 hover:bg-cyan-500/20 border-2 border-cyan-500/50 hover:border-cyan-500 p-4 rounded-xl text-left transition">
-                            <div class="text-cyan-400 text-2xl mb-2 font-comic flex justify-between">
+                        <button onclick="selectStance('sql')" class="bg-stone-900 hover:bg-cyan-500/20 border-2 border-cyan-500/50 hover:border-cyan-500 p-3 sm:p-4 rounded-xl text-left transition">
+                            <div class="text-cyan-400 text-xl sm:text-2xl mb-1 font-comic flex justify-between">
                                 <span>🛡️ SQL MASTER</span>
-                                <i class="fa-solid fa-shield-halved"></i>
+                                <i class="fa-solid fa-shield-halved text-xs"></i>
                             </div>
-                            <p class="text-[11px] text-stone-300 font-mono">+50 Max HP & High Defense. Robust schema integrity.</p>
+                            <p class="text-[10px] text-stone-300 font-mono">+50 Max HP & High Defense. Robust schema integrity.</p>
                         </button>
 
-                        <button onclick="selectStance('streamlit')" class="bg-stone-900 hover:bg-red-500/20 border-2 border-red-500/50 hover:border-red-500 p-4 rounded-xl text-left transition">
-                            <div class="text-red-500 text-2xl mb-2 font-comic flex justify-between">
+                        <button onclick="selectStance('streamlit')" class="bg-stone-900 hover:bg-red-500/20 border-2 border-red-500/50 hover:border-red-500 p-3 sm:p-4 rounded-xl text-left transition">
+                            <div class="text-red-500 text-xl sm:text-2xl mb-1 font-comic flex justify-between">
                                 <span>🚀 STREAMLIT</span>
-                                <i class="fa-solid fa-angles-up"></i>
+                                <i class="fa-solid fa-angles-up text-xs"></i>
                             </div>
-                            <p class="text-[11px] text-stone-300 font-mono">High Jump & Explosive Attacks. Rapid dashboard deployment.</p>
+                            <p class="text-[10px] text-stone-300 font-mono">High Jump & Explosive Attacks. Rapid dashboard deployment.</p>
                         </button>
                     </div>
 
-                    <p class="text-stone-500 text-[10px] font-mono">Controls: [A/D or Arrows] Move | [Space/W] Jump | [F or J] Attack</p>
+                    <p class="text-stone-500 text-[10px] font-mono hidden sm:block">Controls: [A/D or Arrows] Move | [Space/W] Jump | [F or J] Attack</p>
                 </div>
 
                 <!-- Game Over / Victory Modal -->
-                <div id="endModal" class="hidden absolute inset-0 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-30">
-                    <h2 id="endTitle" class="text-5xl font-comic text-red-500 mb-2">GAME OVER</h2>
-                    <p id="endSubtitle" class="text-stone-300 font-mono text-sm mb-6">The Legacy System overwhelmed your workflow.</p>
+                <div id="endModal" class="hidden absolute inset-0 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6 text-center z-30 max-h-full overflow-y-auto">
+                    <h2 id="endTitle" class="text-4xl sm:text-5xl font-comic text-red-500 mb-1">GAME OVER</h2>
+                    <p id="endSubtitle" class="text-stone-300 font-mono text-xs sm:text-sm mb-4">The Legacy System overwhelmed your workflow.</p>
 
-                    <div class="bg-stone-900 p-4 rounded-xl border border-stone-800 font-mono text-xs text-left mb-6 w-full max-w-sm space-y-2">
+                    <div class="bg-stone-900 p-3 sm:p-4 rounded-xl border border-stone-800 font-mono text-xs text-left mb-4 w-full max-w-sm space-y-1.5">
                         <div class="flex justify-between"><span>FINAL SCORE:</span> <span id="endScore" class="text-yellow-400 font-bold">0</span></div>
                         <div class="flex justify-between"><span>HIGHEST LEVEL:</span> <span id="endLevel" class="text-orange-400 font-bold">1</span></div>
                         <div class="flex justify-between"><span>STANCE USED:</span> <span id="endStance" class="text-cyan-400 font-bold">PYTHON</span></div>
                     </div>
 
-                    <div class="flex flex-wrap justify-center gap-3">
-                        <button onclick="restartGame()" class="bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold px-6 py-3 rounded-lg uppercase tracking-wider transition">
+                    <div class="flex flex-wrap justify-center gap-2 sm:gap-3">
+                        <button onclick="restartGame()" class="bg-red-600 hover:bg-red-500 text-white font-mono text-[11px] font-bold px-4 py-2 sm:px-6 sm:py-3 rounded-lg uppercase tracking-wider transition">
                             <i class="fa-solid fa-rotate-right mr-1"></i> Play Again
                         </button>
-                        <button onclick="generateFlashcard()" class="bg-amber-500 hover:bg-amber-400 text-black font-mono text-xs font-bold px-6 py-3 rounded-lg uppercase tracking-wider transition">
-                            <i class="fa-solid fa-share-nodes mr-1"></i> Dojo Flashcard
+                        <button onclick="generateFlashcard()" class="bg-amber-500 hover:bg-amber-400 text-black font-mono text-[11px] font-bold px-4 py-2 sm:px-6 sm:py-3 rounded-lg uppercase tracking-wider transition">
+                            <i class="fa-solid fa-share-nodes mr-1"></i> Flashcard
+                        </button>
+                        <button onclick="switchView('hub-view')" class="bg-stone-800 hover:bg-stone-700 text-stone-300 font-mono text-[11px] font-bold px-4 py-2 sm:px-6 sm:py-3 rounded-lg uppercase tracking-wider transition">
+                            <i class="fa-solid fa-house mr-1"></i> Hub
                         </button>
                     </div>
                 </div>
 
-                <!-- Shareable Flashcard Modal Overlay -->
-                <div id="flashcardModal" class="hidden absolute inset-0 bg-black/95 flex flex-col items-center justify-center p-4 z-40">
+                <!-- Flashcard Modal Overlay -->
+                <div id="flashcardModal" class="hidden absolute inset-0 bg-black/95 flex flex-col items-center justify-center p-4 z-40 max-h-full overflow-y-auto">
                     <div class="bg-stone-900 border border-amber-500/40 p-4 rounded-xl max-w-sm w-full flex flex-col items-center">
-                        <h3 class="font-comic text-2xl text-amber-400 mb-3">YOUR DOJO ACHIEVEMENT</h3>
+                        <h3 class="font-comic text-2xl text-amber-400 mb-2">DOJO ACHIEVEMENT</h3>
                         
-                        <canvas id="cardCanvas" width="360" height="220" class="rounded border border-stone-800 shadow-lg mb-4"></canvas>
+                        <canvas id="cardCanvas" width="360" height="220" class="w-full h-auto rounded border border-stone-800 shadow-lg mb-3"></canvas>
                         
                         <div class="flex gap-2 w-full">
                             <button onclick="downloadFlashcard()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-black font-mono text-[10px] font-bold py-2 rounded uppercase">
@@ -170,22 +237,22 @@
                 </div>
             </div>
 
-            <!-- Touch Controls for Mobile -->
-            <div class="w-full max-w-4xl mt-3 grid grid-cols-2 gap-4 sm:hidden">
-                <div class="flex gap-2">
-                    <button id="btnLeft" class="flex-1 bg-stone-900 border border-stone-800 active:bg-orange-500/40 text-stone-300 py-4 rounded-xl text-xl">◀</button>
-                    <button id="btnRight" class="flex-1 bg-stone-900 border border-stone-800 active:bg-orange-500/40 text-stone-300 py-4 rounded-xl text-xl">▶</button>
+            <!-- Compact Touch Controls for Mobile -->
+            <div class="w-full max-w-4xl mt-2 grid grid-cols-2 gap-2 sm:hidden">
+                <div class="flex gap-1.5">
+                    <button id="btnLeft" class="flex-1 bg-stone-900 border border-stone-800 active:bg-orange-500/40 text-stone-300 py-2.5 rounded-lg text-lg">◀</button>
+                    <button id="btnRight" class="flex-1 bg-stone-900 border border-stone-800 active:bg-orange-500/40 text-stone-300 py-2.5 rounded-lg text-lg">▶</button>
                 </div>
-                <div class="flex gap-2">
-                    <button id="btnJump" class="flex-1 bg-stone-900 border border-stone-800 active:bg-red-500/40 text-stone-300 py-4 rounded-xl font-comic text-lg">JUMP</button>
-                    <button id="btnAttack" class="flex-1 bg-red-600/30 border border-red-500/50 active:bg-red-600 text-red-400 py-4 rounded-xl font-comic text-lg">KICK</button>
+                <div class="flex gap-1.5">
+                    <button id="btnJump" class="flex-1 bg-stone-900 border border-stone-800 active:bg-red-500/40 text-stone-300 py-2.5 rounded-lg font-comic text-base">JUMP</button>
+                    <button id="btnAttack" class="flex-1 bg-red-600/30 border border-red-500/50 active:bg-red-600 text-red-400 py-2.5 rounded-lg font-comic text-base">KICK</button>
                 </div>
             </div>
         </div>
 
         <!-- VIEW 2: CAREER PATH TO MASTERY -->
-        <div id="story-view" class="view max-w-3xl w-full glass p-8 rounded-xl shadow-2xl">
-            <h2 class="text-xl font-bold uppercase tracking-widest text-blue-500 mb-8 text-center">Path to Mastery</h2>
+        <div id="story-view" class="view max-w-3xl w-full glass p-6 sm:p-8 rounded-xl shadow-2xl my-auto">
+            <h2 class="text-lg sm:text-xl font-bold uppercase tracking-widest text-blue-500 mb-6 text-center">Path to Mastery</h2>
             
             <div id="track">
                 <div id="character">👷</div>
@@ -195,45 +262,45 @@
                 <div class="milestone-marker" style="left: 95%;"></div>
             </div>
 
-            <div class="text-center mt-8">
-                <h3 id="story-title" class="text-2xl font-bold mb-2">Stage 1: The Foundation</h3>
-                <p id="story-text" class="text-stone-400 h-16">Mastering the fundamentals of static loads and material strength.</p>
+            <div class="text-center mt-6">
+                <h3 id="story-title" class="text-xl sm:text-2xl font-bold mb-2">Stage 1: The Foundation</h3>
+                <p id="story-text" class="text-stone-400 text-xs sm:text-sm h-16 max-w-lg mx-auto">Mastering the fundamentals of static loads and material strength.</p>
                 
-                <button id="walk-btn" onclick="advanceJourney()" class="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded font-bold uppercase tracking-widest transition mt-4 w-full md:w-auto">
+                <button id="walk-btn" onclick="advanceJourney()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm px-6 py-3 rounded font-bold uppercase tracking-widest transition mt-4 w-full sm:w-auto">
                     Advance Career
                 </button>
             </div>
             
-            <div class="mt-8 text-center border-t border-white/10 pt-6">
-                <button onclick="switchView('game-view')" class="text-stone-500 hover:text-white text-xs uppercase tracking-widest transition">← Return to Arcade Game</button>
+            <div class="mt-8 text-center border-t border-stone-800 pt-4">
+                <button onclick="switchView('hub-view')" class="text-stone-500 hover:text-white text-xs font-mono transition">← Back to Dojo Hub</button>
             </div>
         </div>
 
         <!-- VIEW 3: DOJO STEM QUIZ -->
-        <div id="quiz-view" class="view max-w-2xl w-full glass p-8 rounded-xl shadow-2xl">
+        <div id="quiz-view" class="view max-w-2xl w-full glass p-6 sm:p-8 rounded-xl shadow-2xl my-auto">
             <div class="flex justify-between items-center mb-6">
-                <h2 id="quiz-title" class="text-xl font-bold uppercase tracking-widest text-orange-400">Hard Mode Protocol</h2>
-                <span id="score-counter" class="font-mono text-sm text-amber-400 font-bold">Score: 0 / 10</span>
+                <h2 id="quiz-title" class="text-lg sm:text-xl font-bold uppercase tracking-widest text-orange-400">Hard Mode Protocol</h2>
+                <span id="score-counter" class="font-mono text-xs sm:text-sm text-amber-400 font-bold">Score: 0 / 10</span>
             </div>
 
-            <p id="q-text" class="text-lg font-medium mb-6 leading-relaxed">Loading Question...</p>
+            <p id="q-text" class="text-base sm:text-lg font-medium mb-6 leading-relaxed">Loading Question...</p>
 
-            <div id="btns" class="grid grid-cols-1 gap-3"></div>
+            <div id="btns" class="grid grid-cols-1 gap-2.5"></div>
 
-            <div class="mt-8 flex justify-between border-t border-white/10 pt-6">
+            <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-stone-800 pt-4">
                 <div class="space-x-2">
                     <button onclick="loadQuiz('hard')" class="text-xs bg-stone-800 hover:bg-stone-700 px-3 py-1.5 rounded font-mono text-stone-300">Hard STEM</button>
                     <button onclick="loadQuiz('gen')" class="text-xs bg-stone-800 hover:bg-stone-700 px-3 py-1.5 rounded font-mono text-stone-300">General Trivia</button>
                 </div>
-                <button onclick="switchView('game-view')" class="text-stone-500 hover:text-white text-xs uppercase tracking-widest transition">← Return to Game</button>
+                <button onclick="switchView('hub-view')" class="text-stone-500 hover:text-white text-xs font-mono transition">← Back to Dojo Hub</button>
             </div>
         </div>
 
     </main>
 
-    <!-- Footer Link -->
-    <footer class="py-4 text-center font-mono text-[10px] text-stone-600 border-t border-stone-900">
-        Structural Sensei Engine | <a href="https://structuralsensei.github.io" class="hover:text-orange-500 underline">structuralsensei.github.io</a>
+    <!-- Footer -->
+    <footer class="py-3 text-center font-mono text-[10px] text-stone-600 border-t border-stone-900">
+        Structural Sensei Engine | <a href="https://structuralsensei.github.io" target="_blank" class="hover:text-orange-500 underline">structuralsensei.github.io</a>
     </footer>
 
     <!-- Game Engine Logic & Hub Scripts -->
@@ -241,7 +308,8 @@
         // --- VIEW SWITCHER ---
         function switchView(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            const targetView = document.getElementById(id);
+            if (targetView) targetView.classList.add('active');
             if (id === 'story-view') loadStory();
         }
 
@@ -680,7 +748,7 @@
             
             q.a.forEach((opt, index) => {
                 const btn = document.createElement('button');
-                btn.className = 'glass p-4 rounded hover:bg-white/10 hover:border-white/40 text-left transition text-sm font-mono text-stone-300';
+                btn.className = 'glass p-3 sm:p-4 rounded hover:bg-white/10 hover:border-white/40 text-left transition text-xs sm:text-sm font-mono text-stone-300';
                 btn.innerText = opt;
                 btn.onclick = () => handleAnswer(index, q.c);
                 btnContainer.appendChild(btn);
@@ -734,10 +802,10 @@
                 const btn = document.getElementById('walk-btn');
                 if (journeyStep === journeyStages.length - 1) {
                     btn.innerText = "Restart Journey";
-                    btn.className = "bg-green-600 hover:bg-green-500 px-8 py-4 rounded font-bold uppercase tracking-widest transition mt-4 w-full md:w-auto";
+                    btn.className = "bg-green-600 hover:bg-green-500 text-white text-xs sm:text-sm px-6 py-3 rounded font-bold uppercase tracking-widest transition mt-4 w-full sm:w-auto";
                 } else {
                     btn.innerText = "Advance Career";
-                    btn.className = "bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded font-bold uppercase tracking-widest transition mt-4 w-full md:w-auto";
+                    btn.className = "bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm px-6 py-3 rounded font-bold uppercase tracking-widest transition mt-4 w-full sm:w-auto";
                 }
             }, 300);
         }
