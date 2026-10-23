@@ -17,7 +17,7 @@ def generate_app_page(app):
     tagline = app['tagline']
     description = app['description']
     price = app['price']
-    gumroad = app['gumroad']
+    gumroad = app.get('store_url') or app.get('gumroad', '')
     features = app.get('features', [])
     faq = app.get('faq', [])
     category = app.get('category', 'tools')
@@ -61,6 +61,9 @@ def generate_app_page(app):
     else:
         price_display = "Free"
         cta_text = f"Get {name} — Free"
+
+    store_label = app.get('store_label', 'Gumroad')
+    cta_text = app.get('cta_text', cta_text)
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -120,7 +123,7 @@ def generate_app_page(app):
                     {cta_text}
                 </a>
                 <a href="{gumroad}" target="_blank" class="text-blue-400 hover:text-blue-300 font-medium transition">
-                    View on Gumroad
+                    View on {store_label}
                 </a>
             </div>
         </div>

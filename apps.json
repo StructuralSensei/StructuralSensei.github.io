@@ -5,7 +5,7 @@
       "name": "Secondly",
       "tagline": "Time management redefined",
       "description": "A smart pomodoro timer with one-tap setup, preset intervals (15, 25, 45, 60, 90 min), and intelligent alerts at halfway and 30-min marks. Work smarter with audio cues and popup notifications.",
-      "price": 10.00,
+      "price": 10.0,
       "currency": "USD",
       "gumroad": "https://wico.gumroad.com/l/secondly",
       "category": "productivity",
@@ -37,7 +37,7 @@
       "name": "KataCopy",
       "tagline": "Hardware-adaptive file transfers",
       "description": "Stop waiting on slow file transfers. KataCopy is a high-performance desktop utility built from the ground up for power users who need to move files across drives and networks at maximum speed.",
-      "price": 9.00,
+      "price": 9.0,
       "currency": "USD",
       "gumroad": "https://wico.gumroad.com/l/KataCopy",
       "category": "utilities",
@@ -101,7 +101,7 @@
       "name": "Efficiency Memo Guide",
       "tagline": "Become the strategic asset",
       "description": "Tired of being the 'tech guy' instead of the Strategic Asset? This guide instantly shifts your value proposition from reactive troubleshooter to proactive efficiency engine. Perfect for engineers, IT professionals, and technical leaders.",
-      "price": 0.00,
+      "price": 0.0,
       "currency": "USD",
       "gumroad": "https://wico.gumroad.com/l/memo",
       "category": "templates",
@@ -133,7 +133,7 @@
       "name": "Junior to Sensei Blueprint",
       "tagline": "Fast-track your engineering career",
       "description": "Stop Trading Hours for Rands. Start Trading Value for WEALTH. This blueprint is designed for talented EIT, Junior, and Mid-Level engineers ready to accelerate their career trajectory and move from time-based to value-based compensation.",
-      "price": 0.00,
+      "price": 0.0,
       "currency": "USD",
       "gumroad": "https://wico.gumroad.com/l/Blueprint",
       "category": "education",
@@ -222,6 +222,45 @@
         {
           "q": "Can I convert multiple images at once?",
           "a": "Yes, batch conversion lets you transform dozens of images in seconds."
+        }
+      ]
+    },
+    {
+      "id": "sensei-takeoff",
+      "name": "Sensei Takeoff",
+      "tagline": "Quantity surveying tool for Chrome",
+      "description": "Production-ready quantity surveying and drawing takeoff extension for civil engineers, contractors, and QS professionals. Measure linear, area, and count quantities right in your browser and export a bill of quantities to Excel.",
+      "price": 0.0,
+      "currency": "USD",
+      "gumroad": "",
+      "store_url": "https://chromewebstore.google.com/detail/sensei-takeoff-quantity-s/nincdcgihdipeclcaofdhlhhcgkjhkgc",
+      "store_label": "Chrome Web Store",
+      "cta_text": "Add to Chrome",
+      "category": "extension",
+      "demo_gif": "",
+      "features": [
+        "Linear, area, and count takeoffs in the browser",
+        "Visual measurement overlay on the document you are working on",
+        "Scale calibration saved locally between page refreshes",
+        "Excel bill of quantities (BOQ) export",
+        "No personal data collected - measurements stay on your device"
+      ],
+      "faq": [
+        {
+          "q": "What can I measure with Sensei Takeoff?",
+          "a": "Linear lengths, areas, and item counts on the drawing or document in your active browser tab, with a calibrated scale."
+        },
+        {
+          "q": "Does it collect or sell my data?",
+          "a": "No. Takeoff measurements and scale settings stay on your device, and your data is never sold. See the privacy policy for details."
+        },
+        {
+          "q": "Which permissions does it need?",
+          "a": "Only activeTab, to show the measurement overlay on the page you are using, and storage, to remember your scale and totals locally."
+        },
+        {
+          "q": "Where do I get it?",
+          "a": "Install it from the Chrome Web Store using the button on this page."
         }
       ]
     }

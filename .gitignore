@@ -6,3 +6,4 @@ __pycache__/
 .vscode/
 # secrets only - the rest of assets/ MUST be tracked (logo, GIFs, css)
 assets/api_key.txt
+*.bak
