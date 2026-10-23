@@ -24,13 +24,12 @@ def generate_app_page(app):
     demo_gif = app.get('demo_gif', '')  # Optional demo GIF
 
     # Generate demo GIF HTML
-    if demo_gif:
+    if demo_gif and Path(demo_gif.lstrip('/')).exists():
         demo_gif_html = f'<img src="{demo_gif}" alt="{name} demo" class="w-full h-full object-cover">'
     else:
-        demo_gif_html = f"""<div class="text-center text-gray-400 p-12">
-                <p class="text-lg font-semibold mb-2">Demo video coming soon</p>
-                <p class="text-sm">Use ScreenToGif to create a GIF, then add the path to apps.json</p>
-                <p class="text-xs mt-4 text-gray-500">Expected dimensions: 1200x675 (or any 16:9 ratio)</p>
+        demo_gif_html = f"""<div class="text-center p-12">
+                <img src="/assets/logo-wordmark-transparent.png" alt="Structural Sensei" class="w-64 max-w-full mx-auto mb-5">
+                <p class="text-lg text-gray-300">Demo video coming soon</p>
             </div>"""
 
     # Generate features HTML
@@ -74,7 +73,7 @@ def generate_app_page(app):
     <meta property="og:title" content="{name}">
     <meta property="og:description" content="{description}">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://structuralsensei.cc/{app_id}/">
+    <meta property="og:url" content="https://structuralsensei.cc/apps/{app_id}/">
     <meta property="og:image" content="https://structuralsensei.cc/assets/logo.png">
     <link rel="icon" type="image/png" href="/assets/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -186,7 +185,7 @@ def generate_app_page(app):
                 <div class="flex gap-6 text-sm text-gray-500">
                     <a href="/privacy.html" class="hover:text-gray-300 transition">Privacy</a>
                     <a href="https://www.structuralsensei.cc" class="hover:text-gray-300 transition">Main Site</a>
-                    <a href="https://www.youtube.com" class="hover:text-gray-300 transition">YouTube</a>
+                    <a href="https://www.youtube.com/@StructuralSensei" class="hover:text-gray-300 transition">YouTube</a>
                 </div>
             </div>
         </div>

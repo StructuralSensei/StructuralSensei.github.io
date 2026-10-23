@@ -1,4 +1,8 @@
 .DS_Store
 Thumbs.db
-# Local UI & Branding Assets
-assets/
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+# secrets only - the rest of assets/ MUST be tracked (logo, GIFs, css)
+assets/api_key.txt
