@@ -1,0 +1,229 @@
+{
+  "apps": [
+    {
+      "id": "secondly",
+      "name": "Secondly",
+      "tagline": "Time management redefined",
+      "description": "A smart pomodoro timer with one-tap setup, preset intervals (15, 25, 45, 60, 90 min), and intelligent alerts at halfway and 30-min marks. Work smarter with audio cues and popup notifications.",
+      "price": 10.00,
+      "currency": "USD",
+      "gumroad": "https://wico.gumroad.com/l/secondly",
+      "category": "productivity",
+      "demo_gif": "/assets/secondly-demo.gif",
+      "features": [
+        "One-tap timer setup with quick presets",
+        "Smart halfway and 30-minute alerts",
+        "Audio cues and popup notifications",
+        "Distraction-free focus mode",
+        "Customizable interval lengths"
+      ],
+      "faq": [
+        {
+          "q": "Does Secondly work offline?",
+          "a": "Yes, Secondly runs fully offline on your computer. No internet required."
+        },
+        {
+          "q": "Can I customize the alert sounds?",
+          "a": "Yes, Secondly includes multiple alert styles and you can adjust volume to your preference."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Download the trial version to test all features before purchasing."
+        }
+      ]
+    },
+    {
+      "id": "katacopy",
+      "name": "KataCopy",
+      "tagline": "Hardware-adaptive file transfers",
+      "description": "Stop waiting on slow file transfers. KataCopy is a high-performance desktop utility built from the ground up for power users who need to move files across drives and networks at maximum speed.",
+      "price": 9.00,
+      "currency": "USD",
+      "gumroad": "https://wico.gumroad.com/l/KataCopy",
+      "category": "utilities",
+      "demo_gif": "/assets/katacopy-demo.gif",
+      "features": [
+        "Hardware-optimized transfer speeds",
+        "Adaptive performance based on system resources",
+        "Batch file operations",
+        "Real-time progress tracking",
+        "Error recovery and retry logic"
+      ],
+      "faq": [
+        {
+          "q": "How much faster is KataCopy than Windows copy?",
+          "a": "Transfer speeds depend on your hardware, but KataCopy optimizes every layer—disk I/O, RAM buffers, and parallel threads—to maximize throughput."
+        },
+        {
+          "q": "Does it work with network drives?",
+          "a": "Yes, KataCopy handles local drives, external drives, and network shares."
+        },
+        {
+          "q": "Can I pause and resume transfers?",
+          "a": "Yes, pause and resume any transfer without losing progress."
+        }
+      ]
+    },
+    {
+      "id": "black-belt-budget",
+      "name": "Black Belt Budget",
+      "tagline": "Financial mastery through discipline",
+      "description": "The Black Belt Budget: Shotokan Secrets to Financial Mastery. A 7-page blueprint written by a Shotokan Karate expert that combines financial strategy with the discipline and mindset of martial arts mastery.",
+      "price": 1.49,
+      "currency": "USD",
+      "gumroad": "https://wico.gumroad.com/l/ufqjwo",
+      "category": "education",
+      "demo_gif": "",
+      "features": [
+        "7-page financial mastery blueprint",
+        "Karate-inspired discipline framework",
+        "Budget hierarchy and goal-setting",
+        "Spending discipline techniques",
+        "Long-term wealth-building mindset"
+      ],
+      "faq": [
+        {
+          "q": "Why combine budgeting with Karate principles?",
+          "a": "Karate teaches discipline, focus, and progression. Applying these principles to your finances creates sustainable habits."
+        },
+        {
+          "q": "Is this just a spreadsheet template?",
+          "a": "No, it's a strategic blueprint focused on the mental framework and philosophy of financial mastery."
+        },
+        {
+          "q": "How long does it take to implement?",
+          "a": "Most people implement the core system in 30 minutes; deeper mastery develops over weeks."
+        }
+      ]
+    },
+    {
+      "id": "efficiency-memo",
+      "name": "Efficiency Memo Guide",
+      "tagline": "Become the strategic asset",
+      "description": "Tired of being the 'tech guy' instead of the Strategic Asset? This guide instantly shifts your value proposition from reactive troubleshooter to proactive efficiency engine. Perfect for engineers, IT professionals, and technical leaders.",
+      "price": 0.00,
+      "currency": "USD",
+      "gumroad": "https://wico.gumroad.com/l/memo",
+      "category": "templates",
+      "demo_gif": "",
+      "features": [
+        "Professional memo template",
+        "Value-proposition framework",
+        "Executive communication style",
+        "ROI calculation templates",
+        "Career advancement positioning"
+      ],
+      "faq": [
+        {
+          "q": "Who should use this guide?",
+          "a": "Engineers, IT specialists, and technical professionals looking to position themselves as strategic partners."
+        },
+        {
+          "q": "How does this differ from a regular memo?",
+          "a": "This framework highlights value, ROI, and business impact—shifting perception from cost center to profit driver."
+        },
+        {
+          "q": "Can I use this at any company?",
+          "a": "Yes, the framework is universal and works across industries and company sizes."
+        }
+      ]
+    },
+    {
+      "id": "junior-to-sensei",
+      "name": "Junior to Sensei Blueprint",
+      "tagline": "Fast-track your engineering career",
+      "description": "Stop Trading Hours for Rands. Start Trading Value for WEALTH. This blueprint is designed for talented EIT, Junior, and Mid-Level engineers ready to accelerate their career trajectory and move from time-based to value-based compensation.",
+      "price": 0.00,
+      "currency": "USD",
+      "gumroad": "https://wico.gumroad.com/l/Blueprint",
+      "category": "education",
+      "demo_gif": "",
+      "features": [
+        "Career acceleration roadmap",
+        "Skills progression framework",
+        "Value-based pricing strategy",
+        "Negotiation techniques",
+        "Portfolio-building guide",
+        "13+ years of professional insights"
+      ],
+      "faq": [
+        {
+          "q": "Is this specific to South Africa?",
+          "a": "Written for SA engineers but principles apply globally. Adjust currency conversions as needed."
+        },
+        {
+          "q": "What if I'm not an engineer?",
+          "a": "The framework applies to any technical professional—architects, developers, IT specialists."
+        },
+        {
+          "q": "How long does it take to implement?",
+          "a": "Initial planning: 2-4 weeks. Full implementation: 6-12 months depending on your current level."
+        }
+      ]
+    },
+    {
+      "id": "mastering-notion",
+      "name": "Mastering Notion",
+      "tagline": "Organize your life and work efficiently",
+      "description": "A beginner's guide to unlocking Notion's full potential. Whether you're managing projects, personal tasks, or team workflows, this guide teaches you to build custom databases, automate workflows, and organize everything in one place.",
+      "price": 2.99,
+      "currency": "USD",
+      "gumroad": "https://wico.gumroad.com/l/nyqjhf",
+      "category": "education",
+      "demo_gif": "",
+      "features": [
+        "Database fundamentals for Notion",
+        "Template library for common workflows",
+        "Advanced filtering and sorting",
+        "Automation and integration basics",
+        "Personal and team setup guides"
+      ],
+      "faq": [
+        {
+          "q": "Do I need Notion experience?",
+          "a": "No, this guide starts from complete beginner and builds up step by step."
+        },
+        {
+          "q": "Is Notion free or paid?",
+          "a": "Notion has a free plan that covers most needs. Premium tiers unlock advanced features."
+        },
+        {
+          "q": "Can I use these templates at work?",
+          "a": "Yes, all templates are fully customizable for personal and team use."
+        }
+      ]
+    },
+    {
+      "id": "image-to-icon",
+      "name": "Image to Icon",
+      "tagline": "Transform images into desktop icons",
+      "description": "Transform any image into a perfect Windows desktop icon instantly. Easily convert photos, logos, and graphics into high-quality icons with optimized sizing, transparency handling, and batch conversion support.",
+      "price": 4.99,
+      "currency": "USD",
+      "gumroad": "https://wico.gumroad.com/l/cvwtz",
+      "category": "utilities",
+      "demo_gif": "/assets/image-to-icon-demo.gif",
+      "features": [
+        "Convert any image to desktop icon (.ico)",
+        "Multiple size optimization (16x16 to 256x256)",
+        "Batch conversion for multiple images",
+        "Transparency and alpha channel support",
+        "One-click Windows integration"
+      ],
+      "faq": [
+        {
+          "q": "What image formats does it support?",
+          "a": "PNG, JPG, GIF, BMP, and most common image formats."
+        },
+        {
+          "q": "Will my image quality suffer?",
+          "a": "No, Image to Icon optimizes resolution while preserving details and clarity."
+        },
+        {
+          "q": "Can I convert multiple images at once?",
+          "a": "Yes, batch conversion lets you transform dozens of images in seconds."
+        }
+      ]
+    }
+  ]
+}

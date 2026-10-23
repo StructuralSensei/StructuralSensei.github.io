@@ -1,740 +1,331 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Structural Sensei | Engineering & Automation</title>
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --background: #050505;
-      --foreground: #f5f5f5;
-      --card: #121212;
-      --surface: #1a1a1a;
-      --primary: #d90429;
-      --primary-foreground: #fafafa;
-      --accent: #f3722c;
-      --accent-foreground: #141414;
-      --muted-foreground: #a0a0a0;
-      --border: rgba(255, 255, 255, 0.1);
-      --border-strong: rgba(255, 255, 255, 0.22);
-      --input: rgba(255, 255, 255, 0.14);
-      --ring: #f3722c;
-      --overlay: rgba(0, 0, 0, 0.88);
-      --font-sans: 'Space Grotesk', sans-serif;
-      --font-mono: 'Space Mono', monospace;
-    }
-
-    * { border-color: var(--border); }
-    body {
-      margin: 0;
-      background: var(--background);
-      color: var(--foreground);
-      font-family: var(--font-sans);
-      overflow-x: hidden;
-    }
-
-    #bg-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .technical-grid {
-      background-image:
-        linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-      background-size: 64px 64px;
-      mask-image: linear-gradient(to bottom, black 40%, transparent 95%);
-    }
-
-    .brand-mark {
-      position: relative;
-      display: grid;
-      width: 1.8rem;
-      height: 1.8rem;
-      place-items: center;
-      border: 1px solid var(--border-strong);
-      transform: rotate(45deg);
-    }
-    .brand-mark::before, .brand-mark::after, .brand-mark span {
-      content: "";
-      position: absolute;
-      background: var(--primary);
-    }
-    .brand-mark::before { width: 1px; height: 0.9rem; }
-    .brand-mark::after { width: 0.9rem; height: 1px; }
-    .brand-mark span { width: 0.25rem; height: 0.25rem; }
-
-    .nav-link {
-      position: relative;
-      color: var(--muted-foreground);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: color 180ms ease;
-    }
-    .nav-link:hover { color: var(--foreground); }
-    .nav-link::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      bottom: -0.45rem;
-      left: 0;
-      height: 1px;
-      background: var(--primary);
-      transform: scaleX(0);
-      transform-origin: right;
-      transition: transform 200ms ease;
-    }
-    .nav-link:hover::after { transform: scaleX(1); transform-origin: left; }
-
-    .samurai-card {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(217, 4, 41, 0.45);
-      background: rgba(18, 18, 18, 0.88);
-      backdrop-filter: blur(14px);
-      clip-path: polygon(0 0, 96% 0, 100% 8%, 100% 100%, 4% 100%, 0 92%);
-      transition: border-color 300ms ease, box-shadow 300ms ease;
-    }
-    .samurai-card::after {
-      content: "";
-      position: absolute;
-      right: -10%;
-      top: 10%;
-      width: 40%;
-      height: 1px;
-      background: var(--primary);
-      transform: rotate(-36deg);
-      opacity: 0.35;
-    }
-    .samurai-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 30px rgba(243, 114, 44, 0.12);
-    }
-
-    .slash-active {
-      animation: katana-slash 420ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    @keyframes katana-slash {
-      0% { filter: brightness(1); transform: translate(0, 0); }
-      30% { filter: brightness(2) drop-shadow(0 0 12px var(--primary)); }
-      100% { clip-path: polygon(0 0, 100% 0, 78% 44%, 0 58%); transform: translate(-20px, -10px); opacity: 0; }
-    }
-
-    .platform-card {
-      border: 1px solid var(--border);
-      background: rgba(22, 22, 22, 0.85);
-      backdrop-filter: blur(10px);
-      transition: border-color 200ms ease, transform 200ms ease;
-    }
-    .platform-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .decision-panel { clip-path: polygon(0 0, 97% 0, 100% 4%, 100% 100%, 3% 100%, 0 96%); }
-    .decision-option {
-      display: flex;
-      min-height: 5rem;
-      align-items: center;
-      gap: 1rem;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      padding: 1rem;
-      transition: border-color 180ms ease, transform 180ms ease;
-    }
-    .decision-option:hover { border-color: var(--accent); transform: translateY(-2px); }
-
-    .sensei-input {
-      width: 100%;
-      border: 1px solid var(--input);
-      border-radius: 0.125rem;
-      background: var(--background);
-      padding: 0.85rem 1rem;
-      color: var(--foreground);
-      outline: none;
-      transition: border-color 180ms ease, box-shadow 180ms ease;
-    }
-    .sensei-input:focus { border-color: var(--ring); box-shadow: 0 0 0 2px rgba(243, 114, 44, 0.22); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structural Sensei | Engineering Automation & Productivity Tools</title>
+    <meta name="description" content="Discover high-performance tools for engineers, automation specialists, and technical professionals. Desktop utilities, productivity apps, and strategic frameworks.">
+    <meta property="og:title" content="Structural Sensei | Engineering Tools & Automation">
+    <meta property="og:description" content="Desktop utilities, productivity apps, and career frameworks for technical professionals.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://structuralsensei.cc">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --accent: #3b82f6;
+        }
+        body {
+            @apply bg-gray-950 text-gray-100;
+        }
+        .gradient-accent {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-hover {
+            @apply transition duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-1;
+        }
+    </style>
 </head>
-<body class="relative min-h-screen">
-
-  <!-- Canvas Particle Physics Background -->
-  <canvas id="bg-canvas" aria-hidden="true"></canvas>
-
-  <!-- Technical Grid Overlay -->
-  <div class="technical-grid pointer-events-none fixed inset-0 z-0"></div>
-
-  <!-- Top Sticky Navigation Bar -->
-  <header class="sticky top-0 z-50 border-b border-[var(--border)] bg-black/75 backdrop-blur-md">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-      <a href="index.html" class="flex items-center gap-3">
-        <div class="brand-mark"><span></span></div>
-        <span class="font-mono text-sm font-bold tracking-widest uppercase text-white">Structural Sensei</span>
-      </a>
-
-      <nav class="hidden items-center gap-8 md:flex">
-        <a href="#about" class="nav-link">About</a>
-        <a href="#platforms" class="nav-link">Platforms</a>
-        <a href="#work" class="nav-link">Work</a>
-        <a href="blog.html" class="nav-link">Blog</a>
-      </nav>
-
-      <button onclick="openDecisionHub()" class="border border-[var(--primary)] bg-[var(--primary)]/10 px-5 py-2 font-mono text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[var(--primary)] hover:text-white">
-        Start a Project ↗
-      </button>
-    </div>
-  </header>
-
-  <main class="relative z-10 mx-auto max-w-6xl px-6">
-
-    <!-- HERO SECTION -->
-    <section class="flex min-h-[82vh] flex-col justify-center py-20">
-      <div class="mb-6 flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)]">
-        <span class="text-[var(--primary)]">//</span> ENGINEERING | AUTOMATION | MENTORSHIP
-      </div>
-      <h1 class="text-5xl font-extrabold uppercase leading-[0.92] tracking-tight sm:text-7xl lg:text-8xl">
-        Build with <br />
-        <span class="text-white">precision.</span> <br />
-        <span class="text-[var(--primary)]">Move with</span> <br />
-        <span class="text-[var(--primary)]">purpose.</span>
-      </h1>
-      <div class="mt-12 flex items-center justify-between border-t border-[var(--border)] pt-6 text-xs font-mono uppercase text-[var(--muted-foreground)]">
-        <span>Structural Sensei // Precision Systems</span>
-        <span class="flex items-center gap-2">
-          <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          Available for select projects
-        </span>
-      </div>
-    </section>
-
-    <!-- SECTION 1: ABOUT / THE METHOD -->
-    <section id="about" class="scroll-mt-24 py-16">
-      <div class="mb-8">
-        <p class="font-mono text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
-          <span class="text-[var(--primary)]">//</span> Architectural Rigor & Budo Ethos
-        </p>
-        <h2 class="mt-2 text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">The Method</h2>
-        <p class="mt-2 max-w-2xl text-sm text-[var(--muted-foreground)]">
-          Engineering precision. Martial focus. Swipe or use the controls to slice through the system behind the work.
-        </p>
-      </div>
-
-      <!-- Samurai Swiper Card -->
-      <div id="samuraiCard" class="samurai-card">
-        <div class="grid gap-8 p-6 sm:p-10 lg:grid-cols-[1fr_16rem] lg:p-14">
-          <div>
-            <div class="mb-8 flex items-center justify-between gap-4 border-b border-[var(--border)] pb-5">
-              <span id="swiperCode" class="font-mono text-xs font-bold uppercase text-[var(--primary)]">NODE 01 // SYSTEMS & LOGIC</span>
-              <span id="swiperProgress" class="font-mono text-xs text-[var(--muted-foreground)]">01 / 03</span>
+<body class="antialiased">
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-40 bg-gray-950/80 backdrop-blur border-b border-gray-900">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">SS</span>
+                    </div>
+                    <span class="text-xl font-bold text-white">Structural Sensei</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="#apps" class="text-gray-400 hover:text-white transition text-sm font-medium">Apps</a>
+                    <a href="https://www.youtube.com/@StructuralSensei" target="_blank" class="text-gray-400 hover:text-white transition text-sm font-medium">YouTube</a>
+                    <a href="https://www.upwork.com/freelancers/~018dd551fe9dd4aa2a" target="_blank" class="text-gray-400 hover:text-white transition text-sm font-medium">Upwork</a>
+                    <a href="https://wico.gumroad.com" target="_blank" class="gradient-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg hover:shadow-blue-500/50 transition">Gumroad</a>
+                </div>
             </div>
-            <p id="swiperKicker" class="mb-3 text-xs font-bold uppercase text-[var(--accent)]">Civil rigor × software architecture</p>
-            <h3 id="swiperTitle" class="max-w-3xl text-2xl font-bold leading-tight sm:text-3xl">Operational systems engineered to hold under pressure.</h3>
-            <p id="swiperBody" class="mt-6 max-w-2xl text-sm leading-relaxed text-[var(--muted-foreground)] sm:text-base">
-              Thirteen years of technical management fused with Python engineering: automated pipelines, SQL architectures, and Streamlit tools built for traceability and control.
-            </p>
-            <div id="swiperTags" class="mt-8 flex flex-wrap gap-2"></div>
-          </div>
-          <aside class="flex flex-col justify-between border-l border-[var(--border)] pl-6">
-            <svg class="h-8 w-8 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v20m10-10H2"/></svg>
-            <div class="mt-12">
-              <strong id="swiperMetric" class="block text-5xl font-extrabold text-[var(--accent)]">13+</strong>
-              <span id="swiperLabel" class="mt-2 block text-xs uppercase leading-snug text-[var(--muted-foreground)]">years in technical systems</span>
-            </div>
-          </aside>
         </div>
-      </div>
+    </nav>
 
-      <!-- Method Swiper Controls -->
-      <div class="mt-6 flex items-center justify-between">
-        <div id="swiperIndicators" class="flex gap-2"></div>
-        <div class="flex gap-2">
-          <button id="prevBtn" aria-label="Previous Slide" class="border border-[var(--border-strong)] bg-[var(--surface)] p-3 hover:border-[var(--accent)]">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-          </button>
-          <button id="nextBtn" aria-label="Next Slide" class="border border-[var(--border-strong)] bg-[var(--surface)] p-3 hover:border-[var(--accent)]">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </button>
+    <!-- Hero Section -->
+    <section class="relative py-20 sm:py-32 overflow-hidden border-b border-gray-900">
+        <div class="absolute inset-0 -z-10">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500 rounded-full blur-3xl opacity-10"></div>
         </div>
-      </div>
-    </section>
-
-    <!-- SECTION 2: PLATFORMS / TOOLS FOR THE FIELD -->
-    <section id="platforms" class="scroll-mt-24 py-16">
-      <div class="mb-8 flex items-end justify-between">
-        <div>
-          <p class="font-mono text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
-            <span class="text-[var(--primary)]">//</span> Global Resource Hub
-          </p>
-          <h2 class="mt-2 text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">Tools for the Field.</h2>
-          <p class="mt-2 max-w-xl text-sm text-[var(--muted-foreground)]">
-            From drawing takeoffs to custom automation, every platform is designed to remove wasted motion.
-          </p>
-        </div>
-        <div class="hidden font-mono text-xs text-[var(--muted-foreground)] sm:block" id="platformCounter">01 / 05</div>
-      </div>
-
-      <!-- Platforms Grid / Swiper Cards -->
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
         
-        <!-- Platform 1: Sensei Takeoff -->
-        <div class="platform-card flex flex-col justify-between p-6">
-          <div>
-            <div class="mb-4 flex items-center justify-between font-mono text-xs text-[var(--muted-foreground)]">
-              <span class="uppercase text-[var(--accent)]">Chrome Extension</span>
-              <span>01 / 05</span>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="inline-block mb-6">
+                    <span class="inline-block px-4 py-2 bg-blue-500/10 text-blue-300 rounded-full text-sm font-medium border border-blue-500/20">
+                        13+ years of engineering expertise
+                    </span>
+                </div>
+                
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                    Engineering <span class="gradient-text">Automation</span> & Productivity
+                </h1>
+                
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-10">
+                    High-performance desktop tools, strategic frameworks, and professional resources built by a specialist with expertise in technical management, civil engineering, and enterprise automation.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#apps" class="gradient-accent text-white font-semibold py-4 px-8 rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition duration-300">
+                        Explore Tools
+                    </a>
+                    <a href="https://www.upwork.com/freelancers/~018dd551fe9dd4aa2a" target="_blank" class="border border-gray-700 text-white font-semibold py-4 px-8 rounded-lg hover:bg-gray-900 transition duration-300">
+                        Hire for Custom Work
+                    </a>
+                </div>
             </div>
-            <h3 class="text-xl font-bold uppercase tracking-wide">Sensei Takeoff</h3>
-            <p class="mt-3 text-xs leading-relaxed text-[var(--muted-foreground)]">
-              Measure linear, area, and count quantities directly from drawings, then export a clean Excel BOQ.
-            </p>
-          </div>
-          <div class="mt-8 pt-4 border-t border-[var(--border)]">
-            <a href="https://chromewebstore.google.com/detail/sensei-takeoff-quantity-s/nincdcgihdipeclcaofdhlhhcgkjhkgc" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--primary)] hover:text-[var(--accent)]">
-              Install Extension ↗
-            </a>
-          </div>
         </div>
-
-        <!-- Platform 2: Automation Shop -->
-        <div class="platform-card flex flex-col justify-between p-6">
-          <div>
-            <div class="mb-4 flex items-center justify-between font-mono text-xs text-[var(--muted-foreground)]">
-              <span class="uppercase text-[var(--accent)]">Gumroad Library</span>
-              <span>02 / 05</span>
-            </div>
-            <h3 class="text-xl font-bold uppercase tracking-wide">Automation Shop</h3>
-            <p class="mt-3 text-xs leading-relaxed text-[var(--muted-foreground)]">
-              Download professional Python scripts, BOQ calculators, workflow tools, and practical finance guides.
-            </p>
-          </div>
-          <div class="mt-8 pt-4 border-t border-[var(--border)]">
-            <a href="https://wico.gumroad.com" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--primary)] hover:text-[var(--accent)]">
-              Browse the Shop ↗
-            </a>
-          </div>
-        </div>
-
-        <!-- Platform 3: Sensei Lessons -->
-        <div class="platform-card flex flex-col justify-between p-6">
-          <div>
-            <div class="mb-4 flex items-center justify-between font-mono text-xs text-[var(--muted-foreground)]">
-              <span class="uppercase text-[var(--accent)]">YouTube Channel</span>
-              <span>03 / 05</span>
-            </div>
-            <h3 class="text-xl font-bold uppercase tracking-wide">Sensei Lessons</h3>
-            <p class="mt-3 text-xs leading-relaxed text-[var(--muted-foreground)]">
-              Watch direct, practical lessons on engineering systems, automation, and technical problem-solving.
-            </p>
-          </div>
-          <div class="mt-8 pt-4 border-t border-[var(--border)]">
-            <a href="https://www.youtube.com/@StruktuurSensei" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--primary)] hover:text-[var(--accent)]">
-              Watch Lessons ↗
-            </a>
-          </div>
-        </div>
-
-        <!-- Platform 4: Custom Projects -->
-        <div class="platform-card flex flex-col justify-between p-6">
-          <div>
-            <div class="mb-4 flex items-center justify-between font-mono text-xs text-[var(--muted-foreground)]">
-              <span class="uppercase text-[var(--accent)]">Upwork Profile</span>
-              <span>04 / 05</span>
-            </div>
-            <h3 class="text-xl font-bold uppercase tracking-wide">Custom Projects</h3>
-            <p class="mt-3 text-xs leading-relaxed text-[var(--muted-foreground)]">
-              Commission Python automation, data extraction, internal tools, and management systems.
-            </p>
-          </div>
-          <div class="mt-8 pt-4 border-t border-[var(--border)]">
-            <a href="https://www.upwork.com/freelancers/~01d3526b89af44ad3e?mp_source=share" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase text-[var(--primary)] hover:text-[var(--accent)]">
-              View Upwork ↗
-            </a>
-          </div>
-        </div>
-
-        <!-- Platform 5: Secondly Game / Tool -->
-        <div class="platform-card flex flex-col justify-between p-6">
-          <div>
-            <div class="mb-4 flex items-center justify-between font-mono text-xs text-[var(--muted-foreground)]">
-              <span class="uppercase text-[var(--accent)]">Itch.io Project</span>
-              <span>05 / 05</span>
-            </div>
-            <h3 class="text-xl font-bold uppercase tracking-wide">Secondly</h3>
-            <p class="mt-3 text-xs leading-relaxed text-[var(--muted-foreground)] mb-4">
-              Check out Secondly on Itch.io.
-            </p>
-            <!-- Itch.io Embedded Widget -->
-            <div class="overflow-hidden rounded border border-[var(--border)]">
-              <iframe frameborder="0" src="https://itch.io/embed/5098563?linkback=true&amp;dark=true" width="100%" height="167"><a href="https://structuralsensei.itch.io/secondly">Secondly by Structural Sensei</a></iframe>
-            </div>
-          </div>
-        </div>
-
-      </div>
     </section>
 
-    <!-- SECTION 3: WORK / FROM BOTTLENECK TO BLUEPRINT -->
-    <section id="work" class="scroll-mt-24 py-16">
-      <div class="grid gap-12 lg:grid-cols-2">
-        <div>
-          <p class="font-mono text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
-            <span class="text-[var(--primary)]">//</span> High-Precision System
-          </p>
-          <h2 class="mt-2 text-4xl font-extrabold uppercase leading-none tracking-tight sm:text-5xl">
-            From Bottleneck <br /> to Blueprint.
-          </h2>
-          <p class="mt-6 text-sm leading-relaxed text-[var(--muted-foreground)] sm:text-base">
-            Focused solutions for technical teams who need less manual work, clearer data, and systems that can withstand operational pressure.
-          </p>
-          <button onclick="openDecisionHub()" class="mt-8 inline-flex items-center gap-3 border border-[var(--primary)] bg-[var(--primary)] px-6 py-3 font-mono text-xs font-bold uppercase tracking-wider text-white transition hover:bg-transparent hover:text-[var(--primary)]">
-            Discuss Your System ↗
-          </button>
+    <!-- Stats Section -->
+    <section class="py-12 bg-gray-900/50 border-b border-gray-900">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="text-3xl font-bold gradient-text">7+</div>
+                    <p class="text-gray-400 text-sm mt-2">Production Apps</p>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold gradient-text">13+</div>
+                    <p class="text-gray-400 text-sm mt-2">Years Experience</p>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold gradient-text">∞</div>
+                    <p class="text-gray-400 text-sm mt-2">Automations Built</p>
+                </div>
+            </div>
         </div>
-
-        <div class="space-y-6">
-          <div class="border-b border-[var(--border)] pb-5">
-            <h3 class="text-base font-bold uppercase tracking-wide text-white">BOQ & Excel Automation</h3>
-            <p class="mt-1 text-xs text-[var(--muted-foreground)]">Reliable quantity workflows, structured exports, and fewer spreadsheet errors.</p>
-          </div>
-
-          <div class="border-b border-[var(--border)] pb-5">
-            <h3 class="text-base font-bold uppercase tracking-wide text-white">Data & LIMS Architecture</h3>
-            <p class="mt-1 text-xs text-[var(--muted-foreground)]">Traceable SQL systems and operational dashboards shaped around the real process.</p>
-          </div>
-
-          <div class="border-b border-[var(--border)] pb-5">
-            <h3 class="text-base font-bold uppercase tracking-wide text-white">Python Internal Tools</h3>
-            <p class="mt-1 text-xs text-[var(--muted-foreground)]">Purpose-built utilities for extraction, reporting, validation, and recurring tasks.</p>
-          </div>
-
-          <div class="border-b border-[var(--border)] pb-5">
-            <h3 class="text-base font-bold uppercase tracking-wide text-white">Technical Mentorship</h3>
-            <p class="mt-1 text-xs text-[var(--muted-foreground)]">Practical guidance for engineers learning automation through a Budo mindset.</p>
-          </div>
-        </div>
-      </div>
     </section>
 
-    <!-- SECTION 4: FIELD NOTES & VIDEO DOJO -->
+    <!-- Apps Section -->
+    <section id="apps" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl sm:text-5xl font-bold text-white mb-4">
+                    Tools & Resources
+                </h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    From productivity apps to career frameworks, every tool is designed to save time and amplify your impact.
+                </p>
+            </div>
+
+            <!-- App Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Secondly -->
+                <a href="/apps/secondly/" class="card-hover bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col">
+                    <div class="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center mb-4">
+                        <span class="text-white font-bold">⏱</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Secondly</h3>
+                    <p class="text-gray-400 text-sm mb-4 flex-grow">Smart pomodoro timer with intelligent alerts and quick presets.</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                        <span class="text-blue-400 font-semibold">$10</span>
+                        <span class="text-gray-500 text-sm">→</span>
+                    </div>
+                </a>
+
+                <!-- KataCopy -->
+                <a href="/apps/katacopy/" class="card-hover bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col">
+                    <div class="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center mb-4">
+                        <span class="text-white font-bold">⚡</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">KataCopy</h3>
+                    <p class="text-gray-400 text-sm mb-4 flex-grow">Hardware-adaptive file transfer utility for maximum speed.</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                        <span class="text-blue-400 font-semibold">$9</span>
+                        <span class="text-gray-500 text-sm">→</span>
+                    </div>
+                </a>
+
+                <!-- Black Belt Budget -->
+                <a href="/apps/black-belt-budget/" class="card-hover bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col">
+                    <div class="w-12 h-12 rounded-lg bg-yellow-500 flex items-center justify-center mb-4">
+                        <span class="text-white font-bold">💰</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Black Belt Budget</h3>
+                    <p class="text-gray-400 text-sm mb-4 flex-grow">Financial mastery through discipline and strategic thinking.</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                        <span class="text-blue-400 font-semibold">$1.49</span>
+                        <span class="text-gray-500 text-sm">→</span>
+                    </div>
+                </a>
+
+                <!-- Efficiency Memo -->
+                <a href="/apps/efficiency-memo/" class="card-hover bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col">
+                    <div class="w-12 h-12 rounded-lg bg-purple-500 flex items-center justify-center mb-4">
+                        <span class="text-white font-bold">📝</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Efficiency Memo</h3>
+                    <p class="text-gray-400 text-sm mb-4 flex-grow">Position yourself as a strategic asset with this professional guide.</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                        <span class="text-blue-400 font-semibold">FREE</span>
+                        <span class="text-gray-500 text-sm">→</span>
+                    </div>
+                </a>
+
+                <!-- Junior to Sensei -->
+                <a href="/apps/junior-to-sensei/" class="card-hover bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col">
+                    <div class="w-12 h-12 rounded-lg bg-red-500 flex items-center justify-center mb-4">
+                        <span class="text-white font-bold">🥋</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Junior to Sensei</h3>
+                    <p class="text-gray-400 text-sm mb-4 flex-grow">Fast-track your engineering career from hours to value-based income.</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                        <span class="text-blue-400 font-semibold">FREE</span>
+                        <span class="text-gray-500 text-sm">→</span>
+                    </div>
+                </a>
+
+                <!-- Mastering Notion -->
+                <a href="/apps/mastering-notion/" class="card-hover bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col">
+                    <div class="w-12 h-12 rounded-lg bg-cyan-500 flex items-center justify-center mb-4">
+                        <span class="text-white font-bold">🗂</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Mastering Notion</h3>
+                    <p class="text-gray-400 text-sm mb-4 flex-grow">Unlock Notion's full potential with a beginner's guide to productivity.</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                        <span class="text-blue-400 font-semibold">$2.99</span>
+                        <span class="text-gray-500 text-sm">→</span>
+                    </div>
+                </a>
+
+                <!-- Image to Icon -->
+                <a href="/apps/image-to-icon/" class="card-hover bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col">
+                    <div class="w-12 h-12 rounded-lg bg-pink-500 flex items-center justify-center mb-4">
+                        <span class="text-white font-bold">🎨</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Image to Icon</h3>
+                    <p class="text-gray-400 text-sm mb-4 flex-grow">Transform any image into a high-quality Windows desktop icon.</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                        <span class="text-blue-400 font-semibold">$4.99</span>
+                        <span class="text-gray-500 text-sm">→</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-20 bg-gray-900/50 border-y border-gray-900">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold text-white mb-6">
+                        Custom Automation Work
+                    </h2>
+                    <p class="text-gray-400 mb-6">
+                        Beyond tools, I offer professional services for engineers, teams, and organizations needing custom automation, system design, and workflow optimization.
+                    </p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3">
+                            <span class="text-blue-400 font-bold mt-1">✓</span>
+                            <span class="text-gray-300">Custom Python automation scripts</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-blue-400 font-bold mt-1">✓</span>
+                            <span class="text-gray-300">Data architecture & SQL design</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-blue-400 font-bold mt-1">✓</span>
+                            <span class="text-gray-300">Workflow streamlining (LIMS/ERP/CRM)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-blue-400 font-bold mt-1">✓</span>
+                            <span class="text-gray-300">System optimization & consulting</span>
+                        </li>
+                    </ul>
+                    <a href="https://www.upwork.com/freelancers/~018dd551fe9dd4aa2a" target="_blank" class="gradient-accent text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition duration-300 inline-block">
+                        Hire on Upwork
+                    </a>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-8 border border-gray-700">
+                    <div class="text-center">
+                        <div class="text-5xl font-bold gradient-text mb-2">13+</div>
+                        <p class="text-gray-400 mb-6">Years of technical expertise in automation, systems design, and professional engineering.</p>
+                        <div class="space-y-2 text-sm text-gray-500">
+                            <p>📧 wico.pydev@gmail.com</p>
+                            <p>🔗 Technical Manager • Python Specialist • Automation Architect</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
     <section class="py-16">
-      <div class="grid gap-6 sm:grid-cols-2">
-        <a href="blog.html" class="platform-card block p-8">
-          <p class="font-mono text-xs font-bold uppercase text-[var(--primary)]">// Field Notes</p>
-          <h3 class="mt-4 text-2xl font-bold uppercase leading-tight">Read the Structural Sensei Blog ↗</h3>
-        </a>
-
-        <a href="https://www.youtube.com/@StruktuurSensei" target="_blank" rel="noreferrer" class="platform-card block p-8">
-          <p class="font-mono text-xs font-bold uppercase text-[var(--accent)]">// Video Dojo</p>
-          <h3 class="mt-4 text-2xl font-bold uppercase leading-tight">Learn Through Practical Demonstrations ↗</h3>
-        </a>
-      </div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+                Start building smarter today
+            </h2>
+            <p class="text-xl text-gray-400 mb-8">
+                Choose from production-ready tools or work with me on your custom project.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#apps" class="gradient-accent text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition duration-300">
+                    Browse All Tools
+                </a>
+                <a href="https://wico.gumroad.com" target="_blank" class="border border-gray-700 text-white font-semibold py-3 px-8 rounded-lg hover:bg-gray-900 transition duration-300">
+                    View on Gumroad
+                </a>
+            </div>
+        </div>
     </section>
 
-    <!-- SECTION 5: FOOTER CTA -->
-    <section class="border-t border-[var(--border)] py-20 text-center">
-      <p class="font-mono text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
-        <span class="text-[var(--primary)]">//</span> Ready when the system matters
-      </p>
-      <h2 class="mt-4 text-4xl font-extrabold uppercase tracking-tight sm:text-6xl">
-        Bring the Problem. <br /> Build the Solution.
-      </h2>
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <button onclick="openDecisionHub()" class="border border-[var(--primary)] bg-[var(--primary)] px-8 py-3 font-mono text-xs font-bold uppercase tracking-wider text-white transition hover:bg-transparent hover:text-[var(--primary)]">
-          Open Decision Hub ↗
-        </button>
-        <a href="mailto:wico.pydev@gmail.com" class="font-mono text-xs font-bold uppercase text-[var(--muted-foreground)] underline hover:text-white">
-          wico.pydev@gmail.com
-        </a>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Footer Bar -->
-  <footer class="border-t border-[var(--border)] bg-black/60 py-8 text-xs text-[var(--muted-foreground)]">
-    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6">
-      <div class="flex items-center gap-2">
-        <div class="brand-mark scale-75"><span></span></div>
-        <span class="font-mono font-bold uppercase text-white">Structural Sensei</span>
-      </div>
-      <div class="flex gap-6 font-mono">
-        <a href="#about" class="hover:text-white">About</a>
-        <a href="#platforms" class="hover:text-white">Tools & Apps</a>
-        <a href="privacy.html" class="hover:text-white">Privacy</a>
-      </div>
-      <div class="font-mono">
-        &copy; Structural Sensei. Built with Precision.
-      </div>
-    </div>
-  </footer>
-
-  <!-- DECISION HUB MODAL -->
-  <div id="hireMenu" class="fixed inset-0 z-[100] hidden items-center justify-center bg-[var(--overlay)] p-4 backdrop-blur-md" role="dialog" aria-modal="true">
-    <div class="decision-panel relative max-h-[92vh] w-full max-w-2xl overflow-y-auto border border-[var(--border-strong)] bg-[var(--card)] p-6 shadow-2xl sm:p-8">
-      <div class="mb-6 flex items-start justify-between border-b border-[var(--border)] pb-4">
-        <div>
-          <p class="font-mono text-xs uppercase text-[var(--muted-foreground)]"><span class="text-[var(--primary)]">//</span> Select your path</p>
-          <h2 class="mt-1 text-2xl font-bold uppercase tracking-tight sm:text-3xl">The Decision Hub</h2>
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 bg-gray-950 py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">SS</span>
+                        </div>
+                        <span class="font-bold text-white">Structural Sensei</span>
+                    </div>
+                    <p class="text-gray-500 text-sm">Engineering automation and productivity tools.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Products</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="/apps/secondly/" class="hover:text-white transition">Secondly</a></li>
+                        <li><a href="/apps/katacopy/" class="hover:text-white transition">KataCopy</a></li>
+                        <li><a href="/apps/image-to-icon/" class="hover:text-white transition">Image to Icon</a></li>
+                        <li><a href="https://wico.gumroad.com" target="_blank" class="hover:text-white transition">All Tools</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Community</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="https://www.youtube.com/@StructuralSensei" target="_blank" class="hover:text-white transition">YouTube</a></li>
+                        <li><a href="https://www.upwork.com/freelancers/~018dd551fe9dd4aa2a" target="_blank" class="hover:text-white transition">Upwork</a></li>
+                        <li><a href="https://wico.gumroad.com" target="_blank" class="hover:text-white transition">Gumroad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="/privacy.html" class="hover:text-white transition">Privacy</a></li>
+                        <li><a href="mailto:wico.pydev@gmail.com" class="hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-900 pt-8">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <p class="text-gray-500 text-sm">© 2026 Structural Sensei. Built with purpose.</p>
+                    <p class="text-gray-500 text-sm">Mastering the art of design, one system at a time.</p>
+                </div>
+            </div>
         </div>
-        <button onclick="closeDecisionHub()" class="border border-[var(--border-strong)] p-2 text-[var(--muted-foreground)] hover:border-[var(--accent)] hover:text-white" aria-label="Close">
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-
-      <div class="grid gap-3 sm:grid-cols-2">
-        <a class="decision-option" href="https://www.upwork.com/freelancers/~01d3526b89af44ad3e?mp_source=share" target="_blank" rel="noreferrer">
-          <span class="font-bold text-xs uppercase tracking-wider text-[var(--primary)]">Upwork</span>
-          <div class="flex-1">
-            <strong class="block text-xs uppercase">Hire on Upwork</strong>
-            <small class="mt-1 block text-[10px] text-[var(--muted-foreground)]">Protected freelance engagement</small>
-          </div>
-        </a>
-        <a class="decision-option" href="https://wico.gumroad.com" target="_blank" rel="noreferrer">
-          <span class="font-bold text-xs uppercase tracking-wider text-[var(--accent)]">Gumroad</span>
-          <div class="flex-1">
-            <strong class="block text-xs uppercase">Buy ready-made tools</strong>
-            <small class="mt-1 block text-[10px] text-[var(--muted-foreground)]">Scripts, calculators, and guides</small>
-          </div>
-        </a>
-      </div>
-
-      <div class="my-6 flex items-center gap-4 text-[10px] font-bold uppercase text-[var(--muted-foreground)]">
-        <span class="h-px flex-1 bg-[var(--border)]"></span>or send a direct inquiry<span class="h-px flex-1 bg-[var(--border)]"></span>
-      </div>
-
-      <form id="inquiryForm" class="space-y-4">
-        <div>
-          <label class="mb-2 block font-mono text-xs uppercase text-[var(--muted-foreground)]" for="userEmail">Your Email</label>
-          <input id="userEmail" type="email" required placeholder="engineer@company.com" class="sensei-input" />
-        </div>
-        <div>
-          <label class="mb-2 block font-mono text-xs uppercase text-[var(--muted-foreground)]" for="jobInquiry">What needs to work better?</label>
-          <textarea id="jobInquiry" required minlength="10" rows="3" placeholder="Describe the manual process, data challenge, or engineering tool you need." class="sensei-input resize-none"></textarea>
-        </div>
-        <button id="submitBtn" type="submit" class="w-full border border-[var(--primary)] bg-[var(--primary)] py-3 font-mono text-xs font-bold uppercase tracking-wider text-white transition hover:bg-transparent hover:text-[var(--primary)]">
-          Send Inquiry to Sensei ↗
-        </button>
-        <div id="formStatus" class="min-h-5 text-center font-mono text-xs"></div>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    /* ==========================================================================
-       1. CANVAS PARTICLE SYSTEM
-       ========================================================================== */
-    const canvas = document.getElementById("bg-canvas");
-    const ctx = canvas.getContext("2d");
-    let particles = [];
-    let pointer = { x: 0, y: 0, active: false };
-
-    function resizeCanvas() {
-      const scale = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = window.innerWidth * scale;
-      canvas.height = window.innerHeight * scale;
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
-      ctx.setTransform(scale, 0, 0, scale, 0, 0);
-
-      particles = Array.from({ length: window.innerWidth < 640 ? 25 : 48 }, () => ({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        color: Math.random() > 0.5 ? "#d90429" : "#f3722c",
-      }));
-    }
-
-    window.addEventListener("mousemove", (e) => { pointer.x = e.clientX; pointer.y = e.clientY; pointer.active = true; });
-    window.addEventListener("resize", resizeCanvas);
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      particles.forEach((p, idx) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > window.innerWidth) p.vx *= -1;
-        if (p.y < 0 || p.y > window.innerHeight) p.vy *= -1;
-
-        if (pointer.active) {
-          const dx = pointer.x - p.x;
-          const dy = pointer.y - p.y;
-          const dist = Math.hypot(dx, dy) || 1;
-          if (dist < 110) {
-            p.x -= (dx / dist) * 1.1;
-            p.y -= (dy / dist) * 1.1;
-          }
-        }
-
-        ctx.globalAlpha = 0.4;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.3, 0, Math.PI * 2);
-        ctx.fill();
-
-        for (let next = idx + 1; next < particles.length; next++) {
-          const other = particles[next];
-          const dist = Math.hypot(p.x - other.x, p.y - other.y);
-          if (dist < 100) {
-            ctx.globalAlpha = 0.12 * (1 - dist / 100);
-            ctx.strokeStyle = "#d90429";
-            ctx.lineWidth = 0.6;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(other.x, other.y);
-            ctx.stroke();
-          }
-        }
-      });
-      requestAnimationFrame(drawParticles);
-    }
-
-    resizeCanvas();
-    drawParticles();
-
-    /* ==========================================================================
-       2. METHOD SAMURAI SWIPER
-       ========================================================================== */
-    const slides = [
-      {
-        code: "NODE 01 // SYSTEMS & LOGIC",
-        kicker: "Civil rigor × software architecture",
-        title: "Operational systems engineered to hold under pressure.",
-        body: "Thirteen years of technical management fused with Python engineering: automated pipelines, SQL architectures, and Streamlit tools built for traceability and control.",
-        tags: ["Python 3.12", "SQL integrity", "Streamlit systems"],
-        metric: "13+",
-        label: "years in technical systems",
-      },
-      {
-        code: "NODE 02 // BUDO ETHOS",
-        kicker: "Kime focus × Zanshin quality",
-        title: "Discipline becomes a repeatable delivery system.",
-        body: "Shotokan principles shape the work: Kime for decisive execution, Zanshin for awareness, and Kaizen for continual improvement after every release.",
-        tags: ["Shotokan discipline", "Kaizen workflows", "Zero-defect QA"],
-        metric: "3",
-        label: "principles in every engagement",
-      },
-      {
-        code: "NODE 03 // KAIZEN AUTOMATION",
-        kicker: "Manual routines → automated kata",
-        title: "Turn recurring friction into precise automation.",
-        body: "A kata is a perfected sequence. In enterprise operations, that means replacing spreadsheet bottlenecks with dependable extraction, calculation, and reporting tools.",
-        tags: ["ETL scraping", "Automated BOQ", "PDF extraction"],
-        metric: "01",
-        label: "goal: remove wasted motion",
-      },
-    ];
-
-    let currentSlide = 0;
-    let isSlashing = false;
-
-    function renderSlide(index) {
-      const node = slides[index];
-      document.getElementById("swiperCode").textContent = node.code;
-      document.getElementById("swiperProgress").textContent = `0${index + 1} / 0${slides.length}`;
-      document.getElementById("swiperKicker").textContent = node.kicker;
-      document.getElementById("swiperTitle").textContent = node.title;
-      document.getElementById("swiperBody").textContent = node.body;
-      document.getElementById("swiperMetric").textContent = node.metric;
-      document.getElementById("swiperLabel").textContent = node.label;
-
-      const tagsContainer = document.getElementById("swiperTags");
-      tagsContainer.innerHTML = node.tags.map(t => `<span class="border border-[var(--border)] bg-[var(--surface)] px-3 py-1 font-mono text-[10px] uppercase text-[var(--muted-foreground)]">${t}</span>`).join("");
-
-      const indicators = document.getElementById("swiperIndicators");
-      indicators.innerHTML = slides.map((_, i) => `<span class="h-1 transition-all ${i === index ? "w-10 bg-[var(--primary)]" : "w-4 bg-[var(--border-strong)]"}"></span>`).join("");
-    }
-
-    function moveSlide(dir) {
-      if (isSlashing) return;
-      const card = document.getElementById("samuraiCard");
-      isSlashing = true;
-      card.classList.add("slash-active");
-
-      setTimeout(() => {
-        currentSlide = (currentSlide + dir + slides.length) % slides.length;
-        renderSlide(currentSlide);
-        card.classList.remove("slash-active");
-        isSlashing = false;
-      }, 400);
-    }
-
-    document.getElementById("prevBtn").addEventListener("click", () => moveSlide(-1));
-    document.getElementById("nextBtn").addEventListener("click", () => moveSlide(1));
-    renderSlide(0);
-
-    /* ==========================================================================
-       3. DECISION HUB MODAL
-       ========================================================================== */
-    const hireMenu = document.getElementById("hireMenu");
-    const emailInput = document.getElementById("userEmail");
-    const inquiryInput = document.getElementById("jobInquiry");
-    const inquiryForm = document.getElementById("inquiryForm");
-    const formStatus = document.getElementById("formStatus");
-
-    function openDecisionHub() {
-      emailInput.value = localStorage.getItem("sensei_draft_email") || "";
-      inquiryInput.value = localStorage.getItem("sensei_draft_inquiry") || "";
-      hireMenu.classList.remove("hidden");
-      hireMenu.classList.add("flex");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeDecisionHub() {
-      hireMenu.classList.add("hidden");
-      hireMenu.classList.remove("flex");
-      document.body.style.overflow = "";
-    }
-
-    hireMenu.addEventListener("click", (e) => { if (e.target === hireMenu) closeDecisionHub(); });
-    window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDecisionHub(); });
-
-    emailInput.addEventListener("input", (e) => localStorage.setItem("sensei_draft_email", e.target.value));
-    inquiryInput.addEventListener("input", (e) => localStorage.setItem("sensei_draft_inquiry", e.target.value));
-
-    inquiryForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      formStatus.textContent = "Sending inquiry…";
-      formStatus.className = "min-h-5 text-center font-mono text-xs text-[var(--accent)]";
-
-      try {
-        const response = await fetch("https://formsubmit.co/ajax/wico.pydev@gmail.com", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            email: emailInput.value,
-            message: inquiryInput.value,
-            _subject: "Structural Sensei: New Project Inquiry"
-          }),
-        });
-
-        if (!response.ok) throw new Error("Submission failed");
-
-        emailInput.value = "";
-        inquiryInput.value = "";
-        localStorage.removeItem("sensei_draft_email");
-        localStorage.removeItem("sensei_draft_inquiry");
-        formStatus.textContent = "Inquiry sent. Sensei will respond shortly.";
-        formStatus.className = "min-h-5 text-center font-mono text-xs text-emerald-400";
-      } catch (err) {
-        formStatus.textContent = "Failed. Email wico.pydev@gmail.com directly.";
-        formStatus.className = "min-h-5 text-center font-mono text-xs text-red-400";
-      }
-    });
-  </script>
+    </footer>
 </body>
 </html>
