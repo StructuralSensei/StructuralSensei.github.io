@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050505">
     <title>Image to Icon — Transform images into desktop icons | Structural Sensei</title>
     <meta name="description" content="Transform any image into a perfect Windows desktop icon instantly. Easily convert photos, logos, and graphics into high-quality icons with optimized sizing, transparency handling, and batch conversion support.">
     <meta property="og:title" content="Image to Icon">
     <meta property="og:description" content="Transform any image into a perfect Windows desktop icon instantly. Easily convert photos, logos, and graphics into high-quality icons with optimized sizing, transparency handling, and batch conversion support.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://structuralsensei.cc/image-to-icon/">
+    <meta property="og:image" content="https://structuralsensei.cc/assets/logo.png">
+    <link rel="icon" type="image/png" href="/assets/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      :root {
-        --accent: #3b82f6;
-      }
-      body {
-        @apply bg-gray-950 text-gray-100;
-      }
-      .gradient-accent {
-        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
-      }
-    </style>
+    <script src="/assets/tailwind-brand.js"></script>
+    <link rel="stylesheet" href="/assets/brand.css">
 </head>
 <body class="antialiased">
     <!-- Navigation -->
     <nav class="sticky top-0 z-40 bg-gray-950/80 backdrop-blur border-b border-gray-900">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-            <a href="/" class="text-xl font-bold text-white hover:text-blue-400 transition">Structural Sensei</a>
+            <a href="/" class="brand-lockup">
+                <img src="/assets/logo.png" alt="Structural Sensei logo">
+                <span class="brand-name">Structural <em>Sensei</em></span>
+            </a>
             <a href="/#apps" class="text-gray-400 hover:text-white transition">Back to Apps</a>
         </div>
     </nav>
@@ -39,7 +39,7 @@
                     Utilities
                 </span>
             </div>
-            
+
             <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
                 Image to Icon
             </h1>
@@ -49,7 +49,7 @@
             <p class="text-gray-300 max-w-2xl mx-auto mb-10 text-lg">
                 Transform any image into a perfect Windows desktop icon instantly. Easily convert photos, logos, and graphics into high-quality icons with optimized sizing, transparency handling, and batch conversion support.
             </p>
-            
+
             <!-- Price & CTA -->
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
                 <a href="https://wico.gumroad.com/l/cvwtz" target="_blank" class="gradient-accent text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition duration-300 inline-block">
@@ -83,35 +83,35 @@
             <div class="grid sm:grid-cols-2 gap-8">
                 
         <div class="flex gap-3">
-          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold">
+          <div class="icon-tile flex-shrink-0 w-6 h-6 flex items-center justify-center text-white text-sm font-bold">
             1
           </div>
           <p class="text-gray-300">Convert any image to desktop icon (.ico)</p>
         </div>
         
         <div class="flex gap-3">
-          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold">
+          <div class="icon-tile flex-shrink-0 w-6 h-6 flex items-center justify-center text-white text-sm font-bold">
             2
           </div>
           <p class="text-gray-300">Multiple size optimization (16x16 to 256x256)</p>
         </div>
         
         <div class="flex gap-3">
-          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold">
+          <div class="icon-tile flex-shrink-0 w-6 h-6 flex items-center justify-center text-white text-sm font-bold">
             3
           </div>
           <p class="text-gray-300">Batch conversion for multiple images</p>
         </div>
         
         <div class="flex gap-3">
-          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold">
+          <div class="icon-tile flex-shrink-0 w-6 h-6 flex items-center justify-center text-white text-sm font-bold">
             4
           </div>
           <p class="text-gray-300">Transparency and alpha channel support</p>
         </div>
         
         <div class="flex gap-3">
-          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold">
+          <div class="icon-tile flex-shrink-0 w-6 h-6 flex items-center justify-center text-white text-sm font-bold">
             5
           </div>
           <p class="text-gray-300">One-click Windows integration</p>

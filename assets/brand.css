@@ -1,0 +1,176 @@
+/* =====================================================================
+   Structural Sensei brand layer
+   Mirrors the logo + wordmark: black field, chrome-white heavy condensed
+   caps, slanted italics, orange brush-swoosh lines, low-poly dark backdrop.
+   Load AFTER the Tailwind CDN and assets/tailwind-brand.js.
+   ===================================================================== */
+
+:root {
+  --black: #050505;
+  --silk: #f5f5f0;
+  --orange: #f47b20;       /* wordmark swoosh */
+  --orange-hot: #ffb347;
+  --orange-deep: #e4501e;  /* logo sun */
+  --display: 'Anton', Impact, 'Arial Narrow', sans-serif;
+  --swoosh: linear-gradient(90deg, rgba(244,123,32,0) 0%, #f47b20 35%, #ffb347 85%, #ffd9a0 100%);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black) url('/assets/bg-lowpoly.jpg') center top / cover fixed no-repeat;
+  color: var(--silk);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+}
+
+/* keep the low-poly texture visible but calm */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: -1;
+  pointer-events: none;
+}
+
+::selection { background: var(--orange-deep); color: #fff; }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb { background: linear-gradient(#f47b20, #e4501e); }
+
+/* ---------- Typography: heavy condensed caps like the wordmark ---------- */
+h1, h2, h3, h4, h5 {
+  font-family: var(--display);
+  font-weight: 400 !important;      /* Anton is single-weight; avoid faux bold */
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+}
+
+/* chrome-white gradient on the big headings (STRUCTURAL look) */
+h1,
+.text-center > h2 {
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 42%, #b9b9b9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* orange brush swoosh under centered headings */
+h1::after,
+.text-center > h2::after {
+  content: "";
+  display: block;
+  width: 110px;
+  height: 5px;
+  margin: 16px auto 0;
+  background: var(--swoosh);
+  clip-path: polygon(0 62%, 100% 0, 100% 100%, 0 100%);
+  transform: rotate(-1.5deg);
+}
+
+/* accent words / big numbers: slanted orange like "SENSEI" + swoosh */
+.gradient-text {
+  font-family: var(--display);
+  font-style: italic;
+  display: inline-block;
+  padding-right: 0.12em;
+  background: linear-gradient(135deg, #ffb347 0%, #f47b20 50%, #e4501e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.brush {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--orange);
+  display: inline-block;
+  transform: skewX(-8deg);
+}
+
+/* ---------- Lines: orange hairlines that fade out at the edges ---------- */
+nav.border-b,
+section.border-b,
+section.border-y,
+section.border-t,
+footer.border-t,
+main .border-b,
+main .border-t,
+.border-t.border-gray-800,
+.border-b.border-gray-700 {
+  border-image: linear-gradient(90deg, rgba(244,123,32,0), rgba(244,123,32,.65) 50%, rgba(244,123,32,0)) 1;
+}
+
+/* ---------- Shapes: sharp, slanted, no soft pills ---------- */
+.rounded-lg, .rounded-xl, .rounded-2xl { border-radius: 2px !important; }
+span.inline-block.rounded-full { border-radius: 2px !important; transform: skewX(-12deg); letter-spacing: .08em; text-transform: uppercase; }
+
+/* buttons: italic slanted blocks with orange gradient */
+a.gradient-accent,
+.gradient-accent[type="button"] {
+  background: linear-gradient(135deg, #f47b20 0%, #e4501e 100%);
+  color: #fff;
+  font-family: var(--display);
+  font-weight: 400 !important;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  border-radius: 2px;
+  transform: skewX(-10deg);
+  border: 0;
+  box-shadow: 0 0 0 1px rgba(255,179,71,.25) inset;
+}
+a.gradient-accent:hover { filter: brightness(1.1); transform: skewX(-10deg) translateY(-2px); }
+
+a.border.border-gray-700 {
+  transform: skewX(-10deg);
+  border-color: rgba(255,255,255,.35);
+  font-family: var(--display);
+  font-weight: 400 !important;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  border-radius: 2px;
+}
+a.border.border-gray-700:hover { border-color: var(--orange); background: rgba(244,123,32,.12); }
+
+/* cards: dark glass with an orange edge + angled hover lift */
+.card-hover {
+  background: rgba(10,10,10,.82) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-left: 3px solid var(--orange) !important;
+  border-radius: 2px !important;
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px -8px rgba(244,123,32,.35);
+  border-color: rgba(244,123,32,.6) !important;
+}
+
+/* icon tile on the app cards */
+.icon-tile {
+  background: linear-gradient(135deg, #f47b20 0%, #e4501e 100%);
+  transform: skewX(-10deg);
+  border-radius: 2px !important;
+}
+
+/* glass panels used by blog / privacy / game */
+.glass, .glass-card { border-radius: 2px !important; background: rgba(10,10,10,.72); }
+.glass:hover { border-color: rgba(244,123,32,.55); }
+
+/* demo / media frame on app pages */
+.aspect-video { border-left: 3px solid var(--orange); }
+
+/* small caps labels keep the body font */
+.font-sans { font-family: 'Inter', system-ui, sans-serif; }
+
+/* nav brand lockup */
+.brand-lockup { display: flex; align-items: center; gap: .6rem; }
+.brand-lockup img { height: 38px; width: auto; display: block; }
+.brand-lockup .brand-name { font-family: var(--display); font-size: 1.35rem; letter-spacing: .04em; text-transform: uppercase; color: #fff; line-height: 1; }
+.brand-lockup .brand-name em { font-style: italic; color: var(--orange); display: inline-block; transform: skewX(-8deg); }
+
+/* hero wordmark image */
+.hero-wordmark { width: min(520px, 80%); height: auto; margin: 0 auto 1.5rem; display: block; }
