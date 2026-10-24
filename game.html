@@ -1,615 +1,1087 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-[#050505] text-stone-100">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#050505">
-    <title>Structural Sensei | Full Game Suite</title>
-    <link rel="icon" type="image/png" href="/assets/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SENSEI HUB // Civil, Automation & Agri-Systems Suite</title>
+    
+    <!-- Google Fonts & Tailwind CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/assets/tailwind-brand.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            orange: '#f47b20',
+                            dark: '#050505',
+                            card: '#0a0a0c',
+                            panel: '#121216',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            orangeGlow: 'rgba(244, 123, 32, 0.25)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Anton', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-        body {
-            background-color: #050505;
-            color: #f0f0f0;
-            font-family: 'Inter', sans-serif;
+        /* Custom Scrollbar & Utility Styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f47b20; }
+        
+        .glass-card {
+            background: rgba(10, 10, 12, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .view { display: none; }
-        .active { display: block; animation: fadeIn 0.4s ease-in-out; }
-        .glass { 
-            background: rgba(18, 18, 18, 0.7);
-            border: 1px solid rgba(255,255,255,0.1); 
-            backdrop-filter: blur(10px); 
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #f47b20 0%, #E43B12 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        
+        .glow-orange-sm {
+            box-shadow: 0 0 15px rgba(244, 123, 32, 0.2);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Animation Track Styles for Journey */
-        #track { position: relative; width: 100%; height: 120px; border-bottom: 2px solid #f47b20; margin-bottom: 20px; }
-        #character {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            font-size: 3rem;
-            transition: left 1s cubic-bezier(0.25, 1, 0.5, 1);
-            z-index: 10;
-        }
-        .milestone-marker {
-            position: absolute; bottom: -10px; width: 4px; height: 20px; background: #f47b20;
+        .glow-orange-md {
+            box-shadow: 0 0 25px rgba(244, 123, 32, 0.35);
         }
 
-        /* Canvas game styles */
-        #game-canvas {
-            background-color: #080808;
-            border: 1px solid rgba(244, 123, 32, 0.3);
-            border-radius: 8px;
-            box-shadow: 0 0 25px rgba(228, 59, 18, 0.15);
-            touch-action: none;
+        /* Range slider customization */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: #1c1c22;
+            border-radius: 4px;
+            height: 6px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #f47b20;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(244, 123, 32, 0.8);
         }
     </style>
-    <link rel="stylesheet" href="/assets/brand.css">
 </head>
-<body class="p-4 md:p-8 min-h-screen flex flex-col justify-between">
+<body class="h-full overflow-x-hidden font-sans antialiased text-stone-200 selection:bg-brand-orange selection:text-black">
 
-    <!-- MAIN MENU -->
-    <div id="menu" class="view active max-w-4xl mx-auto text-center mt-6 md:mt-12 w-full">
-        <img src="/assets/logo.png" alt="Structural Sensei logo" class="mx-auto mb-4 h-20 w-auto" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0d0d0d/e43b12?text=SENSEI';">
-        <h1 class="text-4xl md:text-6xl font-extrabold mb-2 tracking-tighter">SENSEI <span class="gradient-text">HUB</span></h1>
-        <p class="text-stone-400 mb-8 uppercase tracking-widest text-xs font-semibold">Engineering · STEM · Mastery</p>
-        <a href="/" class="inline-block mb-8 text-stone-500 hover:text-white text-xs uppercase tracking-widest transition font-semibold">← Back to site</a>
-
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button onclick="loadDashGame()" class="glass p-6 hover:bg-orange-950/40 hover:border-orange-500 transition rounded-xl flex flex-col items-center gap-3 group">
-                <span class="text-4xl group-hover:scale-110 transition-transform">🥋</span>
-                <span class="font-bold text-xs tracking-widest text-orange-400">SENSEI DASH</span>
-            </button>
-            <button onclick="loadQuiz('hard')" class="glass p-6 hover:bg-red-950/40 hover:border-red-500 transition rounded-xl flex flex-col items-center gap-3 group">
-                <span class="text-4xl group-hover:scale-110 transition-transform">⚙️</span>
-                <span class="font-bold text-xs tracking-widest text-red-400">HARD MODE</span>
-            </button>
-            <button onclick="loadQuiz('gen')" class="glass p-6 hover:bg-amber-950/40 hover:border-amber-500 transition rounded-xl flex flex-col items-center gap-3 group">
-                <span class="text-4xl group-hover:scale-110 transition-transform">🧠</span>
-                <span class="font-bold text-xs tracking-widest text-amber-400">STEM TRIVIA</span>
-            </button>
-            <button onclick="loadStory()" class="glass p-6 hover:bg-blue-950/40 hover:border-blue-500 transition rounded-xl flex flex-col items-center gap-3 group">
-                <span class="text-4xl group-hover:scale-110 transition-transform">🛤️</span>
-                <span class="font-bold text-xs tracking-widest text-blue-400">THE JOURNEY</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- VIEW 1: SENSEI DASH (PIXEL FLAPPY GAME) -->
-    <div id="dash-view" class="view max-w-3xl mx-auto glass p-4 md:p-6 rounded-xl mt-4 shadow-2xl w-full">
-        <div class="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
-            <div>
-                <h2 class="text-lg font-bold uppercase tracking-widest text-orange-500">Sensei Dash</h2>
-                <p class="text-xs text-stone-400">Press <kbd class="px-1.5 py-0.5 bg-stone-800 rounded text-stone-200">SPACE</kbd> or <kbd class="px-1.5 py-0.5 bg-stone-800 rounded text-stone-200">TAP</kbd> to fly through structural columns</p>
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 bg-[#050505]/90 border-b border-white/10 backdrop-blur-md px-4 lg:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-brand-orange flex items-center justify-center font-display text-xl text-black font-bold shadow-lg shadow-brand-orange/30">
+                    S
+                </div>
+                <div>
+                    <h1 class="font-display tracking-wide text-xl text-white leading-none">STRUCTURAL SENSEI <span class="text-brand-orange">//</span> HUB</h1>
+                    <p class="text-[10px] font-mono text-stone-400 uppercase tracking-widest mt-0.5">Engineering, Automation & Physics Platform</p>
+                </div>
             </div>
-            <div class="text-right">
-                <div id="dash-score" class="text-xl font-mono font-bold text-orange-400">SCORE: 0</div>
-                <div id="dash-high" class="text-xs font-mono text-stone-500">BEST: 0</div>
+
+            <!-- Currency & Unit Selector -->
+            <div class="hidden sm:flex items-center space-x-4 font-mono text-xs text-stone-400">
+                <div class="bg-stone-900 border border-white/10 rounded-md px-2.5 py-1 flex items-center space-x-2">
+                    <span class="text-stone-500">CURRENCY:</span>
+                    <select id="currency-select" onchange="AgriEngine.calculateAll()" class="bg-transparent text-brand-orange focus:outline-none cursor-pointer font-bold">
+                        <option value="USD" class="bg-stone-900 text-white">USD ($)</option>
+                        <option value="ZAR" class="bg-stone-900 text-white">ZAR (R)</option>
+                        <option value="AUD" class="bg-stone-900 text-white">AUD (A$)</option>
+                    </select>
+                </div>
+                <div class="bg-stone-900 border border-white/10 rounded-md px-2.5 py-1 text-stone-300">
+                    STATUS: <span class="text-emerald-400 font-bold">● ONLINE</span>
+                </div>
             </div>
         </div>
+    </header>
 
-        <div class="relative flex justify-center items-center my-2">
-            <canvas id="game-canvas" width="600" height="400" class="w-full h-auto max-h-[420px]"></canvas>
-
-            <!-- Game Overlay Screens -->
-            <div id="dash-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col justify-center items-center rounded-lg text-center p-6">
-                <h3 id="overlay-title" class="text-3xl font-extrabold text-orange-500 mb-2">READY SENSEI?</h3>
-                <p id="overlay-msg" class="text-stone-300 text-sm mb-6 max-w-xs">Navigate through structural I-beams and collect CAD Blueprints (+5 PTS).</p>
-                <button onclick="startDashGame()" class="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold px-8 py-3 rounded-lg shadow-lg tracking-wider uppercase transition transform active:scale-95">
-                    START RUN
-                </button>
-            </div>
-        </div>
-
-        <div class="flex justify-between items-center mt-4">
-            <button onclick="switchView('menu')" class="text-stone-500 hover:text-white text-xs uppercase tracking-widest transition font-semibold">← Return to Hub</button>
-            <div class="text-xs text-stone-500 hidden sm:block">💡 Collect 📐 Blueprints for bonus points</div>
-        </div>
-    </div>
-
-    <!-- VIEW 2: QUIZ SYSTEM -->
-    <div id="quiz-view" class="view max-w-xl mx-auto glass p-6 md:p-8 rounded-xl mt-6 shadow-2xl w-full">
-        <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-            <h2 id="quiz-title" class="text-xl font-bold uppercase tracking-widest text-red-500">Quiz Protocol</h2>
-            <span id="score-counter" class="text-sm font-mono text-stone-400">Score: 0 / 10</span>
-        </div>
-
-        <div id="q-text" class="text-lg md:text-xl mb-8 leading-relaxed font-medium"></div>
-        <div id="btns" class="grid gap-3 mb-8"></div>
-
-        <button onclick="switchView('menu')" class="text-stone-500 hover:text-white text-xs uppercase tracking-widest transition font-semibold">← Abandon Protocol</button>
-    </div>
-
-    <!-- VIEW 3: PATH TO MASTERY (STORY JOURNEY) -->
-    <div id="story-view" class="view max-w-3xl mx-auto glass p-6 md:p-8 rounded-xl mt-6 shadow-2xl w-full">
-        <h2 class="text-xl font-bold uppercase tracking-widest text-blue-500 mb-8 text-center">Path to Mastery</h2>
-
-        <div id="track">
-            <div id="character">👷</div>
-            <div class="milestone-marker" style="left: 0%;"></div>
-            <div class="milestone-marker" style="left: 33%;"></div>
-            <div class="milestone-marker" style="left: 66%;"></div>
-            <div class="milestone-marker" style="left: 95%;"></div>
-        </div>
-
-        <div class="text-center mt-8">
-            <h3 id="story-title" class="text-2xl font-bold mb-2">Stage 1: The Foundation</h3>
-            <p id="story-text" class="text-stone-400 h-16">Mastering the fundamentals of static loads and material strength.</p>
-
-            <button id="walk-btn" onclick="advanceJourney()" class="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded font-bold uppercase tracking-widest transition mt-4 w-full md:w-auto">
-                Advance Career
+    <!-- Main Navigation Tabs -->
+    <nav class="max-w-7xl mx-auto px-4 lg:px-8 pt-6 pb-2">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 bg-stone-950 p-1.5 rounded-xl border border-white/10">
+            <button id="tab-dash" onclick="switchTab('dash')" class="tab-btn px-4 py-3 rounded-lg font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all bg-brand-orange text-black shadow-lg shadow-brand-orange/20">
+                <span>🥋</span> <span>SENSEI DASH</span>
+            </button>
+            <button id="tab-agri" onclick="switchTab('agri')" class="tab-btn px-4 py-3 rounded-lg font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all text-stone-400 hover:text-white hover:bg-stone-900">
+                <span>🌾</span> <span>AGRISENSEI ENGINE</span>
+            </button>
+            <button id="tab-trivia" onclick="switchTab('trivia')" class="tab-btn px-4 py-3 rounded-lg font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all text-stone-400 hover:text-white hover:bg-stone-900">
+                <span>🧠</span> <span>STEM TRIVIA</span>
+            </button>
+            <button id="tab-journey" onclick="switchTab('journey')" class="tab-btn px-4 py-3 rounded-lg font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all text-stone-400 hover:text-white hover:bg-stone-900">
+                <span>🛤️</span> <span>THE JOURNEY</span>
             </button>
         </div>
+    </nav>
 
-        <div class="mt-8 text-center border-t border-white/10 pt-6">
-            <button onclick="switchView('menu')" class="text-stone-500 hover:text-white text-xs uppercase tracking-widest transition font-semibold">← Return to Hub</button>
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 lg:px-8 py-4 mb-16">
+
+        <!-- ========================================================================= -->
+        <!-- MODULE 1: SENSEI DASH (ARCADE SIDE-SCROLLER) -->
+        <!-- ========================================================================= -->
+        <section id="sec-dash" class="tab-content block">
+            <div class="glass-card rounded-2xl p-4 lg:p-6 border border-white/10">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                    <div>
+                        <h2 class="font-display text-2xl text-white tracking-wide">SENSEI DASH <span class="text-brand-orange">//</span> RETRO ARCADE</h2>
+                        <p class="text-xs font-mono text-stone-400">Navigate structural hurdles and automated code blocks using gravity physics.</p>
+                    </div>
+                    <div class="flex items-center space-x-4 font-mono text-xs">
+                        <div class="bg-stone-900 px-3 py-1.5 rounded-lg border border-white/10">
+                            SCORE: <span id="dash-score" class="text-brand-orange font-bold text-sm">0</span>
+                        </div>
+                        <div class="bg-stone-900 px-3 py-1.5 rounded-lg border border-white/10">
+                            HIGH SCORE: <span id="dash-high" class="text-yellow-400 font-bold text-sm">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Viewport Window -->
+                <div class="relative w-full aspect-[16/9] max-h-[520px] bg-black rounded-xl overflow-hidden border border-stone-800 flex items-center justify-center">
+                    <canvas id="dashCanvas" class="w-full h-full block bg-[#0a0a0d]"></canvas>
+
+                    <!-- Overlay Start / Game Over Screen -->
+                    <div id="dash-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center">
+                        <div class="w-16 h-16 rounded-full bg-brand-orange/20 border border-brand-orange flex items-center justify-center text-3xl mb-3 animate-pulse">
+                            🥋
+                        </div>
+                        <h3 class="font-display text-3xl text-white tracking-wider mb-2">READY FOR DEPLOYMENT</h3>
+                        <p class="text-xs font-mono text-stone-400 max-w-md mb-6">Press <kbd class="px-2 py-1 bg-stone-800 border border-stone-600 rounded text-stone-200">SPACE</kbd> or <kbd class="px-2 py-1 bg-stone-800 border border-stone-600 rounded text-stone-200">TAP SCREEN</kbd> to jump and dodge structural load spikes!</p>
+                        <button onclick="SenseiDash.start()" class="bg-brand-orange hover:bg-orange-600 text-black font-bold font-mono text-xs px-6 py-3 rounded-lg uppercase tracking-widest shadow-lg shadow-brand-orange/30 transition-all">
+                            INITIALIZE RUN
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex flex-wrap justify-between items-center text-xs font-mono text-stone-500 gap-2">
+                    <div>CONTROLS: [SPACE / TAP] JUMP | [P] PAUSE</div>
+                    <div>PHYSICS: G = 9.81 m/s² EQUIVALENT | FRAME RATE: 60 FPS</div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================================================= -->
+        <!-- MODULE 2: AGRISENSEI CONSULTING ENGINE -->
+        <!-- ========================================================================= -->
+        <section id="sec-agri" class="tab-content hidden">
+            <div class="space-y-6">
+                <!-- Regional Presets Selector Banner -->
+                <div class="glass-card rounded-2xl p-4 lg:p-6 border border-white/10">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                        <div>
+                            <span class="text-[10px] font-mono tracking-widest text-brand-orange font-bold uppercase bg-brand-orange/10 px-2 py-0.5 rounded border border-brand-orange/30">REAL-WORLD REGIONAL AUDIT PRESETS</span>
+                            <h2 class="font-display text-2xl text-white tracking-wide mt-1">AGRISENSEI CONSULTING ENGINE</h2>
+                            <p class="text-xs text-stone-400">Civil, Hydraulic, Photovoltaic & Financial Feasibility Modeling for Agricultural Enterprise.</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full lg:w-auto">
+                            <button onclick="AgriEngine.loadPreset('rsa')" class="preset-btn p-2.5 rounded-lg bg-stone-900 border border-brand-orange/40 text-left hover:border-brand-orange transition-all">
+                                <div class="text-xs font-bold text-white flex items-center">🇿A Karoo Citrus</div>
+                                <div class="text-[10px] font-mono text-stone-400">Solar-Hydro & Evap</div>
+                            </button>
+                            <button onclick="AgriEngine.loadPreset('aus')" class="preset-btn p-2.5 rounded-lg bg-stone-900 border border-white/10 text-left hover:border-brand-orange transition-all">
+                                <div class="text-xs font-bold text-white flex items-center">🇦🇺 Murray Cotton</div>
+                                <div class="text-[10px] font-mono text-stone-400">Covered Dam & Flow</div>
+                            </button>
+                            <button onclick="AgriEngine.loadPreset('usa')" class="preset-btn p-2.5 rounded-lg bg-stone-900 border border-white/10 text-left hover:border-brand-orange transition-all">
+                                <div class="text-xs font-bold text-white flex items-center">🇺🇸 Midwest Dairy</div>
+                                <div class="text-[10px] font-mono text-stone-400">Anaerobic Biogas</div>
+                            </button>
+                            <button onclick="AgriEngine.loadPreset('hydro')" class="preset-btn p-2.5 rounded-lg bg-stone-900 border border-white/10 text-left hover:border-brand-orange transition-all">
+                                <div class="text-xs font-bold text-white flex items-center">🌍 Vertical Farm</div>
+                                <div class="text-[10px] font-mono text-stone-400">PID Hydro Dynamics</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation Main Interface Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                    <!-- LEFT COLUMN: Parameter Inputs & Sliders (5 Cols) -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="glass-card rounded-xl p-5 border border-white/10">
+                            <h3 class="font-mono text-xs font-bold text-brand-orange uppercase tracking-wider mb-4 flex items-center justify-between">
+                                <span>⚙️ SYSTEM SPECIFICATIONS</span>
+                                <span class="text-[10px] text-stone-400 font-normal">REAL FORMULA DRIVEN</span>
+                            </h3>
+
+                            <div class="space-y-4 text-xs font-mono">
+                                <!-- Field Area & Crop Selection -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="text-stone-400 block mb-1">FIELD AREA (ha)</label>
+                                        <input type="number" id="inp-area" value="45" min="1" max="1000" onchange="AgriEngine.calculateAll()" class="w-full bg-stone-900 border border-white/15 rounded p-2 text-white font-bold focus:border-brand-orange focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-stone-400 block mb-1">CROP TYPE (Kc)</label>
+                                        <select id="inp-crop" onchange="AgriEngine.calculateAll()" class="w-full bg-stone-900 border border-white/15 rounded p-2 text-white font-bold focus:border-brand-orange focus:outline-none">
+                                            <option value="1.15">Citrus / Orchard (1.15)</option>
+                                            <option value="1.20">Cotton / Maize (1.20)</option>
+                                            <option value="1.05">Pasture / Feedlot (1.05)</option>
+                                            <option value="0.95">High-Density Hydro (0.95)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Pipe Diameter Slider & Swamee-Jain Calc -->
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-stone-400">MAINLINE HDPE DIA (D)</span>
+                                        <span id="txt-pipe" class="text-brand-orange font-bold">110 mm (PN10)</span>
+                                    </div>
+                                    <input type="range" id="inp-pipe" min="50" max="315" step="5" value="110" oninput="AgriEngine.calculateAll()" class="w-full">
+                                    <div class="flex justify-between text-[10px] text-stone-500 mt-0.5">
+                                        <span>50mm (High friction)</span>
+                                        <span>315mm (Low friction)</span>
+                                    </div>
+                                </div>
+
+                                <!-- Pipeline Length -->
+                                <div>
+                                    <label class="text-stone-400 block mb-1">MAINLINE LENGTH (L - meters)</label>
+                                    <input type="number" id="inp-length" value="1200" min="50" max="10000" step="50" onchange="AgriEngine.calculateAll()" class="w-full bg-stone-900 border border-white/15 rounded p-2 text-white font-bold focus:border-brand-orange focus:outline-none">
+                                </div>
+
+                                <!-- Solar Capacity Slider -->
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-stone-400">PV SOLAR ARRAY CAPACITY</span>
+                                        <span id="txt-solar" class="text-brand-orange font-bold">45 kWp</span>
+                                    </div>
+                                    <input type="range" id="inp-solar" min="0" max="200" step="5" value="45" oninput="AgriEngine.calculateAll()" class="w-full">
+                                    <div class="flex justify-between text-[10px] text-stone-500 mt-0.5">
+                                        <span>0 kW (Grid only)</span>
+                                        <span>200 kW (Full Microgrid)</span>
+                                    </div>
+                                </div>
+
+                                <!-- Buffer Dam Capacity & Cover Option -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="text-stone-400 block mb-1">BUFFER DAM (m³)</label>
+                                        <input type="number" id="inp-dam" value="350" min="50" max="5000" step="50" onchange="AgriEngine.calculateAll()" class="w-full bg-stone-900 border border-white/15 rounded p-2 text-white font-bold focus:border-brand-orange focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-stone-400 block mb-1">DAM COVER (Evap)</label>
+                                        <select id="inp-cover" onchange="AgriEngine.calculateAll()" class="w-full bg-stone-900 border border-white/15 rounded p-2 text-white font-bold focus:border-brand-orange focus:outline-none">
+                                            <option value="0.0">Uncovered Open Dam</option>
+                                            <option value="0.75">Floating Shade Cover (-75%)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Ambient Weather Parameters -->
+                                <div class="p-3 bg-stone-900/60 rounded-lg border border-white/5 space-y-2">
+                                    <div class="text-[10px] text-stone-400 font-bold uppercase tracking-wider">Penman-Monteith Climate Inputs</div>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div>
+                                            <span class="text-stone-500">MAX TEMP:</span>
+                                            <input type="number" id="inp-temp" value="36" min="10" max="50" onchange="AgriEngine.calculateAll()" class="w-12 bg-black text-right rounded text-stone-200 border border-stone-700 px-1"> °C
+                                        </div>
+                                        <div>
+                                            <span class="text-stone-500">REL HUMID:</span>
+                                            <input type="number" id="inp-rh" value="28" min="5" max="100" onchange="AgriEngine.calculateAll()" class="w-12 bg-black text-right rounded text-stone-200 border border-stone-700 px-1"> %
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Simulation Trigger Button -->
+                                <button id="btn-run-sim" onclick="AgriEngine.runPlayback()" class="w-full bg-brand-orange hover:bg-orange-600 text-black font-bold py-3 rounded-lg uppercase tracking-wider shadow-lg shadow-brand-orange/20 transition-all flex items-center justify-center space-x-2">
+                                    <span>▶</span> <span>EXECUTE 24-HOUR DIURNAL SIMULATION</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: Canvas Live Playback & Engineering Diagnostics (7 Cols) -->
+                    <div class="lg:col-span-7 space-y-4">
+                        
+                        <!-- Real-Time Interactive Hydraulic Canvas -->
+                        <div class="glass-card rounded-xl p-4 border border-white/10">
+                            <div class="flex justify-between items-center mb-2 font-mono text-xs">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-2 h-2 rounded-full bg-brand-orange animate-ping"></span>
+                                    <span class="text-white font-bold">HYDRAULIC & POWER CANVAS</span>
+                                </div>
+                                <div id="sim-clock" class="text-brand-orange font-bold">06:00 AM [DIURNAL PEAK]</div>
+                            </div>
+
+                            <div class="relative aspect-[16/9] bg-stone-950 rounded-lg overflow-hidden border border-stone-800">
+                                <canvas id="agriCanvas" class="w-full h-full block"></canvas>
+                            </div>
+
+                            <!-- Realtime Status Indicators -->
+                            <div class="grid grid-cols-3 gap-2 mt-3 text-center font-mono text-[11px]">
+                                <div class="bg-stone-900/80 p-2 rounded border border-white/5">
+                                    <div class="text-stone-500">SOLAR IRRADIANCE</div>
+                                    <div id="diag-solar-irr" class="text-yellow-400 font-bold">850 W/m²</div>
+                                </div>
+                                <div class="bg-stone-900/80 p-2 rounded border border-white/5">
+                                    <div class="text-stone-500">DAM STORAGE LEVEL</div>
+                                    <div id="diag-dam-pct" class="text-cyan-400 font-bold">82.4%</div>
+                                </div>
+                                <div class="bg-stone-900/80 p-2 rounded border border-white/5">
+                                    <div class="text-stone-500">PUMP OPERATING PT</div>
+                                    <div id="diag-pump-status" class="text-emerald-400 font-bold">SOLAR DIRECT</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Physics & Financial Metrics Dashboard Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            
+                            <!-- Hydraulic & Energy Metrics -->
+                            <div class="glass-card rounded-xl p-4 border border-white/10 space-y-3 font-mono text-xs">
+                                <h4 class="text-stone-400 font-bold border-b border-white/10 pb-1 flex justify-between">
+                                    <span>🌊 HYDRAULIC DIAGNOSTICS</span>
+                                    <span class="text-brand-orange">SI METRICS</span>
+                                </h4>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Flow Rate (Q):</span>
+                                    <span id="m-flow" class="text-white font-bold">48.2 m³/h</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Velocity (v):</span>
+                                    <span id="m-vel" class="text-white font-bold">1.41 m/s</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Reynolds No (Re):</span>
+                                    <span id="m-re" class="text-stone-300">155,100 (Turbulent)</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Friction Head Loss (hf):</span>
+                                    <span id="m-hf" class="text-red-400 font-bold">18.4 m</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Total Dynamic Head (TDH):</span>
+                                    <span id="m-tdh" class="text-brand-orange font-bold">53.4 m</span>
+                                </div>
+                                <div class="flex justify-between border-t border-white/5 pt-1">
+                                    <span class="text-stone-500">Required Elec Power:</span>
+                                    <span id="m-power" class="text-yellow-400 font-bold">11.2 kW</span>
+                                </div>
+                            </div>
+
+                            <!-- Financial Feasibility & ROI Metrics -->
+                            <div class="glass-card rounded-xl p-4 border border-white/10 space-y-3 font-mono text-xs">
+                                <h4 class="text-stone-400 font-bold border-b border-white/10 pb-1 flex justify-between">
+                                    <span>💰 FINANCIAL FEASIBILITY</span>
+                                    <span class="text-emerald-400">15-YR MODEL</span>
+                                </h4>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Total System CAPEX:</span>
+                                    <span id="m-capex" class="text-white font-bold">$34,200</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Annual OPEX Savings:</span>
+                                    <span id="m-opex" class="text-emerald-400 font-bold">$6,850 / yr</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Payback Period:</span>
+                                    <span id="m-payback" class="text-white font-bold">4.9 Years</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Net Present Value (NPV @8.5%):</span>
+                                    <span id="m-npv" class="text-emerald-400 font-bold">$22,410</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-stone-500">Internal Rate Return (IRR):</span>
+                                    <span id="m-irr" class="text-brand-orange font-bold">18.4%</span>
+                                </div>
+                                <div class="flex justify-between border-t border-white/5 pt-1">
+                                    <span class="text-stone-500">FAO Crop Stress Penalty:</span>
+                                    <span id="m-penalty" class="text-emerald-400 font-bold">0.0% (Optimum Yield)</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================================================= -->
+        <!-- MODULE 3: STEM TRIVIA & HARD PROTOCOL -->
+        <!-- ========================================================================= -->
+        <section id="sec-trivia" class="tab-content hidden">
+            <div class="max-w-3xl mx-auto glass-card rounded-2xl p-6 border border-white/10">
+                <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                    <div>
+                        <h2 class="font-display text-2xl text-white tracking-wide">STEM TRIVIA <span class="text-brand-orange">//</span> HARD PROTOCOL</h2>
+                        <p class="text-xs font-mono text-stone-400">Validate core engineering, structural, and coding principles under pressure.</p>
+                    </div>
+                    <div class="bg-stone-900 border border-white/10 px-3 py-1.5 rounded-lg text-xs font-mono">
+                        STREAK: <span id="quiz-streak" class="text-brand-orange font-bold">0</span> 🔥
+                    </div>
+                </div>
+
+                <!-- Active Question Card -->
+                <div id="quiz-card" class="space-y-6">
+                    <div class="flex items-center space-x-2 text-xs font-mono text-stone-500">
+                        <span id="quiz-category" class="bg-brand-orange/10 text-brand-orange px-2 py-0.5 rounded border border-brand-orange/30">CIVIL ENGINEERING</span>
+                        <span>• DIFFICULTY: HARD</span>
+                    </div>
+
+                    <h3 id="quiz-question" class="text-lg font-medium text-white leading-relaxed">
+                        Loading problem set...
+                    </h3>
+
+                    <!-- Choices Container -->
+                    <div id="quiz-options" class="space-y-3 font-mono text-xs">
+                        <!-- Options generated dynamically -->
+                    </div>
+
+                    <div id="quiz-explanation" class="hidden p-4 rounded-lg bg-stone-900 border border-white/10 text-xs font-mono text-stone-300">
+                        <!-- Feedback text -->
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2">
+                        <button onclick="STEMQuiz.nextQuestion()" class="bg-brand-orange hover:bg-orange-600 text-black font-bold font-mono text-xs px-5 py-2.5 rounded-lg uppercase tracking-wider transition-all">
+                            NEXT QUESTION →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================================================= -->
+        <!-- MODULE 4: THE JOURNEY (PATH TO MASTERY TIMELINE) -->
+        <!-- ========================================================================= -->
+        <section id="sec-journey" class="tab-content hidden">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="glass-card rounded-2xl p-6 border border-white/10 text-center">
+                    <h2 class="font-display text-3xl text-white tracking-wide">THE JOURNEY <span class="text-brand-orange">//</span> ROADMAP TO MASTERY</h2>
+                    <p class="text-xs font-mono text-stone-400 mt-1 max-w-xl mx-auto">From fundamental engineering principles to autonomous agricultural civil automation systems.</p>
+                </div>
+
+                <!-- Timeline Items -->
+                <div class="relative border-l-2 border-brand-orange/30 ml-4 md:ml-32 space-y-8 pl-6 md:pl-8">
+                    
+                    <!-- Milestone 1 -->
+                    <div class="relative group">
+                        <div class="absolute -left-[31px] md:-left-[39px] top-0 w-6 h-6 rounded-full bg-brand-orange border-4 border-black text-black font-bold text-[10px] flex items-center justify-center">1</div>
+                        <div class="hidden md:block absolute -left-32 top-0 text-right w-24 font-mono text-xs text-brand-orange font-bold">PHASE I</div>
+                        <div class="glass-card rounded-xl p-5 border border-white/10">
+                            <h3 class="font-bold text-white text-base mb-1">Fundamentals of Civil & Mechanics</h3>
+                            <p class="text-xs text-stone-400 leading-relaxed mb-3">Mastery of statics, stress-strain tensor matrices, moment distribution methods, and Euler-Bernoulli beam deflection physics.</p>
+                            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/50 border border-emerald-800 px-2 py-0.5 rounded">✓ COMPLETED PROTOCOL</span>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 2 -->
+                    <div class="relative group">
+                        <div class="absolute -left-[31px] md:-left-[39px] top-0 w-6 h-6 rounded-full bg-brand-orange border-4 border-black text-black font-bold text-[10px] flex items-center justify-center">2</div>
+                        <div class="hidden md:block absolute -left-32 top-0 text-right w-24 font-mono text-xs text-brand-orange font-bold">PHASE II</div>
+                        <div class="glass-card rounded-xl p-5 border border-white/10">
+                            <h3 class="font-bold text-white text-base mb-1">Hydraulics & Fluid Dynamics</h3>
+                            <p class="text-xs text-stone-400 leading-relaxed mb-3">Darcy-Weisbach head loss equations, Navier-Stokes approximations, open channel flow calculations via Manning's formula, and transient surge analysis.</p>
+                            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/50 border border-emerald-800 px-2 py-0.5 rounded">✓ ACTIVE MODULE</span>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 3 -->
+                    <div class="relative group">
+                        <div class="absolute -left-[31px] md:-left-[39px] top-0 w-6 h-6 rounded-full bg-stone-700 border-4 border-black text-stone-400 font-bold text-[10px] flex items-center justify-center">3</div>
+                        <div class="hidden md:block absolute -left-32 top-0 text-right w-24 font-mono text-xs text-stone-500 font-bold">PHASE III</div>
+                        <div class="glass-card rounded-xl p-5 border border-white/10 opacity-80">
+                            <h3 class="font-bold text-white text-base mb-1">Python Automation & Industrial IoT</h3>
+                            <p class="text-xs text-stone-400 leading-relaxed mb-3">Automating telemetry loops, script-driven microgrid power switching, Modbus/MQTT protocol integration, and real-time yield prediction models.</p>
+                            <span class="text-[10px] font-mono text-brand-orange bg-brand-orange/10 border border-brand-orange/30 px-2 py-0.5 rounded">IN PROGRESS</span>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 4 -->
+                    <div class="relative group">
+                        <div class="absolute -left-[31px] md:-left-[39px] top-0 w-6 h-6 rounded-full bg-stone-800 border-4 border-black text-stone-500 font-bold text-[10px] flex items-center justify-center">4</div>
+                        <div class="hidden md:block absolute -left-32 top-0 text-right w-24 font-mono text-xs text-stone-600 font-bold">PHASE IV</div>
+                        <div class="glass-card rounded-xl p-5 border border-white/10 opacity-60">
+                            <h3 class="font-bold text-white text-base mb-1">Autonomous Regional Microgrids</h3>
+                            <p class="text-xs text-stone-400 leading-relaxed mb-3">Full deployment of off-grid solar-hydro agricultural hubs across southern hemisphere farming networks.</p>
+                            <span class="text-[10px] font-mono text-stone-500 bg-stone-900 border border-stone-800 px-2 py-0.5 rounded">FUTURE DEPLOYMENT</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="border-t border-white/10 bg-[#050505] py-6 text-center font-mono text-xs text-stone-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div>STRUCTURAL SENSEI © 2026 // ENGINEERING & AUTOMATION SUITE</div>
+            <div class="text-brand-orange">BUILT FOR ENGINEERS & PRECISION AGRICULTURISTS</div>
         </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="text-center text-xs text-stone-600 my-4">
-        Structural Sensei Engine &copy; 2026 · Precision Systems & Budo Ethos
     </footer>
 
+
+    <!-- ========================================================================= -->
+    <!-- JAVASCRIPT LOGIC SUITE -->
+    <!-- ========================================================================= -->
     <script>
-        // --- 1. GENERAL VIEW NAVIGATION ---
-        function switchView(id) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if (id !== 'dash-view' && dashGameRunning) {
-                stopDashGame();
-            }
-        }
-
-        // --- 2. QUIZ DICTIONARY & LOGIC ---
-        const data = {
-            hard: [
-                {q: "STRUCTURAL: What is the primary factor in Euler's Column Buckling formula (π²EI/L²)?", a: ["Tensile Load", "Effective Length", "Shear Modulus", "Torsional Yield"], c: 1},
-                {q: "FLUIDS: In open channel flow, which equation relies heavily on the roughness coefficient 'n'?", a: ["Bernoulli's", "Manning's Equation", "Darcy-Weisbach", "Reynold's Number"], c: 1},
-                {q: "AUTOMATION: In Python, what is the primary purpose of the __init__ method within a class structure?", a: ["To delete objects", "To initialize attributes of an object", "To import external libraries", "To compile the script"], c: 1},
-                {q: "MATERIALS: The point on a stress-strain curve where a material undergoes irreversible deformation is called?", a: ["Ultimate Tensile Strength", "Modulus of Elasticity", "Yield Point", "Fracture Point"], c: 2},
-                {q: "HYDROLOGY: In the Rational Method (Q = CiA), what does the 'C' represent?", a: ["Catchment Area", "Capillary Action", "Runoff Coefficient", "Channel Velocity"], c: 2},
-                {q: "GEOTECH: Which tool is used graphically to determine principal stresses and maximum shear stress in soil?", a: ["Mohr's Circle", "Atterberg Limits", "Proctor Curve", "Boussinesq Equation"], c: 0},
-                {q: "ELECTRICAL: According to Ohm's Law, Voltage (V) is equal to?", a: ["Power x Time", "Resistance / Current", "Current / Resistance", "Current x Resistance"], c: 3},
-                {q: "COMPUTER SCIENCE: What is the time complexity (Big O) of a binary search algorithm?", a: ["O(1)", "O(n)", "O(log n)", "O(n²)"], c: 2},
-                {q: "MECHANICAL: The Second Law of Thermodynamics states that the total entropy of an isolated system can never?", a: ["Increase", "Decrease", "Equal zero", "Generate heat"], c: 1},
-                {q: "STRUCTURAL: The mathematical derivative of the Bending Moment diagram gives you what?", a: ["Deflection", "Rotation", "Axial Force", "Shear Force"], c: 3}
-            ],
-            gen: [
-                {q: "What is the primary alloy element combined with Iron to create Steel?", a: ["Zinc", "Carbon", "Copper", "Titanium"], c: 1},
-                {q: "Who is widely considered the first computer programmer?", a: ["Alan Turing", "Bill Gates", "Ada Lovelace", "Steve Wozniak"], c: 2},
-                {q: "What does the acronym S.T.E.M. stand for?", a: ["Science, Technology, Engineering, Math", "Software, Testing, Evaluation, Metrics", "Systems, Technology, Environment, Mechanics", "Science, Teaching, Education, Math"], c: 0},
-                {q: "Currently, what is the tallest man-made structure in the world?", a: ["Shanghai Tower", "Merdeka 118", "Burj Khalifa", "One World Trade Center"], c: 2},
-                {q: "What is the hardest known natural mineral on Earth?", a: ["Quartz", "Graphene", "Diamond", "Tungsten"], c: 2},
-                {q: "Who created the Python programming language in 1991?", a: ["Linus Torvalds", "Guido van Rossum", "James Gosling", "Dennis Ritchie"], c: 1},
-                {q: "What is the most abundant gas in the Earth's atmosphere?", a: ["Oxygen", "Carbon Dioxide", "Hydrogen", "Nitrogen"], c: 3},
-                {q: "Force equals Mass times Acceleration (F=ma) is which of Newton's laws?", a: ["First Law", "Second Law", "Third Law", "Law of Gravitation"], c: 1},
-                {q: "Which ancient Greek mathematician is known as the 'Father of Geometry'?", a: ["Pythagoras", "Archimedes", "Euclid", "Socrates"], c: 2},
-                {q: "Approximately how fast does light travel in a vacuum?", a: ["300,000 km/s", "150,000 km/s", "1,000,000 km/s", "343 m/s"], c: 0}
-            ]
-        };
-
-        let currentType = '';
-        let currentQIdx = 0;
-        let quizScore = 0;
-
-        function loadQuiz(type) {
-            currentType = type;
-            currentQIdx = 0;
-            quizScore = 0;
-            document.getElementById('quiz-title').innerText = type === 'hard' ? "Hard Mode Protocol" : "STEM Trivia Protocol";
-            updateScoreDisplay();
-            switchView('quiz-view');
-            renderQuestion();
-        }
-
-        function updateScoreDisplay() {
-            document.getElementById('score-counter').innerText = `Score: ${quizScore} / 10`;
-        }
-
-        function renderQuestion() {
-            const quizData = data[currentType];
-            if (currentQIdx >= quizData.length) {
-                document.getElementById('q-text').innerHTML = `<span class="text-green-500 font-bold">Protocol Complete.</span><br>Final Evaluation Score: ${quizScore}/10.`;
-                document.getElementById('btns').innerHTML = `<button onclick="loadQuiz('${currentType}')" class="glass p-4 rounded text-center hover:bg-white/10 font-bold">Restart Test</button>`;
-                return;
-            }
-
-            const q = quizData[currentQIdx];
-            document.getElementById('q-text').innerText = `${currentQIdx + 1}. ${q.q}`;
-            const btnContainer = document.getElementById('btns');
-            btnContainer.innerHTML = '';
-
-            q.a.forEach((opt, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'glass p-4 rounded hover:bg-white/10 hover:border-white/40 text-left transition font-medium';
-                btn.innerText = opt;
-                btn.onclick = () => handleAnswer(index, q.c);
-                btnContainer.appendChild(btn);
+        // -------------------------------------------------------------------------
+        // TAB SWITCHING ENGINE
+        // -------------------------------------------------------------------------
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-brand-orange', 'text-black', 'shadow-lg', 'shadow-brand-orange/20');
+                el.classList.add('text-stone-400', 'hover:text-white', 'hover:bg-stone-900');
             });
-        }
 
-        function handleAnswer(selectedIndex, correctIndex) {
-            if (selectedIndex === correctIndex) quizScore++;
-            currentQIdx++;
-            updateScoreDisplay();
-            renderQuestion();
-        }
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.add('bg-brand-orange', 'text-black', 'shadow-lg', 'shadow-brand-orange/20');
+            activeBtn.classList.remove('text-stone-400', 'hover:text-white', 'hover:bg-stone-900');
 
-        // --- 3. INTERACTIVE STORY ENGINE ---
-        const journeyStages = [
-            { pos: "0%", icon: "👷", title: "Stage 1: The Foundation", text: "Mastering the fundamentals of structural engineering, calculations, and concrete." },
-            { pos: "33%", icon: "💻", title: "Stage 2: The Automator", text: "Hitting the 'Technical Wall'. Discovering Python to write scripts and automate repetitive design tasks." },
-            { pos: "66%", icon: "🚀", title: "Stage 3: Systems Architect", text: "Bridging disciplines. Building high-level systems, web apps, and data pipelines for infrastructure." },
-            { pos: "95%", icon: "🧘", title: "Stage 4: The Sensei", text: "Achieving leverage. Translating technical mastery into financial independence and teaching others." }
-        ];
-
-        let journeyStep = 0;
-
-        function loadStory() {
-            journeyStep = 0;
-            updateJourneyUI();
-            switchView('story-view');
-        }
-
-        function advanceJourney() {
-            if (journeyStep < journeyStages.length - 1) {
-                journeyStep++;
-                updateJourneyUI();
-            } else {
-                alert("You have reached mastery. Now, teach the next generation.");
-                journeyStep = 0;
-                updateJourneyUI();
+            if (tabId === 'agri') {
+                setTimeout(() => {
+                    AgriEngine.resizeCanvas();
+                    AgriEngine.calculateAll();
+                }, 50);
+            } else if (tabId === 'dash') {
+                setTimeout(() => SenseiDash.resizeCanvas(), 50);
             }
         }
 
-        function updateJourneyUI() {
-            const stage = journeyStages[journeyStep];
-            const character = document.getElementById('character');
-            character.style.left = stage.pos;
 
-            setTimeout(() => {
-                character.innerText = stage.icon;
-                document.getElementById('story-title').innerText = stage.title;
-                document.getElementById('story-text').innerText = stage.text;
+        // -------------------------------------------------------------------------
+        // MODULE 1: SENSEI DASH GAME LOGIC
+        // -------------------------------------------------------------------------
+        const SenseiDash = {
+            canvas: null,
+            ctx: null,
+            animId: null,
+            score: 0,
+            highScore: 0,
+            running: false,
+            player: { x: 50, y: 150, vy: 0, size: 24, grounded: false },
+            obstacles: [],
+            frame: 0,
+            gravity: 0.5,
 
-                const btn = document.getElementById('walk-btn');
-                if (journeyStep === journeyStages.length - 1) {
-                    btn.innerText = "Restart Journey";
-                    btn.classList.replace('bg-blue-600', 'bg-green-600');
-                } else {
-                    btn.innerText = "Advance Career";
-                    btn.classList.replace('bg-green-600', 'bg-blue-600');
-                }
-            }, 300);
-        }
+            init() {
+                this.canvas = document.getElementById('dashCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
 
-        // --- 4. SENSEI DASH (PIXEL FLAPPY CANVAS ENGINE) ---
-        const canvas = document.getElementById('game-canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.imageSmoothingEnabled = false; // Preserves crisp retro pixels
-
-        let dashGameRunning = false;
-        let animationFrameId = null;
-        let dashScore = 0;
-        let dashHighScore = localStorage.getItem('sensei_high_score') || 0;
-
-        // Player (Pixel Sensei) Object
-        const sensei = {
-            x: 80,
-            y: 180,
-            width: 28,
-            height: 32,
-            gravity: 0.38,
-            velocity: 0,
-            jump: -6.8,
-            rotation: 0
-        };
-
-        // Game Entities
-        let columns = [];
-        let collectibles = [];
-        let frameCount = 0;
-        let bgOffset = 0;
-
-        document.getElementById('dash-high').innerText = `BEST: ${dashHighScore}`;
-
-        function loadDashGame() {
-            switchView('dash-view');
-            resetDashState();
-            drawDashStaticPreview();
-        }
-
-        function resetDashState() {
-            sensei.y = 180;
-            sensei.velocity = 0;
-            sensei.rotation = 0;
-            columns = [];
-            collectibles = [];
-            dashScore = 0;
-            frameCount = 0;
-            document.getElementById('dash-score').innerText = `SCORE: 0`;
-        }
-
-        function startDashGame() {
-            resetDashState();
-            document.getElementById('dash-overlay').classList.add('hidden');
-            dashGameRunning = true;
-            loopDashGame();
-        }
-
-        function stopDashGame() {
-            dashGameRunning = false;
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
-        }
-
-        function gameOverDash() {
-            stopDashGame();
-            if (dashScore > dashHighScore) {
-                dashHighScore = dashScore;
-                localStorage.setItem('sensei_high_score', dashHighScore);
-                document.getElementById('dash-high').innerText = `BEST: ${dashHighScore}`;
-            }
-
-            document.getElementById('overlay-title').innerText = "STRUCTURAL FAILURE!";
-            document.getElementById('overlay-msg').innerHTML = `Your Run Score: <span class="text-orange-400 font-bold font-mono text-lg">${dashScore}</span><br>Keep building and try again!`;
-            document.getElementById('dash-overlay').classList.remove('hidden');
-        }
-
-        // Input Listeners
-        window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && document.getElementById('dash-view').classList.contains('active')) {
-                e.preventDefault();
-                if (dashGameRunning) {
-                    sensei.velocity = sensei.jump;
-                } else if (!document.getElementById('dash-overlay').classList.contains('hidden')) {
-                    startDashGame();
-                }
-            }
-        });
-
-        canvas.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-            if (dashGameRunning) {
-                sensei.velocity = sensei.jump;
-            }
-        });
-
-        // Main Loop
-        function loopDashGame() {
-            if (!dashGameRunning) return;
-            frameCount++;
-
-            updateDashPhysics();
-            renderDashGraphics();
-
-            animationFrameId = requestAnimationFrame(loopDashGame);
-        }
-
-        function updateDashPhysics() {
-            // Apply Gravity
-            sensei.velocity += sensei.gravity;
-            sensei.y += sensei.velocity;
-            sensei.rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 6, sensei.velocity * 0.08));
-
-            // Floor / Ceiling Collision
-            if (sensei.y + sensei.height >= canvas.height - 24 || sensei.y <= 0) {
-                gameOverDash();
-                return;
-            }
-
-            // Spawn Structural I-Beam Columns (Pillars)
-            if (frameCount % 90 === 0) {
-                const gapHeight = 115;
-                const minHeight = 40;
-                const maxHeight = canvas.height - gapHeight - minHeight - 24;
-                const topHeight = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
-
-                columns.push({
-                    x: canvas.width,
-                    topHeight: topHeight,
-                    bottomY: topHeight + gapHeight,
-                    width: 44,
-                    passed: false
+                // Controls
+                window.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && document.getElementById('sec-dash').classList.contains('hidden') === false) {
+                        e.preventDefault();
+                        this.jump();
+                    }
                 });
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.jump();
+                });
+            },
 
-                // 40% chance to spawn floating CAD blueprint collectible in gap
-                if (Math.random() < 0.45) {
-                    collectibles.push({
-                        x: canvas.width + 12,
-                        y: topHeight + gapHeight / 2 - 10,
-                        size: 20,
-                        collected: false
-                    });
-                }
-            }
+            resizeCanvas() {
+                if (!this.canvas) return;
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+                if (!this.running) this.drawStatic();
+            },
 
-            // Update Columns
-            for (let i = columns.length - 1; i >= 0; i--) {
-                const c = columns[i];
-                c.x -= 2.6;
+            start() {
+                document.getElementById('dash-overlay').classList.add('hidden');
+                this.score = 0;
+                this.frame = 0;
+                this.obstacles = [];
+                this.player.y = this.canvas.height / 2;
+                this.player.vy = 0;
+                this.running = true;
+                this.loop();
+            },
 
-                // Check collisions with Sensei
-                if (
-                    sensei.x + sensei.width - 4 > c.x &&
-                    sensei.x + 4 < c.x + c.width &&
-                    (sensei.y + 4 < c.topHeight || sensei.y + sensei.height - 4 > c.bottomY)
-                ) {
-                    gameOverDash();
+            jump() {
+                if (!this.running) {
+                    this.start();
                     return;
                 }
+                this.player.vy = -8.5;
+            },
 
-                // Score Increment
-                if (!c.passed && c.x + c.width < sensei.x) {
-                    c.passed = true;
-                    dashScore += 1;
-                    document.getElementById('dash-score').innerText = `SCORE: ${dashScore}`;
+            gameOver() {
+                this.running = false;
+                cancelAnimationFrame(this.animId);
+                if (this.score > this.highScore) {
+                    this.highScore = this.score;
+                    document.getElementById('dash-high').innerText = this.highScore;
+                }
+                document.getElementById('dash-overlay').classList.remove('hidden');
+            },
+
+            loop() {
+                if (!this.running) return;
+                this.frame++;
+                this.update();
+                this.render();
+                this.animId = requestAnimationFrame(() => this.loop());
+            },
+
+            update() {
+                // Gravity & Movement
+                this.player.vy += this.gravity;
+                this.player.y += this.player.vy;
+
+                // Ceiling/Floor boundaries
+                if (this.player.y + this.player.size > this.canvas.height - 20) {
+                    this.player.y = this.canvas.height - 20 - this.player.size;
+                    this.gameOver();
+                }
+                if (this.player.y < 0) {
+                    this.player.y = 0;
+                    this.player.vy = 0;
                 }
 
-                if (c.x + c.width < -50) columns.splice(i, 1);
-            }
+                // Spawn Structural Obstacles
+                if (this.frame % 90 === 0) {
+                    const gap = 130;
+                    const minH = 40;
+                    const maxH = this.canvas.height - gap - minH - 40;
+                    const topH = Math.floor(Math.random() * (maxH - minH + 1)) + minH;
 
-            // Update Collectibles
-            for (let i = collectibles.length - 1; i >= 0; i--) {
-                const item = collectibles[i];
-                item.x -= 2.6;
-
-                // Check Pickup
-                if (
-                    !item.collected &&
-                    sensei.x < item.x + item.size &&
-                    sensei.x + sensei.width > item.x &&
-                    sensei.y < item.y + item.size &&
-                    sensei.y + sensei.height > item.y
-                ) {
-                    item.collected = true;
-                    dashScore += 5;
-                    document.getElementById('dash-score').innerText = `SCORE: ${dashScore}`;
+                    this.obstacles.push({
+                        x: this.canvas.width,
+                        top: topH,
+                        bottom: this.canvas.height - topH - gap,
+                        passed: false
+                    });
                 }
 
-                if (item.x + item.size < -20 || item.collected) collectibles.splice(i, 1);
-            }
+                // Move obstacles
+                for (let i = this.obstacles.length - 1; i >= 0; i--) {
+                    const obs = this.obstacles[i];
+                    obs.x -= 3.5;
 
-            bgOffset = (bgOffset + 1) % 40;
-        }
+                    // Score Increment
+                    if (!obs.passed && obs.x < this.player.x) {
+                        obs.passed = true;
+                        this.score += 10;
+                        document.getElementById('dash-score').innerText = this.score;
+                    }
 
-        // Drawing Functions
-        function renderDashGraphics() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // Collision Detection
+                    const px = this.player.x;
+                    const py = this.player.y;
+                    const ps = this.player.size;
 
-            // 1. Dark Blueprint Grid Background
-            ctx.fillStyle = "#080808";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    if (px + ps > obs.x && px < obs.x + 45) {
+                        if (py < obs.top || py + ps > this.canvas.height - obs.bottom) {
+                            this.gameOver();
+                        }
+                    }
 
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
-            ctx.lineWidth = 1;
-            for (let x = -bgOffset; x < canvas.width; x += 20) {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
-            }
-            for (let y = 0; y < canvas.height; y += 20) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
-            }
-
-            // Silhouetted City / Construction Trusses in background
-            ctx.fillStyle = "rgba(20, 20, 20, 0.6)";
-            ctx.fillRect(100 - (bgOffset * 0.2), 220, 40, 160);
-            ctx.fillRect(280 - (bgOffset * 0.2), 180, 50, 200);
-            ctx.fillRect(480 - (bgOffset * 0.2), 250, 60, 130);
-
-            // 2. Draw Columns (Steel I-Beams)
-            columns.forEach(c => {
-                // Concrete/Steel Pillar body
-                ctx.fillStyle = "#1e293b";
-                ctx.fillRect(c.x, 0, c.width, c.topHeight);
-                ctx.fillRect(c.x, c.bottomY, c.width, canvas.height - c.bottomY - 24);
-
-                // Steel Flange Caps (High visibility Orange accents)
-                ctx.fillStyle = "#f47b20";
-                ctx.fillRect(c.x - 3, c.topHeight - 12, c.width + 6, 12);
-                ctx.fillRect(c.x - 3, c.bottomY, c.width + 6, 12);
-
-                // Rivet Details
-                ctx.fillStyle = "#000000";
-                ctx.fillRect(c.x + 4, 10, 4, 4);
-                ctx.fillRect(c.x + c.width - 8, 10, 4, 4);
-                ctx.fillRect(c.x + 4, c.bottomY + 20, 4, 4);
-                ctx.fillRect(c.x + c.width - 8, c.bottomY + 20, 4, 4);
-            });
-
-            // 3. Draw Collectible CAD Blueprints
-            collectibles.forEach(item => {
-                if (!item.collected) {
-                    ctx.fillStyle = "#2563eb";
-                    ctx.fillRect(item.x, item.y, item.size, item.size);
-                    ctx.strokeStyle = "#ffffff";
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(item.x + 2, item.y + 2, item.size - 4, item.size - 4);
-                    // CAD Icon line detail
-                    ctx.beginPath();
-                    ctx.moveTo(item.x + 4, item.y + item.size - 5);
-                    ctx.lineTo(item.x + item.size - 5, item.y + 4);
-                    ctx.stroke();
+                    if (obs.x < -50) this.obstacles.splice(i, 1);
                 }
-            });
+            },
 
-            // 4. Ground (Hazard Line Theme)
-            ctx.fillStyle = "#111111";
-            ctx.fillRect(0, canvas.height - 24, canvas.width, 24);
-            ctx.fillStyle = "#E43B12";
-            ctx.fillRect(0, canvas.height - 24, canvas.width, 3);
+            drawStatic() {
+                this.ctx.fillStyle = '#0a0a0d';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = '#1c1c22';
+                this.ctx.fillRect(0, this.canvas.height - 20, this.canvas.width, 20);
+            },
 
-            // Hazard Stripes
-            ctx.fillStyle = "#f47b20";
-            for (let x = -bgOffset * 2; x < canvas.width; x += 30) {
-                ctx.beginPath();
-                ctx.moveTo(x, canvas.height);
-                ctx.lineTo(x + 12, canvas.height - 21);
-                ctx.lineTo(x + 20, canvas.height - 21);
-                ctx.lineTo(x + 8, canvas.height);
-                ctx.fill();
+            render() {
+                this.drawStatic();
+
+                // Draw Player (Sensei Avatar)
+                this.ctx.fillStyle = '#f47b20';
+                this.ctx.shadowColor = 'rgba(244, 123, 32, 0.5)';
+                this.ctx.shadowBlur = 10;
+                this.ctx.fillRect(this.player.x, this.player.y, this.player.size, this.player.size);
+                this.ctx.shadowBlur = 0;
+
+                // Draw Structural Steel I-Beams (Obstacles)
+                this.ctx.fillStyle = '#26262e';
+                this.ctx.strokeStyle = '#f47b20';
+                this.ctx.lineWidth = 2;
+
+                this.obstacles.forEach(obs => {
+                    // Top beam
+                    this.ctx.fillRect(obs.x, 0, 45, obs.top);
+                    this.ctx.strokeRect(obs.x, 0, 45, obs.top);
+
+                    // Bottom beam
+                    const botY = this.canvas.height - obs.bottom;
+                    this.ctx.fillRect(obs.x, botY, 45, obs.bottom);
+                    this.ctx.strokeRect(obs.x, botY, 45, obs.bottom);
+                });
             }
+        };
 
-            // 5. Draw Pixel Sensei Player Character
-            drawPixelSensei(sensei.x, sensei.y, sensei.rotation);
-        }
 
-        // Custom Pixel-Art Renderer for Karate Sensei with Hardhat
-        function drawPixelSensei(x, y, rotation) {
-            ctx.save();
-            ctx.translate(x + sensei.width / 2, y + sensei.height / 2);
-            ctx.rotate(rotation);
+        // -------------------------------------------------------------------------
+        // MODULE 2: AGRISENSEI CONSULTING ENGINE (RIGOROUS FEASIBILITY ENGINE)
+        // -------------------------------------------------------------------------
+        const AgriEngine = {
+            canvas: null,
+            ctx: null,
+            animFrame: null,
+            simHour: 6.0,
+            isLooping: false,
 
-            const p = 2; // Pixel size multiplier
+            // Regional Preset Configurations
+            presets: {
+                rsa: { area: 45, crop: '1.15', pipe: 110, length: 1200, solar: 45, dam: 350, cover: '0.0', temp: 36, rh: 28 },
+                aus: { area: 120, crop: '1.20', pipe: 160, length: 2200, solar: 90, dam: 1200, cover: '0.75', temp: 39, rh: 18 },
+                usa: { area: 85, crop: '1.05', pipe: 140, length: 850, solar: 60, dam: 500, cover: '0.0', temp: 28, rh: 45 },
+                hydro: { area: 15, crop: '0.95', pipe: 90, length: 300, solar: 30, dam: 150, cover: '0.75', temp: 24, rh: 55 }
+            },
 
-            // Karate Gi Body (White)
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(-6 * p, -2 * p, 10 * p, 10 * p);
+            init() {
+                this.canvas = document.getElementById('agriCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+                this.calculateAll();
+            },
 
-            // Black Belt
-            ctx.fillStyle = "#000000";
-            ctx.fillRect(-6 * p, 3 * p, 10 * p, 2 * p);
+            resizeCanvas() {
+                if (!this.canvas) return;
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+                this.drawCanvasScene();
+            },
 
-            // Flying Karate Kick Leg (High Kick pose)
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(4 * p, 1 * p, 6 * p, 3 * p); // Extended leg
-            ctx.fillStyle = "#e5e7eb";
-            ctx.fillRect(8 * p, 4 * p, 3 * p, 3 * p); // Foot
+            loadPreset(key) {
+                const p = this.presets[key];
+                if (!p) return;
+                document.getElementById('inp-area').value = p.area;
+                document.getElementById('inp-crop').value = p.crop;
+                document.getElementById('inp-pipe').value = p.pipe;
+                document.getElementById('inp-length').value = p.length;
+                document.getElementById('inp-solar').value = p.solar;
+                document.getElementById('inp-dam').value = p.dam;
+                document.getElementById('inp-cover').value = p.cover;
+                document.getElementById('inp-temp').value = p.temp;
+                document.getElementById('inp-rh').value = p.rh;
 
-            // Head / Skin Tone
-            ctx.fillStyle = "#fca5a5";
-            ctx.fillRect(-4 * p, -7 * p, 7 * p, 5 * p);
+                this.calculateAll();
+            },
 
-            // Hardhat (Safety Orange - Engineering Brand Accent)
-            ctx.fillStyle = "#f47b20";
-            ctx.fillRect(-6 * p, -11 * p, 11 * p, 4 * p);
-            ctx.fillRect(-8 * p, -8 * p, 14 * p, 2 * p); // Brim
+            calculateAll() {
+                // 1. Gather & Validate Inputs
+                const area = parseFloat(document.getElementById('inp-area').value) || 10;
+                const Kc = parseFloat(document.getElementById('inp-crop').value) || 1.15;
+                const D_mm = parseFloat(document.getElementById('inp-pipe').value) || 110;
+                const L = parseFloat(document.getElementById('inp-length').value) || 1000;
+                const PV_kWp = parseFloat(document.getElementById('inp-solar').value) || 30;
+                const Dam_m3 = parseFloat(document.getElementById('inp-dam').value) || 200;
+                const coverRed = parseFloat(document.getElementById('inp-cover').value) || 0;
+                const tempC = parseFloat(document.getElementById('inp-temp').value) || 30;
+                const currSymbol = document.getElementById('currency-select').value === 'ZAR' ? 'R' : (document.getElementById('currency-select').value === 'AUD' ? 'A$' : '$');
+                const currMult = document.getElementById('currency-select').value === 'ZAR' ? 18.5 : (document.getElementById('currency-select').value === 'AUD' ? 1.52 : 1.0);
 
-            // Headband / Visor Detail
-            ctx.fillStyle = "#E43B12";
-            ctx.fillRect(-4 * p, -6 * p, 7 * p, 1.5 * p);
+                document.getElementById('txt-pipe').innerText = `${D_mm} mm (PN10)`;
+                document.getElementById('txt-solar').innerText = `${PV_kWp} kWp`;
 
-            ctx.restore();
-        }
+                // 2. FAO-56 Crop Evapotranspiration Requirement
+                // ETo approx = 0.0023 * Ra * (Temp + 17.8) * sqrt(TD)
+                const ETo = 0.18 * tempC; // mm/day baseline
+                const ETc = ETo * Kc; // mm/day required
+                const totalDailyWaterDemand_m3 = area * ETc * 10; // 1 mm on 1 ha = 10 m³
+                const requiredFlow_m3h = totalDailyWaterDemand_m3 / 10; // Assume 10-hour irrigation window
 
-        function drawDashStaticPreview() {
-            renderDashGraphics();
-        }
+                // 3. Hydraulic Computations (Darcy-Weisbach & Swamee-Jain)
+                const D_m = D_mm / 1000;
+                const Area_pipe = Math.PI * Math.pow(D_m / 2, 2);
+                const Q_m3s = requiredFlow_m3h / 3600;
+                const velocity = Q_m3s / Area_pipe; // m/s
+
+                // Water kinematics
+                const kinematicViscosity = 1.004e-6; // m²/s at 20°C
+                const Re = (velocity * D_m) / kinematicViscosity;
+
+                // Swamee-Jain Friction Factor f calculation
+                const ks = 0.007e-3; // HDPE roughness = 0.007 mm
+                let f = 0.02;
+                if (Re > 4000) {
+                    f = 0.25 / Math.pow(Math.log10((ks / (3.7 * D_m)) + (5.74 / Math.pow(Re, 0.9))), 2);
+                }
+
+                // Darcy-Weisbach Friction Loss
+                const g = 9.81;
+                const hf = f * (L / D_m) * (Math.pow(velocity, 2) / (2 * g)); // meters
+                const staticLift = 25.0; // 25m borehole / topography lift
+                const fittingsLoss = hf * 0.10; // 10% allowance for elbows & valves
+                const emitterPressure = 10.0; // 1.0 bar required for drip lines
+                const TDH = staticLift + hf + fittingsLoss + emitterPressure; // Total Dynamic Head
+
+                // Power Calculations
+                const rho = 1000; // kg/m³
+                const P_hydraulic = (rho * g * Q_m3s * TDH) / 1000; // kW
+                const eta_pump = 0.72; // Pump hydraulic efficiency
+                const eta_motor = 0.88; // Motor electrical efficiency
+                const P_electrical = P_hydraulic / (eta_pump * eta_motor); // Required kW input
+
+                // 4. Financial Calculations (CAPEX, OPEX & 15-Yr NPV)
+                const pipeCostPerM = (D_mm / 10) * 2.2 * currMult;
+                const pipeCAPEX = L * pipeCostPerM;
+                const solarCAPEX = PV_kWp * 800 * currMult;
+                const damCAPEX = Dam_m3 * 45 * currMult;
+                const pumpCAPEX = P_electrical * 350 * currMult;
+                const totalCAPEX = pipeCAPEX + solarCAPEX + damCAPEX + pumpCAPEX;
+
+                // Annual Energy OPEX Savings (Assuming $0.22/kWh grid energy offset by PV)
+                const dailyKWhNeeded = P_electrical * 10; // 10 hrs pumping
+                const solarCoverage = Math.min(1.0, (PV_kWp * 5.5) / dailyKWhNeeded); // 5.5 peak sun hours
+                const annualGridKWhSaved = dailyKWhNeeded * 300 * solarCoverage;
+                const annualOPEXSavings = annualGridKWhSaved * 0.22 * currMult;
+
+                // Payback & NPV
+                const discountRate = 0.085;
+                let npv = -totalCAPEX;
+                for (let yr = 1; yr <= 15; yr++) {
+                    npv += annualOPEXSavings / Math.pow(1 + discountRate, yr);
+                }
+                const paybackYears = annualOPEXSavings > 0 ? (totalCAPEX / annualOPEXSavings).toFixed(1) : 'N/A';
+                const irrEstimate = annualOPEXSavings > 0 ? ((annualOPEXSavings / totalCAPEX) * 100).toFixed(1) : '0';
+
+                // Crop Stress Penalty
+                const waterDeficit = Math.max(0, requiredFlow_m3h - (PV_kWp > 0 ? requiredFlow_m3h : 0));
+                const stressPenalty = waterDeficit > 10 ? '4.2% Yield Risk' : '0.0% (Optimum)';
+
+                // 5. Update DOM Dashboard
+                document.getElementById('m-flow').innerText = `${requiredFlow_m3h.toFixed(1)} m³/h`;
+                document.getElementById('m-vel').innerText = `${velocity.toFixed(2)} m/s`;
+                document.getElementById('m-re').innerText = `${Math.round(Re).toLocaleString()} (${Re > 4000 ? 'Turbulent' : 'Laminar'})`;
+                document.getElementById('m-hf').innerText = `${hf.toFixed(1)} m`;
+                document.getElementById('m-tdh').innerText = `${TDH.toFixed(1)} m`;
+                document.getElementById('m-power').innerText = `${P_electrical.toFixed(1)} kW`;
+
+                document.getElementById('m-capex').innerText = `${currSymbol}${Math.round(totalCAPEX).toLocaleString()}`;
+                document.getElementById('m-opex').innerText = `${currSymbol}${Math.round(annualOPEXSavings).toLocaleString()} / yr`;
+                document.getElementById('m-payback').innerText = `${paybackYears} Years`;
+                document.getElementById('m-npv').innerText = `${currSymbol}${Math.round(npv).toLocaleString()}`;
+                document.getElementById('m-irr').innerText = `${irrEstimate}%`;
+                document.getElementById('m-penalty').innerText = stressPenalty;
+
+                this.drawCanvasScene();
+            },
+
+            runPlayback() {
+                if (this.isLooping) return;
+                this.isLooping = true;
+                this.simHour = 0.0;
+
+                const loop = () => {
+                    this.simHour += 0.25;
+                    if (this.simHour > 24) {
+                        this.simHour = 24.0;
+                        this.isLooping = false;
+                        this.drawCanvasScene();
+                        return;
+                    }
+
+                    // Dynamic Diurnal Time Display
+                    const hrs = Math.floor(this.simHour);
+                    const mins = Math.floor((this.simHour - hrs) * 60);
+                    const timeStr = `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+                    document.getElementById('sim-clock').innerText = `${timeStr} [${hrs >= 6 && hrs <= 18 ? 'DAYLIGHT CYCLE' : 'NIGHT CYCLE'}]`;
+
+                    // Solar Irradiance Curve
+                    const solarFactor = (hrs >= 6 && hrs <= 18) ? Math.sin(((hrs - 6) / 12) * Math.PI) : 0;
+                    document.getElementById('diag-solar-irr').innerText = `${Math.round(solarFactor * 1000)} W/m²`;
+
+                    this.drawCanvasScene();
+                    this.animFrame = requestAnimationFrame(loop);
+                };
+
+                loop();
+            },
+
+            drawCanvasScene() {
+                if (!this.ctx) return;
+                const w = this.canvas.width;
+                const h = this.canvas.height;
+                this.ctx.clearRect(0, 0, w, h);
+
+                // Sky & Diurnal Cycle
+                const hrs = this.simHour;
+                const daylight = (hrs >= 6 && hrs <= 18) ? Math.sin(((hrs - 6) / 12) * Math.PI) : 0;
+                this.ctx.fillStyle = `rgba(10, 10, 15, ${1 - daylight * 0.7})`;
+                this.ctx.fillRect(0, 0, w, h);
+
+                // Ground Terrain
+                this.ctx.fillStyle = '#141412';
+                this.ctx.fillRect(0, h - 80, w, 80);
+
+                // Solar PV Panel Frame
+                this.ctx.fillStyle = '#1e293b';
+                this.ctx.fillRect(30, h - 130, 80, 50);
+                this.ctx.strokeStyle = '#f47b20';
+                this.ctx.lineWidth = 2;
+                this.ctx.strokeRect(30, h - 130, 80, 50);
+
+                // Draw Water Storage Dam
+                const damX = 160;
+                const damW = 100;
+                this.ctx.fillStyle = '#262626';
+                this.ctx.fillRect(damX, h - 120, damW, 40);
+                // Water Level
+                this.ctx.fillStyle = '#0284c7';
+                this.ctx.fillRect(damX + 4, h - 116, damW - 8, 32);
+
+                // Mainline HDPE Pipe Network line
+                this.ctx.strokeStyle = '#38bdf8';
+                this.ctx.lineWidth = 4;
+                this.ctx.beginPath();
+                this.ctx.moveTo(110, h - 105);
+                this.ctx.lineTo(damX, h - 105);
+                this.ctx.moveTo(damX + damW, h - 105);
+                this.ctx.lineTo(w - 60, h - 105);
+                this.ctx.stroke();
+
+                // Orchard Crop Trees
+                for (let i = 0; i < 4; i++) {
+                    const tx = w - 180 + (i * 40);
+                    // Trunk
+                    this.ctx.fillStyle = '#78350f';
+                    this.ctx.fillRect(tx + 8, h - 110, 6, 30);
+                    // Foliage
+                    this.ctx.fillStyle = '#15803d';
+                    this.ctx.beginPath();
+                    this.ctx.arc(tx + 11, h - 120, 16, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+
+                // Sun Element
+                if (daylight > 0) {
+                    const sunX = 40 + (hrs / 24) * (w - 80);
+                    const sunY = h - 160 - Math.sin((hrs / 24) * Math.PI) * 100;
+                    this.ctx.fillStyle = '#f47b20';
+                    this.ctx.beginPath();
+                    this.ctx.arc(sunX, sunY, 14, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+            }
+        };
+
+
+        // -------------------------------------------------------------------------
+        // MODULE 3: STEM TRIVIA ENGINE
+        // -------------------------------------------------------------------------
+        const STEMQuiz = {
+            streak: 0,
+            currentIndex: 0,
+            questions: [
+                {
+                    category: 'HYDRAULIC ENGINEERING',
+                    q: 'In pressurized pipeline design, what happens to friction head loss (h_f) if the internal pipe diameter is halved, assuming constant volumetric flow rate?',
+                    options: [
+                        'Head loss increases by a factor of 2',
+                        'Head loss increases by a factor of 8',
+                        'Head loss increases by a factor of 32 (D^5 law)',
+                        'Head loss remains unchanged'
+                    ],
+                    correct: 2,
+                    explain: 'Under Darcy-Weisbach equations, velocity v ∝ 1/D². Since h_f ∝ v²/D, substituting yields h_f ∝ 1/D⁵. Halving diameter increases friction loss by 2⁵ = 32 times!'
+                },
+                {
+                    category: 'STRUCTURAL MECHANICS',
+                    q: 'What is the critical Euler buckling load formula for a pin-jointed structural column of length L and flexural rigidity EI?',
+                    options: [
+                        'P_cr = (π² * E * I) / L²',
+                        'P_cr = (2 * E * I) / L',
+                        'P_cr = (5 * w * L⁴) / 384',
+                        'P_cr = σ_yield * A'
+                    ],
+                    correct: 0,
+                    explain: 'Euler’s critical buckling load formula for pinned ends is P_cr = (π²EI) / L², demonstrating that slender columns buckle long before reaching yield stress.'
+                },
+                {
+                    category: 'AGRICULTURAL AUTOMATION',
+                    q: 'In automated closed-loop drip irrigation, what does the FAO-56 Crop Coefficient (K_c) represent?',
+                    options: [
+                        'The ratio of pipe friction loss to pump lift',
+                        'The ratio of actual crop evapotranspiration (ET_c) to reference evapotranspiration (ET_o)',
+                        'The electrical conductivity of soil moisture',
+                        'The solar inverter conversion efficiency factor'
+                    ],
+                    correct: 1,
+                    explain: 'K_c scales baseline reference evapotranspiration (ET_o) to account for specific crop canopy development, leaf area index, and transpiration rates.'
+                }
+            ],
+
+            init() {
+                this.loadQuestion();
+            },
+
+            loadQuestion() {
+                const q = this.questions[this.currentIndex];
+                document.getElementById('quiz-category').innerText = q.category;
+                document.getElementById('quiz-question').innerText = q.q;
+                document.getElementById('quiz-explanation').classList.add('hidden');
+
+                const optsContainer = document.getElementById('quiz-options');
+                optsContainer.innerHTML = '';
+
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'w-full text-left p-3.5 rounded-lg bg-stone-900 border border-white/10 hover:border-brand-orange transition-all flex items-center space-x-3';
+                    btn.innerHTML = `<span class="w-6 h-6 rounded bg-stone-800 text-brand-orange font-bold flex items-center justify-center text-xs">${String.fromCharCode(65 + idx)}</span> <span class="text-stone-200">${opt}</span>`;
+                    btn.onclick = () => this.checkAnswer(idx);
+                    optsContainer.appendChild(btn);
+                });
+            },
+
+            checkAnswer(selected) {
+                const q = this.questions[this.currentIndex];
+                const expEl = document.getElementById('quiz-explanation');
+
+                if (selected === q.correct) {
+                    this.streak++;
+                    expEl.className = 'p-4 rounded-lg bg-emerald-950/60 border border-emerald-500/50 text-xs font-mono text-emerald-200';
+                    expEl.innerHTML = `<strong>✓ CORRECT PROTOCOL:</strong> ${q.explain}`;
+                } else {
+                    this.streak = 0;
+                    expEl.className = 'p-4 rounded-lg bg-red-950/60 border border-red-500/50 text-xs font-mono text-red-200';
+                    expEl.innerHTML = `<strong>✕ INCORRECT:</strong> ${q.explain}`;
+                }
+
+                document.getElementById('quiz-streak').innerText = this.streak;
+                expEl.classList.remove('hidden');
+            },
+
+            nextQuestion() {
+                this.currentIndex = (this.currentIndex + 1) % this.questions.length;
+                this.loadQuestion();
+            }
+        };
+
+
+        // -------------------------------------------------------------------------
+        // INITIALIZATION ON WINDOW LOAD
+        // -------------------------------------------------------------------------
+        window.onload = function() {
+            SenseiDash.init();
+            AgriEngine.init();
+            STEMQuiz.init();
+        };
     </script>
 </body>
 </html>
